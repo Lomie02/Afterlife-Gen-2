@@ -15,7 +15,7 @@ D:/Unity/Afterlife Gen 2/Afterlife-Gen-2/Afterlife Gen 2
 -logFile
 Logs/AssetImportWorker1.log
 -srvPort
-51827
+51981
 Successfully changed project path to: D:/Unity/Afterlife Gen 2/Afterlife-Gen-2/Afterlife Gen 2
 D:/Unity/Afterlife Gen 2/Afterlife-Gen-2/Afterlife Gen 2
 [UnityMemory] Configuration Parameters - Can be set up in boot.config
@@ -47,3 +47,410 @@ D:/Unity/Afterlife Gen 2/Afterlife-Gen-2/Afterlife Gen 2
     "memorysetup-temp-allocator-size-cloud-worker=32768"
     "memorysetup-temp-allocator-size-gi-baking-worker=262144"
     "memorysetup-temp-allocator-size-gfx=262144"
+Player connection [2400] Host "[IP] 192.168.0.46 [Port] 0 [Flags] 2 [Guid] 2797036014 [EditorId] 2797036014 [Version] 1048832 [Id] WindowsEditor(7,Dylans-Laptop) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined multi-casting on [225.0.0.222:54997]...
+
+Player connection [2400] Host "[IP] 192.168.0.46 [Port] 0 [Flags] 2 [Guid] 2797036014 [EditorId] 2797036014 [Version] 1048832 [Id] WindowsEditor(7,Dylans-Laptop) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined alternative multi-casting on [225.0.0.222:34997]...
+
+Refreshing native plugins compatible for Editor in 22.34 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2022.2.12f1 (022dac4955a3)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2022.2.12f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path D:/Unity/Afterlife Gen 2/Afterlife-Gen-2/Afterlife Gen 2/Assets
+GfxDevice: creating device client; threaded=0; jobified=0
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 2060 (ID=0x1f11)
+    Vendor:   NVIDIA
+    VRAM:     5968 MB
+    Driver:   31.0.15.2879
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2022.2.12f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2022.2.12f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/2022.2.12f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56792
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2022.2.12f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.015078 seconds.
+- Loaded All Assemblies, in  0.489 seconds
+Native extension for WindowsStandalone target not found
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  0.393 seconds
+Domain Reload Profiling:
+	ReloadAssembly (277ms)
+		BeginReloadAssembly (132ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (0ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (1ms)
+		LoadAllAssembliesAndSetupDomain (0ms)
+			LoadAssemblies (129ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (199ms)
+				TypeCache.Initialize (198ms)
+					TypeCache.ScanAssembly (196ms)
+				ResolveRequiredComponents (1ms)
+		FinalizeReload (0ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (0ms)
+			SetupLoadedEditorAssemblies (308ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (15ms)
+				SetLoadedEditorAssemblies (11ms)
+				RefreshPlugins (0ms)
+				BeforeProcessingInitializeOnLoad (2ms)
+				ProcessInitializeOnLoadAttributes (206ms)
+				ProcessInitializeOnLoadMethodAttributes (73ms)
+				AfterProcessingInitializeOnLoad (0ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (0ms)
+========================================================================
+Worker process is ready to serve import requests
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Afterlife Gen 2\Afterlife-Gen-2\Afterlife Gen 2\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Afterlife Gen 2\Afterlife-Gen-2\Afterlife Gen 2\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+- Loaded All Assemblies, in  1.505 seconds
+Refreshing native plugins compatible for Editor in 4.38 ms, found 3 plugins.
+Native extension for WindowsStandalone target not found
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  1.693 seconds
+Domain Reload Profiling:
+	ReloadAssembly (348ms)
+		BeginReloadAssembly (212ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (7ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (46ms)
+		LoadAllAssembliesAndSetupDomain (1154ms)
+			LoadAssemblies (525ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (726ms)
+				TypeCache.Initialize (663ms)
+					TypeCache.ScanAssembly (652ms)
+				ResolveRequiredComponents (17ms)
+		FinalizeReload (0ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (0ms)
+			SetupLoadedEditorAssemblies (1332ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (10ms)
+				SetLoadedEditorAssemblies (7ms)
+				RefreshPlugins (0ms)
+				BeforeProcessingInitializeOnLoad (195ms)
+				ProcessInitializeOnLoadAttributes (715ms)
+				ProcessInitializeOnLoadMethodAttributes (385ms)
+				AfterProcessingInitializeOnLoad (21ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (11ms)
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.10 seconds
+Refreshing native plugins compatible for Editor in 3.40 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 6169 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 98 unused Assets / (3.6 MB). Loaded Objects now: 6636.
+Memory consumption went from 270.7 MB to 267.1 MB.
+Total: 8.126800 ms (FindLiveObjects: 0.866400 ms CreateObjectMapping: 1.232000 ms MarkObjects: 4.935600 ms  DeleteObjects: 1.089700 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:AudioImporter_EditorPlatform: d09bf68614088b80899f8185d706f6e7 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 13181.724238 seconds.
+  path: Assets/Art/Equipment/GhostBox.fbx
+  artifactKey: Guid(40d9de2fb7d8f334e9402dbac9a6004a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Art/Equipment/GhostBox.fbx using Guid(40d9de2fb7d8f334e9402dbac9a6004a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8f094a5010bdfa197a10857ee6e85891') in 10.700218 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 13
+========================================================================
+Received Import Request.
+  Time since last request: 0.000033 seconds.
+  path: Assets/Art/Equipment/GhostTrap.fbx
+  artifactKey: Guid(afc0a11e577e9c94a8a0c4b71527b472) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Art/Equipment/GhostTrap.fbx using Guid(afc0a11e577e9c94a8a0c4b71527b472) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '505469513521d3c5357c66b4a6101f6e') in 0.117565 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 9
+========================================================================
+Received Import Request.
+  Time since last request: 29.811243 seconds.
+  path: Assets/Art/Modular Kits/Mansion/Doors/Door_Double_Right.fbx
+  artifactKey: Guid(d40b893bb98672e4c9f02df30dca557c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Art/Modular Kits/Mansion/Doors/Door_Double_Right.fbx using Guid(d40b893bb98672e4c9f02df30dca557c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6d50dbd8f26e170a2b7aad9847474fe4') in 0.465103 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 8
+========================================================================
+Received Import Request.
+  Time since last request: 127.721921 seconds.
+  path: Assets/Art/Modular Kits/Mansion/Floor/Floor_Single.fbx
+  artifactKey: Guid(13c473a7353d5814eb56a8939c60644d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Art/Modular Kits/Mansion/Floor/Floor_Single.fbx using Guid(13c473a7353d5814eb56a8939c60644d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '436e68a43ccd539cb2893e4d4b173766') in 0.059422 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 8
+========================================================================
+Received Import Request.
+  Time since last request: 36.747895 seconds.
+  path: Assets/Art/Modular Kits/Mansion/Floor Beams/Beam_Double.fbx
+  artifactKey: Guid(5f6e8685686327d42ba21aa258224d8d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Art/Modular Kits/Mansion/Floor Beams/Beam_Double.fbx using Guid(5f6e8685686327d42ba21aa258224d8d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c708b7b7337b35383fde36c347250611') in 0.035276 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 8
+========================================================================
+Received Import Request.
+  Time since last request: 0.000043 seconds.
+  path: Assets/Art/Modular Kits/Mansion/Floor Beams/Beam_Single.fbx
+  artifactKey: Guid(5d66abe7441f2044bae0d748f0d2ff45) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Art/Modular Kits/Mansion/Floor Beams/Beam_Single.fbx using Guid(5d66abe7441f2044bae0d748f0d2ff45) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '2c86b1ea3b8f17ed320826360b61ee80') in 0.044677 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 8
+========================================================================
+Received Import Request.
+  Time since last request: 16.453525 seconds.
+  path: Assets/Prefabs/Modular Kits/Mansion/Floor Beams/Beam_Corner Variant.prefab
+  artifactKey: Guid(4d505e7d5ee6ae943a5343eb70e8e19f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Modular Kits/Mansion/Floor Beams/Beam_Corner Variant.prefab using Guid(4d505e7d5ee6ae943a5343eb70e8e19f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '91f5480fd1414ce9f3fc018d5ee7c2d8') in 0.227564 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 15
+========================================================================
+Received Import Request.
+  Time since last request: 0.000046 seconds.
+  path: Assets/Prefabs/Modular Kits/Mansion/Floor Beams/Beam_Edge Variant.prefab
+  artifactKey: Guid(c41bfb2ee5014754cb7c7ccac5c855f2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Modular Kits/Mansion/Floor Beams/Beam_Edge Variant.prefab using Guid(c41bfb2ee5014754cb7c7ccac5c855f2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e39d311015d3d023802dfc030d190d0a') in 0.160603 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 15
+========================================================================
+Received Import Request.
+  Time since last request: 5.523952 seconds.
+  path: Assets/Prefabs/Modular Kits/Mansion/Floor Beams/Beam_Double Variant.prefab
+  artifactKey: Guid(44742b7d2cb21414cacf9ade0a6027f3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Modular Kits/Mansion/Floor Beams/Beam_Double Variant.prefab using Guid(44742b7d2cb21414cacf9ade0a6027f3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7767bb855981bfa26d5c46cf5187d06c') in 0.195944 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 15
+========================================================================
+Received Import Request.
+  Time since last request: 0.000037 seconds.
+  path: Assets/Prefabs/Modular Kits/Mansion/Floor Beams/Beam_Edge Variant.prefab
+  artifactKey: Guid(c41bfb2ee5014754cb7c7ccac5c855f2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Modular Kits/Mansion/Floor Beams/Beam_Edge Variant.prefab using Guid(c41bfb2ee5014754cb7c7ccac5c855f2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c61bd47fb7185a2379af2a8f0751949d') in 0.085657 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 15
+========================================================================
+Received Import Request.
+  Time since last request: 0.992984 seconds.
+  path: Assets/Prefabs/Modular Kits/Mansion/Floor Beams/Beam_Double Variant.prefab
+  artifactKey: Guid(44742b7d2cb21414cacf9ade0a6027f3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Modular Kits/Mansion/Floor Beams/Beam_Double Variant.prefab using Guid(44742b7d2cb21414cacf9ade0a6027f3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6f2fbd41f81196005499ae06d8ebba0c') in 0.345011 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 15
+========================================================================
+Received Import Request.
+  Time since last request: 0.000032 seconds.
+  path: Assets/Prefabs/Modular Kits/Mansion/Floor Beams/Beam_Single Variant.prefab
+  artifactKey: Guid(5872cc344885bf14d8984f298ace06a6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Modular Kits/Mansion/Floor Beams/Beam_Single Variant.prefab using Guid(5872cc344885bf14d8984f298ace06a6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e3698cbb546267ec0ba74bd1479eb176') in 0.096328 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 15
+========================================================================
+Received Import Request.
+  Time since last request: 26.422419 seconds.
+  path: Assets/Art/Modular Kits/Mansion/Outside/Corner_Small_Outside.fbx
+  artifactKey: Guid(c6a5122e33d041c4c932d988f3f2fd55) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Art/Modular Kits/Mansion/Outside/Corner_Small_Outside.fbx using Guid(c6a5122e33d041c4c932d988f3f2fd55) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd0d086dd43c213da4e6de00ae1923c4b') in 0.033047 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 8
+========================================================================
+Received Import Request.
+  Time since last request: 9.836711 seconds.
+  path: Assets/Prefabs/Modular Kits/Mansion/Outside/Corner_Small_Outside Variant.prefab
+  artifactKey: Guid(6d491b74114d5a6439280ef54eda2788) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Modular Kits/Mansion/Outside/Corner_Small_Outside Variant.prefab using Guid(6d491b74114d5a6439280ef54eda2788) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '23adf1b92c2c9002e86d2279379b27c9') in 0.038125 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 15
+========================================================================
+Received Import Request.
+  Time since last request: 3.997226 seconds.
+  path: Assets/Prefabs/Modular Kits/Mansion/Outside/Corner_Small_Outside Variant.prefab
+  artifactKey: Guid(6d491b74114d5a6439280ef54eda2788) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Modular Kits/Mansion/Outside/Corner_Small_Outside Variant.prefab using Guid(6d491b74114d5a6439280ef54eda2788) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8a62e4493797c58c8c84586b63a7091c') in 0.716797 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 15
+========================================================================
+Received Import Request.
+  Time since last request: 1.636439 seconds.
+  path: Assets/Prefabs/Modular Kits/Mansion/Outside/Corner_Small_Outside Variant.prefab
+  artifactKey: Guid(6d491b74114d5a6439280ef54eda2788) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Modular Kits/Mansion/Outside/Corner_Small_Outside Variant.prefab using Guid(6d491b74114d5a6439280ef54eda2788) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5e22b3510f07498b3b6cfd0517fb8ce4') in 0.034878 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 15
+========================================================================
+Received Import Request.
+  Time since last request: 0.811005 seconds.
+  path: Assets/Prefabs/Modular Kits/Mansion/Outside/Corner_Small_Outside Variant.prefab
+  artifactKey: Guid(6d491b74114d5a6439280ef54eda2788) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Modular Kits/Mansion/Outside/Corner_Small_Outside Variant.prefab using Guid(6d491b74114d5a6439280ef54eda2788) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'f478aed4a0d4610d45c00f4da4e4df1f') in 0.273346 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 15
+========================================================================
+Received Import Request.
+  Time since last request: 0.000032 seconds.
+  path: Assets/Prefabs/Modular Kits/Mansion/Outside/Edge_Small_Outside Variant.prefab
+  artifactKey: Guid(5569621a1a75df440880d984b568fce6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Modular Kits/Mansion/Outside/Edge_Small_Outside Variant.prefab using Guid(5569621a1a75df440880d984b568fce6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'fed8eeee78671ec9e79c8ca4d7d2f019') in 0.070039 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 15
+========================================================================
+Received Import Request.
+  Time since last request: 1.136454 seconds.
+  path: Assets/Prefabs/Modular Kits/Mansion/Outside/Corner_Small_Outside Variant.prefab
+  artifactKey: Guid(6d491b74114d5a6439280ef54eda2788) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Modular Kits/Mansion/Outside/Corner_Small_Outside Variant.prefab using Guid(6d491b74114d5a6439280ef54eda2788) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '962c9f6f101c85717b2b1c12c909d2f4') in 0.020410 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 15
+========================================================================
+Received Import Request.
+  Time since last request: 2.690123 seconds.
+  path: Assets/Art/Modular Kits/Mansion/Stairs/Stairs_Entrance_Right.fbx
+  artifactKey: Guid(c2ea8c8caf6a0c84ca1fcb458248dc0d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Art/Modular Kits/Mansion/Stairs/Stairs_Entrance_Right.fbx using Guid(c2ea8c8caf6a0c84ca1fcb458248dc0d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '2ff2e5539387bb6bf5c91f738b8bdd56') in 0.061639 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 8
+========================================================================
+Received Import Request.
+  Time since last request: 0.000066 seconds.
+  path: Assets/Art/Modular Kits/Mansion/Stairs/Stairs_Steps_Right.fbx
+  artifactKey: Guid(d68e24324d42f4b479e324d68c168ef1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Art/Modular Kits/Mansion/Stairs/Stairs_Steps_Right.fbx using Guid(d68e24324d42f4b479e324d68c168ef1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '70369a99feef9ff0f662e76a64a0bebd') in 0.098280 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 8
+========================================================================
+Received Import Request.
+  Time since last request: 0.000049 seconds.
+  path: Assets/Art/Modular Kits/Mansion/Stairs/Stairs_Support_Beam.fbx
+  artifactKey: Guid(5e06a6bb383716543adaee7aa4a053b2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Art/Modular Kits/Mansion/Stairs/Stairs_Support_Beam.fbx using Guid(5e06a6bb383716543adaee7aa4a053b2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'cc31c0c09ca5bf5e5e429d9e6c05ac9e') in 0.055507 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 8
+========================================================================
+Received Import Request.
+  Time since last request: 0.000080 seconds.
+  path: Assets/Art/Modular Kits/Mansion/Stairs/Stairs_Platform_Right.fbx
+  artifactKey: Guid(cde984a618fa7944ead031d666846dfe) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Art/Modular Kits/Mansion/Stairs/Stairs_Platform_Right.fbx using Guid(cde984a618fa7944ead031d666846dfe) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '22f6fc27ed2babaf5d6e53a9934658a1') in 0.034639 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 8
+========================================================================
+Received Import Request.
+  Time since last request: 19.864030 seconds.
+  path: Assets/Prefabs/Modular Kits/Mansion/Stairs/Stairs_Entrance_Right Variant.prefab
+  artifactKey: Guid(0fe72930b87fd4d4487911ed0f4342fc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Modular Kits/Mansion/Stairs/Stairs_Entrance_Right Variant.prefab using Guid(0fe72930b87fd4d4487911ed0f4342fc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9158b92d6af2ac782348ef97523b31ac') in 0.132724 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 15
+========================================================================
+Received Import Request.
+  Time since last request: 0.000045 seconds.
+  path: Assets/Prefabs/Modular Kits/Mansion/Stairs/Stairs_Support_Beam Variant.prefab
+  artifactKey: Guid(9b998b60a29d25240ba849af4243fd08) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Modular Kits/Mansion/Stairs/Stairs_Support_Beam Variant.prefab using Guid(9b998b60a29d25240ba849af4243fd08) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9c926f34ed5def38330cd6a3a5db0259') in 0.040695 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 15
+========================================================================
+Received Import Request.
+  Time since last request: 0.000041 seconds.
+  path: Assets/Prefabs/Modular Kits/Mansion/Stairs/Stairs_Platform_Right Variant.prefab
+  artifactKey: Guid(dbcb09f7d822c954e93247c05adf0133) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Modular Kits/Mansion/Stairs/Stairs_Platform_Right Variant.prefab using Guid(dbcb09f7d822c954e93247c05adf0133) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9c617f73de22660be71e9ef7849a2a49') in 0.037320 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 15
+========================================================================
+Received Import Request.
+  Time since last request: 0.000083 seconds.
+  path: Assets/Prefabs/Modular Kits/Mansion/Stairs/Stairs_Steps_Left Variant.prefab
+  artifactKey: Guid(781fb18419d52ce49a23ecccffb9e383) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Modular Kits/Mansion/Stairs/Stairs_Steps_Left Variant.prefab using Guid(781fb18419d52ce49a23ecccffb9e383) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7e8a1ef8e8bca43181d7032546f1adb9') in 0.030576 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 15
+========================================================================
+Received Import Request.
+  Time since last request: 4.102694 seconds.
+  path: Assets/Art/Modular Kits/Mansion/Walls/Wall_Large_Double_Doors.fbx
+  artifactKey: Guid(24455c2b140079b43945a3f4ca019bb2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Art/Modular Kits/Mansion/Walls/Wall_Large_Double_Doors.fbx using Guid(24455c2b140079b43945a3f4ca019bb2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a205d509cd04dc3748ea4d1dc2cbef1c') in 0.193398 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 8
+========================================================================
+Received Import Request.
+  Time since last request: 0.000051 seconds.
+  path: Assets/Art/Modular Kits/Mansion/Walls/Wall_Large_Regular.fbx
+  artifactKey: Guid(b89f62311544f784b94438cf7a034290) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Art/Modular Kits/Mansion/Walls/Wall_Large_Regular.fbx using Guid(b89f62311544f784b94438cf7a034290) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9139d6291d84063308cffc5b386317f4') in 0.123223 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 8
+========================================================================
+Received Import Request.
+  Time since last request: 0.000057 seconds.
+  path: Assets/Art/Modular Kits/Mansion/Walls/Wall_Large_Hall.fbx
+  artifactKey: Guid(a6a4cce6248167740b070cc9098ab61a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Art/Modular Kits/Mansion/Walls/Wall_Large_Hall.fbx using Guid(a6a4cce6248167740b070cc9098ab61a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6eb9ebb351507dbf706003478e7870ae') in 0.061781 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 8
+========================================================================
+Received Import Request.
+  Time since last request: 0.000037 seconds.
+  path: Assets/Art/Modular Kits/Mansion/Walls/Wall_Large_Window.fbx
+  artifactKey: Guid(18267b2236bd3e84b8cd1944f04db0ec) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Art/Modular Kits/Mansion/Walls/Wall_Large_Window.fbx using Guid(18267b2236bd3e84b8cd1944f04db0ec) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '44a169a98b52f83b9951d794add35190') in 0.082574 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 8
+========================================================================
+Received Import Request.
+  Time since last request: 0.000075 seconds.
+  path: Assets/Art/Modular Kits/Mansion/Walls/Wall_Single.fbx
+  artifactKey: Guid(f09e3e12f541c5b438330c7b7cf01b53) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Art/Modular Kits/Mansion/Walls/Wall_Single.fbx using Guid(f09e3e12f541c5b438330c7b7cf01b53) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9cbca6b3cf8fdda954cb9b820181a6ad') in 0.035222 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 8
+========================================================================
+Received Import Request.
+  Time since last request: 15.048702 seconds.
+  path: Assets/Prefabs/Modular Kits/Mansion/Walls/Wall_Large_Double_Doors Variant.prefab
+  artifactKey: Guid(263051791b0b27f4281ce5280d34f87a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Modular Kits/Mansion/Walls/Wall_Large_Double_Doors Variant.prefab using Guid(263051791b0b27f4281ce5280d34f87a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'fa228ceca66f88511cbebdb86a1bf5e5') in 0.189499 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 15
+========================================================================
+Received Import Request.
+  Time since last request: 0.000054 seconds.
+  path: Assets/Prefabs/Modular Kits/Mansion/Walls/Wall_Single_Inside_Double_Large Variant.prefab
+  artifactKey: Guid(c0eddd4031e79f847a420fe6520b81d3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Modular Kits/Mansion/Walls/Wall_Single_Inside_Double_Large Variant.prefab using Guid(c0eddd4031e79f847a420fe6520b81d3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '87433fe04a28b15722b0ee1cdbf02e2c') in 0.320773 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 15
+========================================================================
+Received Import Request.
+  Time since last request: 0.000056 seconds.
+  path: Assets/Prefabs/Modular Kits/Mansion/Walls/Wall_Large_Regular Variant.prefab
+  artifactKey: Guid(c5000f45ee23155429d825b5730bd4ce) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Modular Kits/Mansion/Walls/Wall_Large_Regular Variant.prefab using Guid(c5000f45ee23155429d825b5730bd4ce) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'daeeb65d54145de6d545670e9a077210') in 0.462958 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 15
+========================================================================
+Received Import Request.
+  Time since last request: 38.470088 seconds.
+  path: Assets/Prefabs/Equipment/GhostBox Variant.prefab
+  artifactKey: Guid(d467726d02ad9574d93f0b0bec197d52) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Equipment/GhostBox Variant.prefab using Guid(d467726d02ad9574d93f0b0bec197d52) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'ea18e08a96ab00c8ac43dcd2403a1940') in 0.216585 seconds 
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 16

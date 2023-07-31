@@ -24,6 +24,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
         m_GameManager = FindObjectOfType<GameManager>();
 
+        int num = Random.Range(50, 999);
+        PhotonNetwork.LocalPlayer.NickName = "Hunter" + num.ToString();
     }
     public void ConnectToServer() // Connect to the server
     {
@@ -57,5 +59,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.JoinRoom(m_CodeInput.text);
     }
+
+    public override void OnJoinedRoom()
+    {
+        m_GameManager.ChangeScene("Afterlife_Corp");
+    }
+
 
 }

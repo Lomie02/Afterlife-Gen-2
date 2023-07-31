@@ -61,7 +61,7 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
             }
         }
 
-        PhotonNetwork.Instantiate(m_Pharmacist.name, m_PlayerSpawns[0].position, m_PlayerSpawns[0].rotation);
+        PhotonNetwork.Instantiate(m_Pharmacist.name, m_PlayerSpawns[0].position, Quaternion.identity);
     }
 
     public void CopyCode()

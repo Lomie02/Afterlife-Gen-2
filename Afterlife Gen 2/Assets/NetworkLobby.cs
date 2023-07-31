@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
-public class NetworkLobby : MonoBehaviour
+public class NetworkLobby : MonoBehaviourPunCallbacks
 {
     [SerializeField] Text m_Code;
     [Header("Player Models")]
@@ -21,9 +21,9 @@ public class NetworkLobby : MonoBehaviour
     [SerializeField] GameObject m_HostButton;
     void Start()
     {
-        SpawnPlayer();
-
         PhotonNetwork.AutomaticallySyncScene = true;
+
+        SpawnPlayer();
 
         if (PhotonNetwork.IsMasterClient)
         {
@@ -43,10 +43,18 @@ public class NetworkLobby : MonoBehaviour
         m_CodeValue = PhotonNetwork.CurrentRoom.Name;
     }
 
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        base.OnPlayerEnteredRoom(newPlayer);
+
+        Debug.Log(newPlayer.NickName + " Joined.");
+    }
+
     void SpawnPlayer()
     {
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
         {
+            Debug.Log(PhotonNetwork.PlayerList[i].NickName);
             if (PhotonNetwork.PlayerList[i].IsLocal)
             {
                 Location = i;
@@ -54,6 +62,7 @@ public class NetworkLobby : MonoBehaviour
         }
 
         PhotonNetwork.Instantiate(m_Pharmacist.name, m_PlayerSpawns[Location].position, m_PlayerSpawns[Location].rotation);
+
     }
 
     public void CopyCode()

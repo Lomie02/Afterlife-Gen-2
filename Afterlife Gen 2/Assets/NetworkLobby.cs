@@ -21,9 +21,9 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
     [SerializeField] GameObject m_HostButton;
     void Start()
     {
-        PhotonNetwork.AutomaticallySyncScene = true;
-
         SpawnPlayer();
+
+        PhotonNetwork.AutomaticallySyncScene = true;
 
         if (PhotonNetwork.IsMasterClient)
         {
@@ -61,8 +61,7 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
             }
         }
 
-        PhotonNetwork.Instantiate(m_Pharmacist.name, m_PlayerSpawns[Location].position, m_PlayerSpawns[Location].rotation);
-
+        PhotonNetwork.Instantiate(m_Pharmacist.name, m_PlayerSpawns[0].position, m_PlayerSpawns[0].rotation);
     }
 
     public void CopyCode()

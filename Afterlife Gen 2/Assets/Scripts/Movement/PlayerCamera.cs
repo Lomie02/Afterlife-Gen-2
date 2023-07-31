@@ -19,7 +19,7 @@ public class PlayerCamera : MonoBehaviour
         m_MyView = GetComponent<PhotonView>();
         if (!m_MyView.IsMine)
         {
-            gameObject.SetActive(false);
+            m_PlayersCamera.gameObject.SetActive(false);
         }
 
         MouseLockState(true);

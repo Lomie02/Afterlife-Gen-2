@@ -24,12 +24,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
         m_GameManager = FindObjectOfType<GameManager>();
 
-        int num = Random.Range(50, 999);
-        PhotonNetwork.LocalPlayer.NickName = "Hunter" + num.ToString();
     }
     public void ConnectToServer() // Connect to the server
     {
         PhotonNetwork.ConnectUsingSettings();
+        int num = Random.Range(50, 999);
+        PhotonNetwork.LocalPlayer.NickName = "Hunter" + num.ToString();
     }
 
     public override void OnConnectedToMaster()// Has connected to the server

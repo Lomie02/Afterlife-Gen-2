@@ -7,7 +7,9 @@ public class PlayerController : MonoBehaviour
     Rigidbody m_Body;
     Transform m_NewPos;
 
+    [SerializeField] Animator m_Anim;
     [SerializeField] float m_PlayerWalkSpeed = 5;
+
     void Start()
     {
         m_Body = GetComponent<Rigidbody>();
@@ -21,5 +23,8 @@ public class PlayerController : MonoBehaviour
         Vector3 MoveV = transform.right * xPos + transform.forward * yPos;
 
         m_Body.MovePosition(transform.position + MoveV.normalized * m_PlayerWalkSpeed * Time.deltaTime);
+
+        m_Anim.SetFloat("xPos", xPos);
+        m_Anim.SetFloat("yPos", yPos);
     }
 }

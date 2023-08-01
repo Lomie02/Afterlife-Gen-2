@@ -22,9 +22,6 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
     void Start()
     {
         SpawnPlayer();
-
-        PhotonNetwork.AutomaticallySyncScene = true;
-
         if (PhotonNetwork.IsMasterClient)
         {
             if (m_HostButton)
@@ -61,7 +58,7 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
             }
         }
 
-        PhotonNetwork.Instantiate(m_Pharmacist.name, m_PlayerSpawns[0].position, Quaternion.identity);
+        PhotonNetwork.Instantiate(m_Pharmacist.name, m_PlayerSpawns[Location].position, Quaternion.identity);
     }
 
     public void CopyCode()

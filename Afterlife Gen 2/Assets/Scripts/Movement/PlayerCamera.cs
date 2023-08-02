@@ -10,6 +10,8 @@ public class PlayerCamera : MonoBehaviour
 
     [SerializeField] Transform m_Body;
 
+    NetworkWorldCameraHud m_LobbyHud;
+
     PhotonView m_MyView;
     float m_Xview;
     float m_Yview;
@@ -20,6 +22,21 @@ public class PlayerCamera : MonoBehaviour
         if (!m_MyView.IsMine)
         {
             m_PlayersCamera.gameObject.SetActive(false);
+        }
+
+        if (m_MyView)
+        {
+            NetworkWorldCameraHud[] m_Canvases = FindObjectsOfType<NetworkWorldCameraHud>();
+
+            for (int i = 0; i < m_Canvases.Length; i++)
+            {
+                if (m_Canvases[i].tag == "LobbyHud")
+                {
+                    m_LobbyHud = m_Canvases[i];
+                    m_LobbyHud.AssignCamera(m_PlayersCamera);
+                    break;
+                }
+            }
         }
 
         MouseLockState(true);

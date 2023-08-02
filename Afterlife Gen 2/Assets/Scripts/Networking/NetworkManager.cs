@@ -37,6 +37,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinLobby();
     }
 
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        ConnectToServer();
+    }
+
     public override void OnJoinedLobby() // Join Main menu 
     {
         m_NetworkScreenObject.SetActive(false);
@@ -58,12 +63,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void JoinLobby()
     {
         PhotonNetwork.JoinRoom(m_CodeInput.text);
+
     }
 
     public override void OnJoinedRoom()
     {
-        m_GameManager.ChangeScene("Afterlife_Corp");
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
-
-
 }

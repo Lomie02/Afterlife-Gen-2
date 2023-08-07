@@ -47,7 +47,7 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
         Debug.Log(newPlayer.NickName + " Joined.");
     }
 
-    void SpawnPlayer()
+    public void SpawnPlayer()
     {
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
         {
@@ -59,6 +59,40 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
         }
 
         PhotonNetwork.Instantiate(m_Pharmacist.name, m_PlayerSpawns[Location].position, Quaternion.identity);
+    }
+
+    public bool SpawnPlayerByID(int _index)
+    {
+        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        {
+            if (PhotonNetwork.PlayerList[i].IsLocal)
+            {
+                Location = i;
+            }
+        }
+
+        if (_index == 1)
+        {
+            PhotonNetwork.Instantiate(m_Pharmacist.name, m_PlayerSpawns[Location].position, Quaternion.identity);
+            return true;
+        }
+        else if (_index == 2)
+        {
+            PhotonNetwork.Instantiate(m_Trapper.name, m_PlayerSpawns[Location].position, Quaternion.identity);
+            return true;
+        }
+        else if (_index == 3)
+        {
+            PhotonNetwork.Instantiate(m_Excercist.name, m_PlayerSpawns[Location].position, Quaternion.identity);
+            return true;
+        }
+        else if (_index == 4)
+        {
+            PhotonNetwork.Instantiate(m_Mechanic.name, m_PlayerSpawns[Location].position, Quaternion.identity);
+            return true;
+        }
+
+        return false;
     }
 
     public void CopyCode()

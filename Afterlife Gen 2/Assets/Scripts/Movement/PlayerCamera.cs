@@ -16,6 +16,7 @@ public class PlayerCamera : MonoBehaviour
     float m_Xview;
     float m_Yview;
 
+    bool m_CanLookAround = true;
     public void Start()
     {
         m_MyView = GetComponent<PhotonView>();
@@ -44,7 +45,7 @@ public class PlayerCamera : MonoBehaviour
 
     void Update()
     {
-        if (m_MyView.IsMine)
+        if (m_MyView.IsMine && m_CanLookAround)
         {
             float xPos = Input.GetAxis("Mouse X") * m_Sens * Time.deltaTime;
             float yPos = Input.GetAxis("Mouse Y") * m_Sens * Time.deltaTime;
@@ -68,10 +69,12 @@ public class PlayerCamera : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            m_CanLookAround = true;
         }
         else
         {
             Cursor.visible = true;
+            m_CanLookAround = false;
             Cursor.lockState = CursorLockMode.None;
         }
     }

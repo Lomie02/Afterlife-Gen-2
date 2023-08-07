@@ -39,6 +39,8 @@ public class PlayerController : MonoBehaviour
 
     float m_DiveWaitTimer = 0;
     float m_DiveWaitDuration = 1;
+
+    bool m_CanMove = true;
     void Start()
     {
         m_Body = GetComponent<Rigidbody>();
@@ -50,7 +52,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (m_MyView.IsMine)
+        if (m_MyView.IsMine && m_CanMove)
         {
             float xPos = Input.GetAxisRaw("Horizontal") * Time.deltaTime;
             float yPos = Input.GetAxisRaw("Vertical") * Time.deltaTime;
@@ -101,7 +103,7 @@ public class PlayerController : MonoBehaviour
 
     void Dive()
     {
-        if (m_MyView.IsMine)
+        if (m_MyView.IsMine && m_CanMove)
         {
             m_IsDiving = true;
             m_PlayerCollider.center = m_DiveCollider;
@@ -110,5 +112,10 @@ public class PlayerController : MonoBehaviour
             Vector3 DivePos = new Vector3(0, 0.5f, 0.5f);
             m_Body.AddForce(DivePos * 7, ForceMode.Impulse);
         }
+    }
+
+    public void SetMovement(bool _state)
+    {
+        m_CanMove = _state;
     }
 }

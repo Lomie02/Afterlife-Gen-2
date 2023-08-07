@@ -13,8 +13,14 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     PlayerCamera m_MyCamera;
     PlayerController m_MyController;
 
-    [SerializeField] Button m_Test;
-    [SerializeField] Button m_Test1;
+    // Specialist Selections
+    Button m_PharmacistButton;
+    Button m_TrapperButton;
+    Button m_ExorcistButton;
+    Button m_MechanicButton;
+
+    //Cancel Button
+    Button m_CancelButton;
 
     [SerializeField] GameObject m_SpecialistMenu;
     void Start()
@@ -25,8 +31,14 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_MyCamera = GetComponent<PlayerCamera>();
         m_MyController = GetComponent<PlayerController>();
 
-        m_Test = GameObject.Find("PharmacistButton").GetComponent<Button>();
-        m_Test1 = GameObject.Find("TrapperButton").GetComponent<Button>();
+        m_PharmacistButton = GameObject.Find("PharmacistButton").GetComponent<Button>();
+        m_TrapperButton = GameObject.Find("TrapperButton").GetComponent<Button>();
+
+        m_ExorcistButton = GameObject.Find("ExorcistButton").GetComponent<Button>();
+        m_MechanicButton = GameObject.Find("MechanicButton").GetComponent<Button>();
+
+        m_CancelButton = GameObject.Find("Cancel").GetComponent<Button>();
+
         m_SpecialistMenu = GameObject.Find("SpecialistMenu");
 
         if (m_SpecialistMenu)
@@ -36,8 +48,13 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
         if (m_MyView.IsMine)
         {
-            m_Test.onClick.AddListener(delegate { SpawnNewPlayer(1); });
-            m_Test1.onClick.AddListener(delegate { SpawnNewPlayer(2); });
+            m_PharmacistButton.onClick.AddListener(delegate { SpawnNewPlayer(1); });
+            m_TrapperButton.onClick.AddListener(delegate { SpawnNewPlayer(2); });
+
+            m_ExorcistButton.onClick.AddListener(delegate { SpawnNewPlayer(3); });
+            m_MechanicButton.onClick.AddListener(delegate { SpawnNewPlayer(4); });
+
+            m_CancelButton.onClick.AddListener(CancelSpecialistSelection);
         }
     }
 
@@ -54,6 +71,12 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             }
 
         }
+    }
+    void CancelSpecialistSelection()
+    {
+        m_SpecialistMenu.SetActive(false);
+        m_MyCamera.MouseLockState(true);
+        m_MyController.SetMovement(true);
     }
 
     void SpawnNewPlayer(int _index)

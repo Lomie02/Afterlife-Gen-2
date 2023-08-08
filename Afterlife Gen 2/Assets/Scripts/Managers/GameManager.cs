@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] bool m_ExitOnEscape = false;
     [SerializeField] UnityEvent m_OnConfigure;
     void Start()
     {
@@ -22,5 +23,11 @@ public class GameManager : MonoBehaviour
         Application.Quit();
     }
 
-
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) && m_ExitOnEscape)
+        {
+            Application.Quit();
+        }
+    }
 }

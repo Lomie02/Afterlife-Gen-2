@@ -38,6 +38,8 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
         }
         m_Code.text = PhotonNetwork.CurrentRoom.Name;
         m_CodeValue = PhotonNetwork.CurrentRoom.Name;
+
+        CopyCode();
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -98,7 +100,7 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
     public void CopyCode()
     {
         TextEditor te = new TextEditor();
-        te.text = m_Code.text;
+        te.text = PhotonNetwork.CurrentRoom.Name;
         te.SelectAll();
         te.Copy();
     }

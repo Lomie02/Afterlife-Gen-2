@@ -10,6 +10,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     NetworkLobby m_Network;
     PhotonView m_MyView;
 
+    GameManager m_GameManager;
     PlayerCamera m_MyCamera;
     PlayerController m_MyController;
 
@@ -19,10 +20,18 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     Button m_ExorcistButton;
     Button m_MechanicButton;
 
+    Button m_ResumeButton;
+    Button m_LeaveButton;
+    Button m_CopyButton;
+
     //Cancel Button
     Button m_CancelButton;
 
     [SerializeField] GameObject m_SpecialistMenu;
+    [SerializeField] GameObject m_PauseMenu;
+
+    NetworkLobby m_NetworkLobby;
+    bool m_IsPaused = false;
     void Start()
     {
         m_Network = FindObjectOfType<NetworkLobby>();
@@ -38,8 +47,20 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_MechanicButton = GameObject.Find("MechanicButton").GetComponent<Button>();
 
         m_CancelButton = GameObject.Find("Cancel").GetComponent<Button>();
+        m_ResumeButton = GameObject.Find("Resume").GetComponent<Button>();
+
+        m_LeaveButton = GameObject.Find("Leave Game").GetComponent<Button>();
+        m_CopyButton = GameObject.Find("CopyCode").GetComponent<Button>();
 
         m_SpecialistMenu = GameObject.Find("SpecialistMenu");
+        m_PauseMenu = GameObject.Find("PauseMenu");
+
+        m_GameManager = FindObjectOfType<GameManager>();
+
+        if (m_PauseMenu)
+        {
+            m_PauseMenu.SetActive(false);
+        }
 
         if (m_SpecialistMenu)
         {
@@ -48,12 +69,17 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
         if (m_MyView.IsMine)
         {
+            m_ResumeButton.onClick.AddListener(ResumeGame);
+            m_LeaveButton.onClick.AddListener(delegate { PhotonNetwork.LeaveRoom(); });
+            m_LeaveButton.onClick.AddListener(delegate { m_GameManager.ChangeScene("Main_Menu"); });
+
             m_PharmacistButton.onClick.AddListener(delegate { SpawnNewPlayer(1); });
             m_TrapperButton.onClick.AddListener(delegate { SpawnNewPlayer(2); });
 
             m_ExorcistButton.onClick.AddListener(delegate { SpawnNewPlayer(3); });
             m_MechanicButton.onClick.AddListener(delegate { SpawnNewPlayer(4); });
 
+            m_CopyButton.onClick.AddListener(m_NetworkLobby.CopyCode);
             m_CancelButton.onClick.AddListener(CancelSpecialistSelection);
         }
     }
@@ -62,7 +88,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     {
         if (m_MyView.IsMine)
         {
-            if (Input.GetKeyDown(KeyCode.H))
+            if (Input.GetKeyDown(KeyCode.H) && !m_IsPaused)
             {
                 m_SpecialistMenu.SetActive(true);
 
@@ -70,7 +96,24 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 m_MyController.SetMovement(false);
             }
 
+            if (Input.GetKeyDown(KeyCode.Escape) && m_PauseMenu && !m_IsPaused)
+            {
+                m_PauseMenu.SetActive(true);
+                m_IsPaused = true;
+
+                m_MyCamera.MouseLockState(false);
+                m_MyController.SetMovement(false);
+            }
         }
+    }
+
+    void ResumeGame()
+    {
+        m_PauseMenu.SetActive(false);
+        m_IsPaused = false;
+
+        m_MyCamera.MouseLockState(true);
+        m_MyController.SetMovement(true);
     }
     void CancelSpecialistSelection()
     {
@@ -81,6 +124,8 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
     void SpawnNewPlayer(int _index)
     {
+        m_PauseMenu.SetActive(true);
+
         m_Network.SpawnPlayerByID(_index);
         PhotonNetwork.Destroy(m_MyView);
 

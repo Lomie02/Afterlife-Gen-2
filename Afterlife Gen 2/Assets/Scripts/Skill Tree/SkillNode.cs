@@ -9,7 +9,7 @@ public class SkillNode : MonoBehaviour
     [SerializeField] string m_NodeName;
     [SerializeField] string m_Description;
     [Space]
-    [SerializeField] float m_SkillCost = 100f;
+    [SerializeField] int m_SkillCost = 5;
 
     [Header("Nodes")]
     [SerializeField] SkillNode m_PreviousNode;
@@ -19,10 +19,12 @@ public class SkillNode : MonoBehaviour
     public bool m_HasBaughtMe = false;
     public bool m_IsAllowedToBuy = false;
 
+    SkillTreeManager m_SkillManager;
     [SerializeField] float m_Money;
-
     private void Start()
     {
+        m_SkillManager = FindObjectOfType<SkillTreeManager>();
+
         m_MyButton = GetComponent<Button>();
 
         PlayerPrefs.DeleteAll();
@@ -48,10 +50,11 @@ public class SkillNode : MonoBehaviour
         }
         m_MyButton.onClick.AddListener(BuyNode);
 
-        if (m_PreviousNode != null)
+        if (!m_PreviousNode)
         {
             m_IsAllowedToBuy = true;
         }
+
         UpdateNode();
     }
 
@@ -84,11 +87,17 @@ public class SkillNode : MonoBehaviour
 
     public void BuyNode()
     {
-        if (m_Money >= m_SkillCost && !m_HasBaughtMe)
+        if (m_SkillManager.GetSkillPoints() >= m_SkillCost && !m_HasBaughtMe)
         {
             m_HasBaughtMe = true;
             PlayerPrefs.SetInt(m_NodeName + "buy", 1);
-            m_Money -= m_SkillCost;
+            m_SkillManager.SubtractPoints(m_SkillCost);
+        }
+
+        for (int i = 0; i < m_NextNodes.Length; i++)
+        {
+            m_NextNodes[i].m_IsAllowedToBuy = true;
+            m_NextNodes[i].UpdateNode();
         }
     }
 }

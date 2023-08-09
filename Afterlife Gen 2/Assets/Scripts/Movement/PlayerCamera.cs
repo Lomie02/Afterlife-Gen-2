@@ -10,10 +10,13 @@ public class PlayerCamera : MonoBehaviour
 
     [SerializeField] Transform m_Body;
 
+    NetworkWorldCameraHud m_LobbyHud;
+
     PhotonView m_MyView;
     float m_Xview;
     float m_Yview;
 
+    bool m_CanLookAround = true;
     public void Start()
     {
         m_MyView = GetComponent<PhotonView>();
@@ -22,12 +25,27 @@ public class PlayerCamera : MonoBehaviour
             m_PlayersCamera.gameObject.SetActive(false);
         }
 
+        if (m_MyView)
+        {
+            NetworkWorldCameraHud[] m_Canvases = FindObjectsOfType<NetworkWorldCameraHud>();
+
+            for (int i = 0; i < m_Canvases.Length; i++)
+            {
+                if (m_Canvases[i].tag == "LobbyHud")
+                {
+                    m_LobbyHud = m_Canvases[i];
+                    m_LobbyHud.AssignCamera(m_PlayersCamera);
+                    break;
+                }
+            }
+        }
+
         MouseLockState(true);
     }
 
     void Update()
     {
-        if (m_MyView.IsMine)
+        if (m_MyView.IsMine && m_CanLookAround)
         {
             float xPos = Input.GetAxis("Mouse X") * m_Sens * Time.deltaTime;
             float yPos = Input.GetAxis("Mouse Y") * m_Sens * Time.deltaTime;
@@ -51,10 +69,12 @@ public class PlayerCamera : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            m_CanLookAround = true;
         }
         else
         {
             Cursor.visible = true;
+            m_CanLookAround = false;
             Cursor.lockState = CursorLockMode.None;
         }
     }

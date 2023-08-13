@@ -31,7 +31,15 @@ public class NetworkWorldCameraHud : MonoBehaviourPunCallbacks
 
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
         {
-            m_PlayerNames[i].text = PhotonNetwork.PlayerList[i].NickName;
+            int Level = (int)PhotonNetwork.PlayerList[i].CustomProperties["PlayerLevel"];
+            int dev = (int)PhotonNetwork.PlayerList[i].CustomProperties["Developer"];
+
+            if (dev == 1)
+            {
+                m_PlayerNames[i].color = Color.red;
+            }
+
+            m_PlayerNames[i].text = PhotonNetwork.PlayerList[i].NickName + " lvl: " + Level.ToString();
         }
     }
 

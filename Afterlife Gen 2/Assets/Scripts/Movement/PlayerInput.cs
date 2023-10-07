@@ -40,7 +40,6 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     SpecialstAbility m_Ability;
     void Start()
     {
-        m_Network = FindObjectOfType<NetworkLobby>();
         m_MyView = GetComponent<PhotonView>();
 
         m_MyCamera = GetComponent<PlayerCamera>();
@@ -63,6 +62,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
         m_GameManager = FindObjectOfType<GameManager>();
         m_Ability = GetComponent<SpecialstAbility>();
+        m_Network = FindObjectOfType<NetworkLobby>();
 
         if (m_PauseMenu)
         {

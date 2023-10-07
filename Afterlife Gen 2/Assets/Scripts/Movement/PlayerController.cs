@@ -67,10 +67,12 @@ public class PlayerController : MonoBehaviour
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 m_PlayersOverallSpeed = m_PlayerSprintSpeed;
+                m_Anim.SetBool("Sprinting", true);
             }
             else
             {
                 m_PlayersOverallSpeed = m_PlayerWalkSpeed;
+                m_Anim.SetBool("Sprinting", false);
             }
 
             if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.C))
@@ -94,7 +96,6 @@ public class PlayerController : MonoBehaviour
                         m_PlayerCollider.center = m_DefaultCollider;
                         m_PlayerCollider.height = m_DefaultHeight;
                         m_IsDiving = false;
-                        Debug.Log("Hit Floor");
                     }
                 }
             }

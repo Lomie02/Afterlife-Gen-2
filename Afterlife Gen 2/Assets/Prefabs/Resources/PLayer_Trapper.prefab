@@ -239,6 +239,7 @@ GameObject:
   - component: {fileID: 3157348689801726405}
   - component: {fileID: 6694622072434381163}
   - component: {fileID: 4891194843347208101}
+  - component: {fileID: 1111290082601711141}
   m_Layer: 0
   m_Name: PLayer_Trapper
   m_TagString: Untagged
@@ -430,8 +431,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e2f120364d47464b9106df996579afa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_ItemLayer:
+    serializedVersion: 2
+    m_Bits: 0
   m_SpecialistMenu: {fileID: 0}
   m_PauseMenu: {fileID: 0}
+--- !u!114 &1111290082601711141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 436511599088767415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c2299591b6595f4d97d77a3d9179d37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OnSpecialistActivated:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &1285107432947340865
 PrefabInstance:
   m_ObjectHideFlags: 0

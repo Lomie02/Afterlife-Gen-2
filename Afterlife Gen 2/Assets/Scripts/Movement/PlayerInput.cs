@@ -7,6 +7,8 @@ using Photon.Realtime;
 
 public class PlayerInput : MonoBehaviourPunCallbacks
 {
+    [SerializeField] LayerMask m_ItemLayer;
+
     NetworkLobby m_Network;
     PhotonView m_MyView;
 
@@ -32,10 +34,15 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
     NetworkLobby m_NetworkLobby;
     bool m_IsPaused = false;
+
+    RaycastHit m_ItemCast;
+
+    SpecialstAbility m_Ability;
+    ReadyZone m_ReadyUp;
     void Start()
     {
-        m_Network = FindObjectOfType<NetworkLobby>();
         m_MyView = GetComponent<PhotonView>();
+        m_ReadyUp = FindObjectOfType<ReadyZone>();
 
         m_MyCamera = GetComponent<PlayerCamera>();
         m_MyController = GetComponent<PlayerController>();
@@ -56,6 +63,8 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_PauseMenu = GameObject.Find("PauseMenu");
 
         m_GameManager = FindObjectOfType<GameManager>();
+        m_Ability = GetComponent<SpecialstAbility>();
+        m_Network = FindObjectOfType<NetworkLobby>();
 
         if (m_PauseMenu)
         {
@@ -96,6 +105,11 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 m_MyController.SetMovement(false);
             }
 
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                m_ReadyUp.ReadyUpHost();
+            }
+
             if (Input.GetKeyDown(KeyCode.Escape) && m_PauseMenu && !m_IsPaused)
             {
                 m_PauseMenu.SetActive(true);
@@ -104,9 +118,26 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 m_MyCamera.MouseLockState(false);
                 m_MyController.SetMovement(false);
             }
+
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                m_Ability.UseAbility();
+            }
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (Physics.Raycast(m_MyCamera.transform.position, m_MyCamera.transform.forward, out m_ItemCast, 5f))
+                {
+                    if (m_ItemCast.collider.GetComponent<NetworkObject>() != null)
+                    {
+                        m_ItemCast.collider.GetComponent<NetworkObject>().TurnOn();
+                    }
+                }
+            }
         }
     }
 
+    
     void ResumeGame()
     {
         m_PauseMenu.SetActive(false);

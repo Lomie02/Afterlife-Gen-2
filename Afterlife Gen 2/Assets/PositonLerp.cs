@@ -13,9 +13,12 @@ public class PositonLerp : MonoBehaviour
         if (!m_IsLerping)
             return;
 
-        transform.position = Vector3.Lerp(transform.position, m_LerpPositions[m_DesiredPositon], Time.deltaTime);
+        if (transform.parent)
+            transform.localPosition = Vector3.Lerp(transform.position, m_LerpPositions[m_DesiredPositon], 0.5f * Time.fixedDeltaTime);
+        else
+            transform.position = Vector3.Lerp(transform.position, m_LerpPositions[m_DesiredPositon], Time.deltaTime);
 
-        if (transform.localPosition == m_LerpPositions[m_DesiredPositon])
+        if (transform.localPosition == m_LerpPositions[m_DesiredPositon] && transform.parent || transform.position == m_LerpPositions[m_DesiredPositon] && !transform.parent)
         {
             m_IsLerping = false;
         }

@@ -38,9 +38,11 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     RaycastHit m_ItemCast;
 
     SpecialstAbility m_Ability;
+    ReadyZone m_ReadyUp;
     void Start()
     {
         m_MyView = GetComponent<PhotonView>();
+        m_ReadyUp = FindObjectOfType<ReadyZone>();
 
         m_MyCamera = GetComponent<PlayerCamera>();
         m_MyController = GetComponent<PlayerController>();
@@ -101,6 +103,11 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
                 m_MyCamera.MouseLockState(false);
                 m_MyController.SetMovement(false);
+            }
+
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                m_ReadyUp.ReadyUpHost();
             }
 
             if (Input.GetKeyDown(KeyCode.Escape) && m_PauseMenu && !m_IsPaused)

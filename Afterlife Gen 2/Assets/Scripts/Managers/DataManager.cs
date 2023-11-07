@@ -2,17 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class DataManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public void SetPlayersSavedSpecialist(string _name)
     {
-        
+        PlayerPrefs.SetString("specialist_fav_selection", _name);
     }
 
-    // Update is called once per frame
-    void Update()
+    public string GetPlayersSavedSpecialist()
     {
-        
+        return PlayerPrefs.GetString("specialist_fav_selection");
     }
 }

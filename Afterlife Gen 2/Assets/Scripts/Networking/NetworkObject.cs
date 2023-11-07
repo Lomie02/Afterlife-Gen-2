@@ -21,6 +21,7 @@ public class NetworkObject : MonoBehaviourPunCallbacks
 {
     PhotonView m_MyView;
     [SerializeField] ItemID m_ItemsId;
+    Rigidbody m_ItemsBody;
 
     [Header("Basic")]
     [SerializeField] UnityEvent m_OnTurnedOn;
@@ -34,6 +35,7 @@ public class NetworkObject : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        m_ItemsBody = GetComponent<Rigidbody>();
         m_MyView = GetComponent<PhotonView>();
     }
 
@@ -61,6 +63,7 @@ public class NetworkObject : MonoBehaviourPunCallbacks
         m_OnTurnedOff.Invoke();
         m_IsItemOn = false;
     }
+
     [PunRPC]
     public void RPC_ObjectUse()
     {
@@ -70,10 +73,22 @@ public class NetworkObject : MonoBehaviourPunCallbacks
         }
     }
 
+    [PunRPC]
+    public void RPC_SetBodyState(bool _state)
+    {
+        if (_state)
+        {
+            m_ItemsBody.isKinematic = false;
+        }
+        else
+        {
+            m_ItemsBody.isKinematic = true;
+        }
+    }
+
     public void TurnOn()
     {
         m_MyView.RPC("RPC_TurnObectOn", RpcTarget.All);
-        Debug.Log("Turn On");
     }
 
     public void TurnOff()
@@ -84,6 +99,22 @@ public class NetworkObject : MonoBehaviourPunCallbacks
     public void UseItem()
     {
         m_MyView.RPC("RPC_ObjectUse", RpcTarget.All);
+    }
+
+    public void SetBodysState(bool _state)
+    {
+        m_MyView.RPC("RPC_SetBodyState", RpcTarget.All, _state);
+    }
+    public void CyclePowerStage()
+    {
+        if (m_IsItemOn)
+        {
+            TurnOff();
+        }
+        else
+        {
+            TurnOn();
+        }
     }
 
     public ItemID GetItemsID()

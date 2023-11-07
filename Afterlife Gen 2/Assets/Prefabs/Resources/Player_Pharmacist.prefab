@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &376514045910725478
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 716439328367879131}
+  m_Layer: 2
+  m_Name: Inventory
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &716439328367879131
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 376514045910725478}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.096, z: 0.298}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6268275269048071049}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5894786181902345269
 GameObject:
   m_ObjectHideFlags: 0
@@ -18,6 +49,7 @@ GameObject:
   - component: {fileID: 7332863357866736548}
   - component: {fileID: 8025910265231365364}
   - component: {fileID: 4403835565637700296}
+  - component: {fileID: 715021452052687023}
   m_Layer: 2
   m_Name: Player_Pharmacist
   m_TagString: Untagged
@@ -39,6 +71,7 @@ Transform:
   m_Children:
   - {fileID: 4383376382092976261}
   - {fileID: 93266271986173689}
+  - {fileID: 716439328367879131}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -212,6 +245,7 @@ MonoBehaviour:
   m_ItemLayer:
     serializedVersion: 2
     m_Bits: 8
+  m_PlayersCamera: {fileID: 4987427523715596555}
   m_SpecialistMenu: {fileID: 0}
   m_PauseMenu: {fileID: 0}
 --- !u!114 &4403835565637700296
@@ -231,6 +265,20 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_SpecialistIcon: {fileID: 0}
+--- !u!114 &715021452052687023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5894786181902345269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b25923720b48a2a49a764c38b2584f09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ObjectsParent: {fileID: 376514045910725478}
+  m_Items: []
 --- !u!1 &8839729155372969216
 GameObject:
   m_ObjectHideFlags: 0
@@ -1038,6 +1086,9 @@ MonoBehaviour:
   - Type: 1
     SynchronizeType: 2
     Name: yPos
+  - Type: 4
+    SynchronizeType: 0
+    Name: Sprinting
   m_SynchronizeLayers:
   - SynchronizeType: 2
     LayerIndex: 0

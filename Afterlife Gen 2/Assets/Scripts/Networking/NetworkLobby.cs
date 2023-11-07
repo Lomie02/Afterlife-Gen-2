@@ -78,6 +78,7 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
         if (m_NetworkMode == LobbyNetworkMode.Lobby)
         {
             PhotonNetwork.Instantiate(m_Pharmacist.name, m_PlayerSpawns[Location].position, Quaternion.identity);
+            m_SaveManager.SetPlayersSavedSpecialist(m_Pharmacist.name);
         }
         else
         {

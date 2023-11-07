@@ -10,6 +10,9 @@ public class ReadyZone : MonoBehaviour
     [SerializeField] bool m_HostIsReady = false;
     [SerializeField] PositonLerp m_ReadyUpDoor;
 
+    [Header("Host Stuff")]
+    [SerializeField] GameObject m_MonitorFlare;
+
     [Space]
     [SerializeField] Text m_ReadyText;
     public int m_PlayersInReadyZone = 0;
@@ -17,6 +20,11 @@ public class ReadyZone : MonoBehaviour
     [SerializeField] GameManager m_GameManager;
     private void Start()
     {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            m_MonitorFlare.SetActive(false);
+        }
+
         m_View = GetComponent<PhotonView>();
         m_GameManager = FindObjectOfType<GameManager>();
     }

@@ -38,6 +38,7 @@ public class PlayerCamera : MonoBehaviour
                     break;
                 }
             }
+
         }
 
         MouseLockState(true);

@@ -4,8 +4,16 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
+
+enum LobbyNetworkMode
+{
+    Lobby = 0,
+    Map,
+}
 public class NetworkLobby : MonoBehaviourPunCallbacks
 {
+
+    [SerializeField] LobbyNetworkMode m_NetworkMode = LobbyNetworkMode.Lobby;
     [SerializeField] Text m_Code;
     [Header("Player Models")]
     [SerializeField] GameObject m_Pharmacist;
@@ -16,30 +24,37 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
     int Location = 0;
     [SerializeField] Transform[] m_PlayerSpawns;
 
+    DataManager m_SaveManager;
     public string m_CodeValue;
 
     [SerializeField] GameObject m_HostButton;
     void Start()
     {
+        m_SaveManager = FindAnyObjectByType<DataManager>();
         SpawnPlayer();
-        if (PhotonNetwork.IsMasterClient)
-        {
-            if (m_HostButton)
-            {
-                m_HostButton.SetActive(true);
-            }
-        }
-        else
-        {
-            if (m_HostButton)
-            {
-                m_HostButton.SetActive(false);
-            }
-        }
-        m_Code.text = PhotonNetwork.CurrentRoom.Name;
-        m_CodeValue = PhotonNetwork.CurrentRoom.Name;
 
-        CopyCode();
+
+        if (m_NetworkMode == LobbyNetworkMode.Lobby)
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                if (m_HostButton)
+                {
+                    m_HostButton.SetActive(true);
+                }
+            }
+            else
+            {
+                if (m_HostButton)
+                {
+                    m_HostButton.SetActive(false);
+                }
+            }
+            m_Code.text = PhotonNetwork.CurrentRoom.Name;
+            m_CodeValue = PhotonNetwork.CurrentRoom.Name;
+
+            CopyCode();
+        }
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -60,7 +75,17 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
             }
         }
 
-        PhotonNetwork.Instantiate(m_Pharmacist.name, m_PlayerSpawns[Location].position, Quaternion.identity);
+
+        if (m_NetworkMode == LobbyNetworkMode.Lobby)
+        {
+            PhotonNetwork.Instantiate(m_Pharmacist.name, m_PlayerSpawns[Location].position, Quaternion.identity);
+            m_SaveManager.SetPlayersSavedSpecialist(m_Pharmacist.name);
+        }
+        else
+        {
+            PhotonNetwork.Instantiate(m_SaveManager.GetPlayersSavedSpecialist(), m_PlayerSpawns[Location].position, Quaternion.identity);
+        }
+
     }
 
     public bool SpawnPlayerByID(int _index)
@@ -76,21 +101,25 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
         if (_index == 1)
         {
             PhotonNetwork.Instantiate(m_Pharmacist.name, m_PlayerSpawns[Location].position, Quaternion.identity);
+            m_SaveManager.SetPlayersSavedSpecialist(m_Pharmacist.name);
             return true;
         }
         else if (_index == 2)
         {
             PhotonNetwork.Instantiate(m_Trapper.name, m_PlayerSpawns[Location].position, Quaternion.identity);
+            m_SaveManager.SetPlayersSavedSpecialist(m_Trapper.name);
             return true;
         }
         else if (_index == 3)
         {
             PhotonNetwork.Instantiate(m_Excercist.name, m_PlayerSpawns[Location].position, Quaternion.identity);
+            m_SaveManager.SetPlayersSavedSpecialist(m_Excercist.name);
             return true;
         }
         else if (_index == 4)
         {
             PhotonNetwork.Instantiate(m_Mechanic.name, m_PlayerSpawns[Location].position, Quaternion.identity);
+            m_SaveManager.SetPlayersSavedSpecialist(m_Mechanic.name);
             return true;
         }
 

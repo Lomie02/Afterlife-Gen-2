@@ -243,7 +243,7 @@ GameObject:
   - component: {fileID: 377557709370040742}
   m_Layer: 0
   m_Name: PLayer_Trapper
-  m_TagString: Untagged
+  m_TagString: PlayerCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -439,6 +439,9 @@ MonoBehaviour:
   m_PlayersCamera: {fileID: 1933262596531859969}
   m_SpecialistMenu: {fileID: 0}
   m_PauseMenu: {fileID: 0}
+  m_HostGameSettings: {fileID: 0}
+  m_PlayersFlashLight: {fileID: 0}
+  m_PlayersAnimations: {fileID: 0}
 --- !u!114 &1111290082601711141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -470,6 +473,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ObjectsParent: {fileID: 6080940341550864049}
   m_Items: []
+  m_FirstPersonObjects: []
+  m_PlayersAnimation: {fileID: 0}
 --- !u!1 &6080940341550864049
 GameObject:
   m_ObjectHideFlags: 0
@@ -633,7 +638,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2095572092572887824}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 61f48fc1202846d4ebfe912e87beef73, type: 3}
+  m_Avatar: {fileID: 9000000, guid: 2abf83a03dfad1946a3e3994e2c7c674, type: 3}
   m_Controller: {fileID: 9100000, guid: dbf2d1d2b2799c34a9bd7eeb554c4ea0, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0

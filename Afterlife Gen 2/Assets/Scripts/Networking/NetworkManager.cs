@@ -29,7 +29,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     [SerializeField] InputField m_DevCode;
     [SerializeField] Button m_BecomeDev;
 
-
     ExitGames.Client.Photon.Hashtable m_PlayerProps = new ExitGames.Client.Photon.Hashtable();
     int m_Level = 0;
     int m_IsDeveloper = 0;

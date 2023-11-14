@@ -7,17 +7,27 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] GameObject m_ObjectsParent;
     int m_ItemSlots = 3;
     [SerializeField] NetworkObject[] m_Items;
+
     PhotonView m_MyView;
     int m_CurrentSlotSelected = 0;
     int m_PreviousSelected;
     CapsuleCollider m_HitBoxPlayer;
+
+    [Header("First Person")]
+    [SerializeField] NetworkObject[] m_FirstPersonObjects;
+    [SerializeField] Animator m_PlayersAnimation;
+
     void Start()
     {
         m_HitBoxPlayer = gameObject.GetComponent<CapsuleCollider>();
         m_MyView = GetComponent<PhotonView>();
         m_Items = new NetworkObject[m_ItemSlots];
-    }
 
+        for (int i = 0; i < m_FirstPersonObjects.Length; i++)
+        {
+            m_FirstPersonObjects[i].RPC_SetObjectState(false);
+        }
+    }
     public void CycleInvetory()
     {
         if (!m_MyView.IsMine)
@@ -48,18 +58,43 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    [PunRPC]
+    public void RPC_ReTransform(NetworkObject _object, Transform _newParent)
+    {
+        Physics.IgnoreCollision(m_HitBoxPlayer, _object.GetComponent<Collider>(), true);
+        _object.gameObject.transform.parent = _newParent.transform;
+        _object.transform.position = _newParent.transform.position;
+        _object.transform.forward = _newParent.forward;
+    }
+
+    [PunRPC]
+    public void RPC_UnParent(NetworkObject _object)
+    {
+        _object.SetBodysState(true);
+        _object.gameObject.transform.parent = null;
+        Physics.IgnoreCollision(m_HitBoxPlayer, _object.GetComponent<Collider>(), false);
+    }
+
     public void AssignItem(NetworkObject _object)
     {
         if (!m_MyView.IsMine)
             return;
-        Physics.IgnoreCollision(m_HitBoxPlayer, _object.GetComponent<Collider>());
-
-        _object.gameObject.transform.parent = m_ObjectsParent.transform;
-        _object.transform.position = m_ObjectsParent.transform.position;
-        _object.transform.forward = transform.forward;
-        _object.SetBodysState(false);
 
         m_Items[m_CurrentSlotSelected] = _object;
+
+        if (m_Items[m_CurrentSlotSelected] != null)
+        {
+            for (int j = 0; j < m_FirstPersonObjects.Length; j++)
+            {
+                if (m_Items[m_CurrentSlotSelected].GetItemID() == m_FirstPersonObjects[j].GetItemID())
+                {
+                    m_FirstPersonObjects[j].RPC_SetObjectState(true);
+                    m_FirstPersonObjects[j].SetPowerState(m_Items[m_CurrentSlotSelected].GetPowerState());
+                }
+            }
+        }
+
+        m_Items[m_CurrentSlotSelected].RPC_SetObjectState(false);
     }
 
     public void CycleCurrentItemsPower()
@@ -67,7 +102,16 @@ public class InventoryManager : MonoBehaviour
         if (!m_MyView.IsMine)
             return;
 
-        m_Items[m_CurrentSlotSelected].CyclePowerStage();
+        if (m_Items[m_CurrentSlotSelected])
+        {
+            for (int i = 0; i < m_FirstPersonObjects.Length; i++)
+            {
+                if (m_Items[m_CurrentSlotSelected].GetItemsID() == m_FirstPersonObjects[i].GetItemsID())
+                {
+                    m_FirstPersonObjects[i].CyclePowerStage();
+                }
+            }
+        }
     }
 
     public void DropItem()
@@ -75,22 +119,61 @@ public class InventoryManager : MonoBehaviour
         if (!m_MyView.IsMine)
             return;
 
-        Physics.IgnoreCollision(m_HitBoxPlayer, m_Items[m_CurrentSlotSelected].GetComponent<Collider>(), false);
         m_Items[m_CurrentSlotSelected].SetBodysState(true);
-        m_Items[m_CurrentSlotSelected].gameObject.transform.parent = null;
+        m_Items[m_CurrentSlotSelected].RPC_SetObjectState(true);
+
+        m_Items[m_CurrentSlotSelected].transform.position = transform.position;
+
+
+        for (int j = 0; j < m_FirstPersonObjects.Length; j++)
+        {
+            if (m_Items[m_PreviousSelected].GetItemID() == m_FirstPersonObjects[j].GetItemID())
+            {
+                m_Items[m_CurrentSlotSelected].SetPowerState(m_FirstPersonObjects[j].GetPowerState());
+            }
+        }
 
         m_Items[m_CurrentSlotSelected] = null;
+
+        for (int i = 0; i < m_FirstPersonObjects.Length; i++)
+        {
+            m_FirstPersonObjects[i].RPC_SetObjectState(false);
+        }
     }
 
     void UpdateCurrentItemDisplay()
     {
         if (m_Items[m_PreviousSelected] != null)
         {
-            m_Items[m_PreviousSelected].SetObjectsState(false);
+            for (int j = 0; j < m_FirstPersonObjects.Length; j++)
+            {
+                if (m_Items[m_PreviousSelected].GetItemID() == m_FirstPersonObjects[j].GetItemID())
+                {
+                    m_FirstPersonObjects[j].RPC_SetObjectState(false);
+                }
+            }
         }
         if (m_Items[m_CurrentSlotSelected] != null)
         {
-            m_Items[m_CurrentSlotSelected].SetObjectsState(true);
+            for (int j = 0; j < m_FirstPersonObjects.Length; j++)
+            {
+                if (m_Items[m_CurrentSlotSelected].GetItemID() == m_FirstPersonObjects[j].GetItemID())
+                {
+                    m_FirstPersonObjects[j].RPC_SetObjectState(true);
+                }
+            }
+        }
+    }
+
+    public void Update()
+    {
+        if (m_Items[m_CurrentSlotSelected])
+        {
+            m_PlayersAnimation.SetLayerWeight(2,1);
+        }
+        else
+        {
+            m_PlayersAnimation.SetLayerWeight(2,0);
         }
     }
 }

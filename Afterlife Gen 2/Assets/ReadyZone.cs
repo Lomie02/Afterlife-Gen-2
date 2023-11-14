@@ -28,14 +28,13 @@ public class ReadyZone : MonoBehaviour
         m_View = GetComponent<PhotonView>();
         m_GameManager = FindObjectOfType<GameManager>();
     }
-    public bool ReadyUpHost()
+    public void ReadyUpHost()
     {
         if (!PhotonNetwork.IsMasterClient)
-            return false;
+            return;
 
         m_View.RPC("RPC_GameReadyToStart", RpcTarget.All);
         m_HostIsReady = true;
-        return true;
     }
 
     [PunRPC]

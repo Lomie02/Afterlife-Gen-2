@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7755168735902941266}
   m_Layer: 0
   m_Name: Player_Camera
-  m_TagString: MainCamera
+  m_TagString: PlayerCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -439,6 +439,9 @@ MonoBehaviour:
   m_PlayersCamera: {fileID: 2397292921062180169}
   m_SpecialistMenu: {fileID: 0}
   m_PauseMenu: {fileID: 0}
+  m_HostGameSettings: {fileID: 0}
+  m_PlayersFlashLight: {fileID: 0}
+  m_PlayersAnimations: {fileID: 0}
 --- !u!114 &563622061800996073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -470,6 +473,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ObjectsParent: {fileID: 7968870862768118698}
   m_Items: []
+  m_FirstPersonObjects: []
+  m_PlayersAnimation: {fileID: 0}
 --- !u!1 &7968870862768118698
 GameObject:
   m_ObjectHideFlags: 0

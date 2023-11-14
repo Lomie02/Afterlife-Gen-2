@@ -33,6 +33,7 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
         m_SaveManager = FindAnyObjectByType<DataManager>();
         SpawnPlayer();
 
+
         if (m_NetworkMode == LobbyNetworkMode.Lobby)
         {
             if (PhotonNetwork.IsMasterClient)

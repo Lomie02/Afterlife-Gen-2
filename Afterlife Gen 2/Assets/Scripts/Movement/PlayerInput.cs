@@ -50,6 +50,11 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     float m_FlashLightLerp = 0;
     void Start()
     {
+        SearchForElements();
+    }
+
+    public void SearchForElements()
+    {
         m_MyView = GetComponent<PhotonView>();
         m_ReadyUp = FindObjectOfType<ReadyZone>();
         m_Inventory = GetComponent<InventoryManager>();
@@ -138,12 +143,12 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 if (m_PlayersFlashLight.gameObject.activeSelf)
                 {
                     m_PlayersFlashLight.TurnOff();
-                    m_PlayersFlashLight.SetObjectsState(false);
+                    m_PlayersFlashLight.RPC_SetObjectState(false);
 
                 }
                 else
                 {
-                    m_PlayersFlashLight.SetObjectsState(true);
+                    m_PlayersFlashLight.RPC_SetObjectState(true);
                     m_PlayersFlashLight.TurnOn();
                 }
             }
@@ -258,5 +263,6 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
         m_MyCamera.MouseLockState(true);
         m_MyController.SetMovement(true);
+
     }
 }

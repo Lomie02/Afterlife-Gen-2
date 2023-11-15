@@ -258,11 +258,12 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     {
         m_PauseMenu.SetActive(true);
 
-        m_Network.SpawnPlayerByID(_index);
-        PhotonNetwork.Destroy(m_MyView);
 
         m_MyCamera.MouseLockState(true);
         m_MyController.SetMovement(true);
+
+        PhotonNetwork.Destroy(m_MyView);
+        m_Network.SpawnPlayerByID(_index);
 
     }
 }

@@ -24,6 +24,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     [SerializeField] Text m_FailType;
     [SerializeField] GameObject m_ErrorScreen;
 
+    [Header("Developer")]
+    [SerializeField] GameObject m_DevScreen;
+    [SerializeField] InputField m_DevCode;
+    [SerializeField] Button m_BecomeDev;
+
+    ExitGames.Client.Photon.Hashtable m_PlayerProps = new ExitGames.Client.Photon.Hashtable();
+    int m_Level = 0;
+    int m_IsDeveloper = 0;
     private void Start()
     {
         if (m_NetworkScreenObject && !m_NetworkScreenObject.activeSelf)
@@ -32,7 +40,19 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
         m_GameManager = FindObjectOfType<GameManager>();
         m_ErrorScreen.SetActive(false);
+
+        m_BecomeDev.onClick.AddListener(BecomeDeveloper);
+        m_BecomeDev.onClick.AddListener(delegate { m_DevScreen.SetActive(false); });
     }
+
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.D))
+        {
+            m_DevScreen.SetActive(true);
+        }
+    }
+
     public void ConnectToServer() // Connect to the server
     {
         PhotonNetwork.ConnectUsingSettings();
@@ -47,7 +67,49 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             PhotonNetwork.LocalPlayer.NickName = "Employee_" + num.ToString();
         }
 
-        m_Username.text = PhotonNetwork.LocalPlayer.NickName;
+        if (PlayerPrefs.HasKey("players_level"))
+        {
+            m_Level = PlayerPrefs.GetInt("player_levels");
+        }
+        else
+        {
+            m_Level = 1;
+            PlayerPrefs.SetInt("player_levels", m_Level);
+        }
+
+        if (PlayerPrefs.HasKey("developerState"))
+        {
+            m_IsDeveloper = PlayerPrefs.GetInt("developerState");
+
+            if (m_IsDeveloper == 1)
+            {
+                m_Username.color = Color.green;
+            }
+        }
+        else
+        {
+            PlayerPrefs.SetInt("developerState", m_IsDeveloper);
+        }
+
+        SetUpPlayerProfile();
+        m_Username.text = PhotonNetwork.LocalPlayer.NickName + " lvl: " + m_Level;
+    }
+
+    void SetUpPlayerProfile()
+    {
+        if (m_PlayerProps.ContainsKey("PlayerLevel"))
+            m_PlayerProps["PlayerLevel"] = m_Level;
+        else
+            m_PlayerProps.TryAdd("PlayerLevel", m_Level);
+
+
+        if (m_PlayerProps.ContainsKey("Developer"))
+            m_PlayerProps["Developer"] = m_IsDeveloper;
+        else
+            m_PlayerProps.TryAdd("Developer", m_IsDeveloper);
+
+
+        PhotonNetwork.LocalPlayer.CustomProperties = m_PlayerProps;
     }
 
     public override void OnConnectedToMaster()// Has connected to the server
@@ -113,5 +175,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LocalPlayer.NickName = m_UsernameInput.text;
         PlayerPrefs.SetString("username", m_UsernameInput.text);
         m_Username.text = PhotonNetwork.LocalPlayer.NickName;
+    }
+
+    public void BecomeDeveloper()
+    {
+        if (m_DevCode.text == "442190" && m_IsDeveloper == 0)
+        {
+            m_Username.color = Color.green;
+            m_IsDeveloper = 1;
+            PlayerPrefs.SetInt("developerState", m_IsDeveloper);
+            SetUpPlayerProfile();
+        }
     }
 }

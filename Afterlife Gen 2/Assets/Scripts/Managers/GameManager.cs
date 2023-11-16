@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
-
+using Photon.Pun;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] bool m_ExitOnEscape = false;
@@ -29,5 +29,10 @@ public class GameManager : MonoBehaviour
         {
             Application.Quit();
         }
+    }
+
+    public void ChangeNetworkScene(string _name)
+    {
+        PhotonNetwork.LoadLevel(_name);
     }
 }

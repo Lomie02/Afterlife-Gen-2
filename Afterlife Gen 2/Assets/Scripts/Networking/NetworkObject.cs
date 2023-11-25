@@ -32,34 +32,15 @@ public class NetworkObject : MonoBehaviourPunCallbacks
     [SerializeField] UnityEvent m_OnTurnedOff;
     [SerializeField] UnityEvent m_OnUsed;
 
+    [Header("Weight Layers")]
+    [SerializeField] int m_WeightLayer = 2;
     // Important
     bool m_IsItemOn = false;
-    byte m_ID { get; set; }
-    //public static object Deserilize(byte[] _object)
-    //{
-    //    NetworkObject data = new NetworkObject();
-    //
-    //    byte[] m_Rig = new byte[]
-    //}
 
     public ItemID GetItemID()
     {
         return m_ItemsId;
     }
-    //public static byte[] Serilize(object _data)
-    //{
-    //    NetworkObject data = (NetworkObject)_data;
-    //    byte[] myRig = BitConverter.GetBytes(data.m_ItemsBody);
-    //    if (BitConverter.IsLittleEndian)
-    //        Array.Reverse(myRig);
-
-    //    byte[] myId = BitConverter.GetBytes(data.m_Id);
-    //    if (BitConverter.IsLittleEndian)
-    //        Array.Reverse(myId);
-
-    //    return JoinBytes(myRig, myId);
-    //}
-
     private static byte[] JoinBytes(params byte[][] _arrays)
     {
         byte[] rv = new byte[_arrays.Sum(a => a.Length)];
@@ -171,7 +152,10 @@ public class NetworkObject : MonoBehaviourPunCallbacks
             TurnOn();
         }
     }
-
+    public int GetLayerWeight()
+    {
+        return m_WeightLayer;
+    }
     public ItemID GetItemsID()
     {
         return m_ItemsId;

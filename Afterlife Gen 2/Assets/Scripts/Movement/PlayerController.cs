@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     float m_PlayersOverallSpeed = 0;
     [SerializeField] float m_PlayerWalkSpeed = 2;
     [SerializeField] float m_PlayerSprintSpeed = 5;
+    [SerializeField] float m_PlayerTacticalSprintSpeed = 8;
 
     CapsuleCollider m_PlayerCollider;
 
@@ -41,6 +42,8 @@ public class PlayerController : MonoBehaviour
     float m_DiveWaitDuration = 1;
 
     bool m_CanMove = true;
+    bool m_IsSprinting = false;
+    bool m_IsTacticalSprinting = false;
     void Start()
     {
         m_Body = GetComponent<Rigidbody>();
@@ -64,16 +67,27 @@ public class PlayerController : MonoBehaviour
             m_Anim.SetFloat("xPos", xPos);
             m_Anim.SetFloat("yPos", yPos);
 
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.W))
             {
-                m_PlayersOverallSpeed = m_PlayerSprintSpeed;
-                m_Anim.SetBool("Sprinting", true);
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    m_IsTacticalSprinting = true;
+                }
+
+                if (m_IsTacticalSprinting)
+                    m_PlayersOverallSpeed = m_PlayerSprintSpeed + 1;
+                else
+                    m_PlayersOverallSpeed = m_PlayerSprintSpeed;
+
+                m_IsSprinting = true;
             }
             else
             {
                 m_PlayersOverallSpeed = m_PlayerWalkSpeed;
-                m_Anim.SetBool("Sprinting", false);
+                m_IsTacticalSprinting = false;
+                m_IsSprinting = false;
             }
+
 
             if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.C))
             {
@@ -99,7 +113,14 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
+
+            m_Anim.SetBool("Sprinting", m_IsSprinting);
         }
+    }
+
+    public bool IsTacticalSprinting()
+    {
+        return m_IsTacticalSprinting;
     }
 
     void Dive()

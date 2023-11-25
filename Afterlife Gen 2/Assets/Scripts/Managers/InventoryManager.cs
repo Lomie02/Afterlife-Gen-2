@@ -83,6 +83,7 @@ public class InventoryManager : MonoBehaviour
         if (!m_MyView.IsMine)
             return;
 
+        _object.GetComponent<PhotonView>().RequestOwnership();
         m_Items[m_CurrentSlotSelected] = _object;
 
         if (m_Items[m_CurrentSlotSelected] != null)

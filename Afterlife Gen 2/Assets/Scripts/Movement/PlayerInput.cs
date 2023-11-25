@@ -25,7 +25,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     Button m_ResumeButton;
     Button m_LeaveButton;
     Button m_CopyButton;
-   [SerializeField] Button m_ReadyHost;
+    [SerializeField] Button m_ReadyHost;
     Button m_CancelGameStart;
 
     //Cancel Button
@@ -35,12 +35,14 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     [SerializeField] GameObject m_PauseMenu;
     [SerializeField] GameObject m_HostGameSettings;
 
+    [SerializeField] GameObject m_HostSettingsMenu;
+
     NetworkLobby m_NetworkLobby;
     bool m_IsPaused = false;
     RaycastHit m_ItemCast;
 
     SpecialstAbility m_Ability;
-    ReadyZone m_ReadyUp;
+    public ReadyZone m_ReadyUp;
     InventoryManager m_Inventory;
 
     [SerializeField] NetworkObject m_PlayersFlashLight;
@@ -52,7 +54,27 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     ReadyZone m_ReadyDoorsHost;
     void Start()
     {
-        SearchForElements();
+        //SearchForElements();
+        m_MyView = GetComponent<PhotonView>();
+        m_ReadyUp = FindObjectOfType<ReadyZone>();
+        m_Inventory = GetComponent<InventoryManager>();
+
+        m_MyCamera = GetComponent<PlayerCamera>();
+        m_MyController = GetComponent<PlayerController>();
+        m_GameManager = FindObjectOfType<GameManager>();
+        m_Ability = GetComponent<SpecialstAbility>();
+
+        m_Network = FindObjectOfType<NetworkLobby>();
+        m_PlayersFlashLight.gameObject.SetActive(false);
+        m_HostSettingsMenu.SetActive(false);
+
+        m_ReadyHost.onClick.AddListener(m_ReadyUp.ReadyUpHost);
+        m_ReadyHost.onClick.AddListener(delegate { m_HostSettingsMenu.SetActive(false); });
+        m_ReadyHost.onClick.AddListener(delegate { m_MyCamera.MouseLockState(true); });
+        m_ReadyHost.onClick.AddListener(delegate { m_MyController.SetMovement(true); });
+
+        m_PauseMenu.SetActive(false);
+        m_SpecialistMenu.SetActive(false);
     }
 
     public void SearchForElements()
@@ -99,9 +121,9 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_CancelGameStart.onClick.AddListener(delegate { m_MyCamera.MouseLockState(true); });
         m_CancelGameStart.onClick.AddListener(delegate { m_HostGameSettings.SetActive(false); });
 
-        m_ReadyHost.onClick.AddListener( delegate {m_MyController.SetMovement(true);});
-        m_ReadyHost.onClick.AddListener( delegate { m_MyCamera.MouseLockState(true); });
-        m_ReadyHost.onClick.AddListener( delegate { m_HostGameSettings.SetActive(false); });
+        m_ReadyHost.onClick.AddListener(delegate { m_MyController.SetMovement(true); });
+        m_ReadyHost.onClick.AddListener(delegate { m_MyCamera.MouseLockState(true); });
+        m_ReadyHost.onClick.AddListener(delegate { m_HostGameSettings.SetActive(false); });
         m_ReadyHost.onClick.AddListener(m_ReadyDoorsHost.ReadyUpHost);
 
         if (m_MyView.IsMine)
@@ -126,6 +148,12 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     {
         m_FlashLightLerp = Mathf.Lerp(m_FlashLightLerp, _index, 5 * Time.deltaTime);
         m_PlayersAnimations.SetLayerWeight(1, m_FlashLightLerp);
+    }
+
+    public void LeaveGame()
+    {
+        PhotonNetwork.LeaveRoom();
+        m_GameManager.ChangeScene("Main_Menu");
     }
 
     void Update()
@@ -250,7 +278,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     }
 
 
-    void ResumeGame()
+    public void ResumeGame()
     {
         m_PauseMenu.SetActive(false);
         m_IsPaused = false;

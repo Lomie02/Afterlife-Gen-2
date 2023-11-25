@@ -982,6 +982,14 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6031737469768310174}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 13add3fea0bec5b40a6b99eb99a10b1d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3005939219601793040}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 13add3fea0bec5b40a6b99eb99a10b1d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9001501529800104297}
   m_SourcePrefab: {fileID: 100100000, guid: 13add3fea0bec5b40a6b99eb99a10b1d, type: 3}
 --- !u!4 &1425030065780193512 stripped
 Transform:
@@ -1034,7 +1042,9 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 3005939219601793040}
+  - {fileID: 9001501529800104297}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -1100,3 +1110,35 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &3005939219601793040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1769186673438237266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64179f3720bbfe947b7724caa67b7c1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizeVelocity: 1
+  m_SynchronizeAngularVelocity: 0
+  m_TeleportEnabled: 0
+  m_TeleportIfDistanceGreaterThan: 3
+--- !u!114 &9001501529800104297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1769186673438237266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1

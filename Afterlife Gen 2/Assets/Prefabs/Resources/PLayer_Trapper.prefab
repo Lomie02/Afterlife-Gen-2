@@ -584,6 +584,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Trapper
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 99a8e2908ffe33240aa983050eced140,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1790267626722739658, guid: 99a8e2908ffe33240aa983050eced140,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -677,3 +682,7 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 2
     LayerIndex: 0
+  - SynchronizeType: 0
+    LayerIndex: 1
+  - SynchronizeType: 0
+    LayerIndex: 2

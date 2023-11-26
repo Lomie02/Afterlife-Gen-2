@@ -20,6 +20,7 @@ public class InventoryManager : MonoBehaviour
 
     float m_ItemLerp;
     int m_WeightLayerForCurrentDevice;
+    int m_PreviousDeviceWeight;
     void Start()
     {
         m_HitBoxPlayer = gameObject.GetComponent<CapsuleCollider>();
@@ -98,6 +99,7 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
+        m_WeightLayerForCurrentDevice = m_Items[m_CurrentSlotSelected].GetLayerWeight();
         m_Items[m_CurrentSlotSelected].RPC_SetObjectState(false);
     }
 
@@ -163,9 +165,17 @@ public class InventoryManager : MonoBehaviour
             {
                 if (m_Items[m_CurrentSlotSelected].GetItemID() == m_FirstPersonObjects[j].GetItemID())
                 {
-                    //m_WeightLayerForCurrentDevice = m_FirstPersonObjects[j].GetLayerWeight(); TODO:
-                    m_PlayersAnimation.SetLayerWeight(2, 0);
+                    m_PreviousDeviceWeight = m_WeightLayerForCurrentDevice;
+                    m_WeightLayerForCurrentDevice = m_FirstPersonObjects[j].GetLayerWeight();
+
+                    if (m_PreviousDeviceWeight != m_WeightLayerForCurrentDevice) 
+                    {
+                        m_ItemLerp = 0;
+                        m_PlayersAnimation.SetLayerWeight(m_PreviousDeviceWeight, 0);
+                    }
+
                     m_FirstPersonObjects[j].RPC_SetObjectState(true);
+                    break;
                 }
             }
         }
@@ -174,7 +184,7 @@ public class InventoryManager : MonoBehaviour
     void LerpItem(float _index)
     {
         m_ItemLerp = Mathf.Lerp(m_ItemLerp, _index, 5 * Time.deltaTime);
-        m_PlayersAnimation.SetLayerWeight(2, m_ItemLerp);
+        m_PlayersAnimation.SetLayerWeight(m_WeightLayerForCurrentDevice, m_ItemLerp);
     }
 
     public void Update()

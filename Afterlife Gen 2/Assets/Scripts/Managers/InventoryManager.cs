@@ -13,16 +13,20 @@ public class InventoryManager : MonoBehaviour
     int m_PreviousSelected;
     CapsuleCollider m_HitBoxPlayer;
 
+    PlayerController m_PlayerController;
     [Header("First Person")]
     [SerializeField] NetworkObject[] m_FirstPersonObjects;
     [SerializeField] Animator m_PlayersAnimation;
 
+    float m_ItemLerp;
+    int m_WeightLayerForCurrentDevice;
+    int m_PreviousDeviceWeight;
     void Start()
     {
         m_HitBoxPlayer = gameObject.GetComponent<CapsuleCollider>();
         m_MyView = GetComponent<PhotonView>();
         m_Items = new NetworkObject[m_ItemSlots];
-
+        m_PlayerController = GetComponent<PlayerController>();
         for (int i = 0; i < m_FirstPersonObjects.Length; i++)
         {
             m_FirstPersonObjects[i].RPC_SetObjectState(false);
@@ -80,6 +84,7 @@ public class InventoryManager : MonoBehaviour
         if (!m_MyView.IsMine)
             return;
 
+        _object.GetComponent<PhotonView>().RequestOwnership();
         m_Items[m_CurrentSlotSelected] = _object;
 
         if (m_Items[m_CurrentSlotSelected] != null)
@@ -94,6 +99,7 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
+        m_WeightLayerForCurrentDevice = m_Items[m_CurrentSlotSelected].GetLayerWeight();
         m_Items[m_CurrentSlotSelected].RPC_SetObjectState(false);
     }
 
@@ -159,21 +165,41 @@ public class InventoryManager : MonoBehaviour
             {
                 if (m_Items[m_CurrentSlotSelected].GetItemID() == m_FirstPersonObjects[j].GetItemID())
                 {
+                    m_PreviousDeviceWeight = m_WeightLayerForCurrentDevice;
+                    m_WeightLayerForCurrentDevice = m_FirstPersonObjects[j].GetLayerWeight();
+
+                    if (m_PreviousDeviceWeight != m_WeightLayerForCurrentDevice) 
+                    {
+                        m_ItemLerp = 0;
+                        m_PlayersAnimation.SetLayerWeight(m_PreviousDeviceWeight, 0);
+                    }
+
                     m_FirstPersonObjects[j].RPC_SetObjectState(true);
+                    break;
                 }
             }
         }
+    }
+
+    void LerpItem(float _index)
+    {
+        m_ItemLerp = Mathf.Lerp(m_ItemLerp, _index, 5 * Time.deltaTime);
+        m_PlayersAnimation.SetLayerWeight(m_WeightLayerForCurrentDevice, m_ItemLerp);
     }
 
     public void Update()
     {
         if (m_Items[m_CurrentSlotSelected])
         {
-            m_PlayersAnimation.SetLayerWeight(2,1);
+            if (m_PlayerController.IsTacticalSprinting())
+                LerpItem(0);
+            else
+                LerpItem(1);
         }
         else
         {
-            m_PlayersAnimation.SetLayerWeight(2,0);
+            LerpItem(0);
         }
+
     }
 }

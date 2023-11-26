@@ -18,6 +18,8 @@ public class ReadyZone : MonoBehaviour
     public int m_PlayersInReadyZone = 0;
 
     [SerializeField] GameManager m_GameManager;
+
+    bool m_StopAcceptingPlayers = false;
     private void Start()
     {
         if (!PhotonNetwork.IsMasterClient)
@@ -61,11 +63,23 @@ public class ReadyZone : MonoBehaviour
         m_PlayersInReadyZone--;
     }
 
+    [PunRPC]
+    public void RPC_ReadyUP()
+    {
+        m_StopAcceptingPlayers = true;
+    }
+
     private void CheckPlayerZoneCount()
     {
-        if (m_PlayersInReadyZone >= PhotonNetwork.PlayerList.Length)
+        if (m_PlayersInReadyZone >= PhotonNetwork.PlayerList.Length && !m_StopAcceptingPlayers)
         {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                m_View.RPC("RPC_ReadyUP", RpcTarget.All);
+            }
+
             m_GameManager.ChangeNetworkScene("mansion_mp");
+
         }
     }
 }

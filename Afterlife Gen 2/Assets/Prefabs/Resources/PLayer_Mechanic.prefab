@@ -141,7 +141,7 @@ MonoBehaviour:
   invertFaceCulling: 0
   probeLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 63
   hasPersistentHistory: 0
   screenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
   screenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
@@ -283,6 +283,7 @@ MonoBehaviour:
   m_Anim: {fileID: 7816924880609713618}
   m_PlayerWalkSpeed: 1
   m_PlayerSprintSpeed: 5
+  m_PlayerTacticalSprintSpeed: 8
 --- !u!54 &7125449394535112161
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -437,10 +438,14 @@ MonoBehaviour:
   m_ItemLayer:
     serializedVersion: 2
     m_Bits: 0
+  m_MyView: {fileID: 0}
+  m_ReadyHost: {fileID: 0}
   m_PlayersCamera: {fileID: 1933262596531859969}
   m_SpecialistMenu: {fileID: 0}
   m_PauseMenu: {fileID: 0}
   m_HostGameSettings: {fileID: 0}
+  m_HostSettingsMenu: {fileID: 0}
+  m_ReadyUp: {fileID: 0}
   m_PlayersFlashLight: {fileID: 0}
   m_PlayersAnimations: {fileID: 0}
 --- !u!114 &1111290082601711141

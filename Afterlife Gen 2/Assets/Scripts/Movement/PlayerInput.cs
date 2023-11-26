@@ -68,10 +68,13 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_PlayersFlashLight.gameObject.SetActive(false);
         m_HostSettingsMenu.SetActive(false);
 
-        m_ReadyHost.onClick.AddListener(m_ReadyUp.ReadyUpHost);
-        m_ReadyHost.onClick.AddListener(delegate { m_HostSettingsMenu.SetActive(false); });
-        m_ReadyHost.onClick.AddListener(delegate { m_MyCamera.MouseLockState(true); });
-        m_ReadyHost.onClick.AddListener(delegate { m_MyController.SetMovement(true); });
+        if (m_ReadyHost)
+        {
+            m_ReadyHost.onClick.AddListener(m_ReadyUp.ReadyUpHost);
+            m_ReadyHost.onClick.AddListener(delegate { m_HostSettingsMenu.SetActive(false); });
+            m_ReadyHost.onClick.AddListener(delegate { m_MyCamera.MouseLockState(true); });
+            m_ReadyHost.onClick.AddListener(delegate { m_MyController.SetMovement(true); });
+        }
 
         m_PauseMenu.SetActive(false);
         m_SpecialistMenu.SetActive(false);
@@ -293,10 +296,9 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_MyController.SetMovement(true);
     }
 
-    void SpawnNewPlayer(int _index)
+    public void SpawnNewPlayer(int _index)
     {
         m_PauseMenu.SetActive(true);
-
 
         m_MyCamera.MouseLockState(true);
         m_MyController.SetMovement(true);

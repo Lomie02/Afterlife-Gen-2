@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
+using UnityEngine.UI;
 using Photon.Pun;
 
 enum PlayerStance
@@ -15,8 +18,16 @@ enum PlayerStance
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] Volume m_PostProcessing;
+    ColorAdjustments m_Colour;
+
     Rigidbody m_Body;
     Transform m_NewPos;
+    [SerializeField] float m_PlayerHealth = 100;
+    [SerializeField] float m_PossesionMeter = 0;
+
+    [SerializeField] Slider m_HealthBar;
+    [SerializeField] Slider m_PossessionBar;
 
     PlayerStance m_Stance = PlayerStance.Stand;
     [SerializeField] PhotonView m_MyView;
@@ -51,6 +62,9 @@ public class PlayerController : MonoBehaviour
 
         m_PlayerCollider = GetComponent<CapsuleCollider>();
         m_PlayersOverallSpeed = m_PlayerWalkSpeed;
+
+        m_HealthBar.value = m_PlayerHealth;
+        m_PossessionBar.value = m_PossesionMeter;
     }
 
     void Update()
@@ -118,6 +132,38 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void TakeDamage(float _damageAmount)
+    {
+        m_PlayerHealth -= _damageAmount;
+        m_PlayerHealth = Mathf.Clamp(m_PlayerHealth, 0, 100);
+
+        m_HealthBar.value = m_PlayerHealth;
+        CheckHealth();
+    }
+
+    public void RestoreHealth(float _amountRetored)
+    {
+        m_PlayerHealth += _amountRetored;
+        m_HealthBar.value = m_PlayerHealth;
+    }
+
+    public void ResetHealth()
+    {
+        m_PlayerHealth = 100;
+        m_HealthBar.value = m_PlayerHealth;
+    }
+
+    void CheckHealth()
+    {
+        if (m_PlayerHealth <= 50)
+        {
+            m_PostProcessing.profile.TryGet(out m_Colour);
+
+            m_Colour.colorFilter.value = Color.red;
+        }
+        //TODO Check health & if health is low then die
+    }
+
     public bool IsTacticalSprinting()
     {
         return m_IsTacticalSprinting;
@@ -134,6 +180,11 @@ public class PlayerController : MonoBehaviour
             Vector3 DivePos = new Vector3(0, 0.5f, 0.5f);
             m_Body.AddForce(DivePos * 7, ForceMode.Impulse);
         }
+    }
+
+    public void RevivePlayer()
+    {
+
     }
 
     public void SetMovement(bool _state)

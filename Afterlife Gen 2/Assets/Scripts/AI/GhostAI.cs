@@ -14,11 +14,14 @@ enum GhostBehaviour
 
 public class GhostAI : MonoBehaviour
 {
+    [SerializeField] GhostProfile m_Profile;
+
     [SerializeField] PhotonView m_View;
     GhostBehaviour m_GhostsBehaviour = GhostBehaviour.Seeking;
 
     NavMeshAgent m_MyAgent;
 
+    [SerializeField] GhostManager m_GhostManager;
     [SerializeField] float m_RoamingDistance = 50;
 
     private void Start()
@@ -55,6 +58,7 @@ public class GhostAI : MonoBehaviour
                 break;
         }
 
+        CheckInteractions();
     }
 
     void UpdateIdle()
@@ -70,6 +74,52 @@ public class GhostAI : MonoBehaviour
         }
     }
 
+    void CheckInteractions()
+    {
+        switch (m_Profile.m_Evidence1)
+        {
+            case EvidenceTypes.SpiritBox:
+                CheckSpiritBox();
+                break;
+
+            case EvidenceTypes.Emf:
+                CheckEmf();
+                break;
+
+            case EvidenceTypes.Writing:
+                CheckWriting();
+                break;
+
+            case EvidenceTypes.LaserProjector:
+                break;
+
+            case EvidenceTypes.BloodyHandprints:
+                break;
+
+            case EvidenceTypes.GhostOrb:
+                break;
+
+            case EvidenceTypes.AudioSensor:
+                break;
+
+            case EvidenceTypes.FreezingTemps:
+                break;
+
+            case EvidenceTypes.FloatingObjects:
+                break;
+
+            case EvidenceTypes.RemPod:
+                break;
+        }
+
+        //TODO: Add rest of evidence
+    }
+
+    public GhostProfile GetGhostProfile()
+    {
+        return m_Profile;
+    }
+
     public static Vector3 RandomNavSphere(Vector3 origin, float distance, int layermask)
     {
         Vector3 randomDirection = Random.insideUnitSphere * distance;
@@ -83,7 +133,37 @@ public class GhostAI : MonoBehaviour
         return navHit.position;
     }
 
+    public void SetGhostProfile(int _index)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
+        m_GhostManager = FindObjectOfType<GhostManager>();
+        m_View.RPC("RPC_GrabGhostProfile", RpcTarget.All, _index);
+    }
+
+    [PunRPC]
+    public void RPC_GrabGhostProfile(int _index)
+    {
+        m_Profile = m_GhostManager.GrabGhostProfile(_index);
+    }
+
     void HuntPlayer()
+    {
+
+    }
+
+    void CheckSpiritBox()
+    {
+
+    }
+
+    void CheckEmf()
+    {
+
+    }
+
+    void CheckWriting()
     {
 
     }

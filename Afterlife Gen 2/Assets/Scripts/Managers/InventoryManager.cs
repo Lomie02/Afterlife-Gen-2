@@ -133,7 +133,7 @@ public class InventoryManager : MonoBehaviour
 
         for (int j = 0; j < m_FirstPersonObjects.Length; j++)
         {
-            if (m_Items[m_PreviousSelected].GetItemID() == m_FirstPersonObjects[j].GetItemID())
+            if (m_Items[m_CurrentSlotSelected].GetItemID() == m_FirstPersonObjects[j].GetItemID())
             {
                 m_Items[m_CurrentSlotSelected].SetPowerState(m_FirstPersonObjects[j].GetPowerState());
             }

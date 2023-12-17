@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8505119578590067800
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3415913574021377038}
+  - component: {fileID: 2814481542880334280}
+  m_Layer: 0
+  m_Name: Network Item Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3415913574021377038
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8505119578590067800}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 26
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2814481542880334280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8505119578590067800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e6b2b937b9ae904787d6282cc17cfa4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MaxItemsAllowed: 2
+  m_SpawnMode: 3
+  m_NetworkPool:
+  - m_ItemsName: Ghostbox
+    m_ItemObject: {fileID: 5590050550129788072, guid: d467726d02ad9574d93f0b0bec197d52,
+      type: 3}
+    m_MaxAmount: 3
+    m_AmountSpawned: 0
+  - m_ItemsName: Batterys
+    m_ItemObject: {fileID: 5639187592046532201, guid: 42201fdfae740534cbce9282a4c5a31f,
+      type: 3}
+    m_MaxAmount: 12
+    m_AmountSpawned: 0
+  - m_ItemsName: Camcorders
+    m_ItemObject: {fileID: 3719028583025367418, guid: aa4a19b035df1d542a52d7b382251233,
+      type: 3}
+    m_MaxAmount: 2
+    m_AmountSpawned: 0
+  - m_ItemsName: EMFs
+    m_ItemObject: {fileID: 6892950709940847309, guid: ee46ec50693dea44da8d88295c80942e,
+      type: 3}
+    m_MaxAmount: 4
+    m_AmountSpawned: 0
+  - m_ItemsName: Rem
+    m_ItemObject: {fileID: 1769186673438237266, guid: 4af48b22f47af1f448750c35e67dce8c,
+      type: 3}
+    m_MaxAmount: 2
+    m_AmountSpawned: 0
+  m_SpawnLocations: []

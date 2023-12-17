@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.0065023275, g: 0.0062965536, b: 0.008114026, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -20792,6 +20792,11 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 4112229841590446201, guid: 299744b18b8382344b51d7855db641fc,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 4842688531046401505, guid: 299744b18b8382344b51d7855db641fc,
         type: 3}
       propertyPath: sceneViewId
@@ -20986,27 +20991,32 @@ PrefabInstance:
     - target: {fileID: 2814481542880334280, guid: ff7bd60b84762e14eb50ad640e4d403b,
         type: 3}
       propertyPath: m_NetworkPool.Array.data[0].m_MaxAmount
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2814481542880334280, guid: ff7bd60b84762e14eb50ad640e4d403b,
         type: 3}
       propertyPath: m_NetworkPool.Array.data[1].m_MaxAmount
-      value: 500
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2814481542880334280, guid: ff7bd60b84762e14eb50ad640e4d403b,
         type: 3}
       propertyPath: m_NetworkPool.Array.data[2].m_MaxAmount
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2814481542880334280, guid: ff7bd60b84762e14eb50ad640e4d403b,
         type: 3}
       propertyPath: m_NetworkPool.Array.data[3].m_MaxAmount
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2814481542880334280, guid: ff7bd60b84762e14eb50ad640e4d403b,
         type: 3}
       propertyPath: m_NetworkPool.Array.data[4].m_MaxAmount
-      value: 0
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2814481542880334280, guid: ff7bd60b84762e14eb50ad640e4d403b,
+        type: 3}
+      propertyPath: m_NetworkPool.Array.data[5].m_MaxAmount
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 3415913574021377038, guid: ff7bd60b84762e14eb50ad640e4d403b,
         type: 3}

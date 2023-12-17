@@ -17,7 +17,8 @@ public enum ItemID
     Candle,
     GhostTrap,
     SantiyPill,
-    Ghostbox_T9
+    Ghostbox_T9,
+    Useable,
 }
 
 public class NetworkObject : MonoBehaviourPunCallbacks

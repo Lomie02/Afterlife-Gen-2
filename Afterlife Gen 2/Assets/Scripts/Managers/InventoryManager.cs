@@ -85,6 +85,14 @@ public class InventoryManager : MonoBehaviour
             return;
 
         _object.GetComponent<PhotonView>().RequestOwnership();
+
+        if (_object.GetItemID() == ItemID.Useable)
+        {
+            _object.UseItem();
+            PhotonNetwork.Destroy(_object.GetComponent<PhotonView>());
+            return;
+        }
+
         m_Items[m_CurrentSlotSelected] = _object;
 
         if (m_Items[m_CurrentSlotSelected] != null)
@@ -101,6 +109,38 @@ public class InventoryManager : MonoBehaviour
 
         m_WeightLayerForCurrentDevice = m_Items[m_CurrentSlotSelected].GetLayerWeight();
         m_Items[m_CurrentSlotSelected].RPC_SetObjectState(false);
+    }
+
+    public void DropItemsOnPerson()
+    {
+        if (!m_MyView.IsMine)
+            return;
+
+        for (int i = 0; i < m_ItemSlots; i++)
+        {
+            if (m_Items[i] != null)
+            {
+                m_Items[i].SetBodysState(true);
+                m_Items[i].RPC_SetObjectState(true);
+
+                m_Items[i].transform.position = transform.position;
+
+                for (int j = 0; j < m_FirstPersonObjects.Length; j++)
+                {
+                    if (m_Items[i].GetItemID() == m_FirstPersonObjects[j].GetItemID())
+                    {
+                        m_Items[i].SetPowerState(m_FirstPersonObjects[j].GetPowerState());
+                    }
+                }
+
+                m_Items[i] = null;
+            }
+        }
+
+        for (int i = 0; i < m_FirstPersonObjects.Length; i++)
+        {
+            m_FirstPersonObjects[i].RPC_SetObjectState(false);
+        }
     }
 
     public void CycleCurrentItemsPower()
@@ -168,7 +208,7 @@ public class InventoryManager : MonoBehaviour
                     m_PreviousDeviceWeight = m_WeightLayerForCurrentDevice;
                     m_WeightLayerForCurrentDevice = m_FirstPersonObjects[j].GetLayerWeight();
 
-                    if (m_PreviousDeviceWeight != m_WeightLayerForCurrentDevice) 
+                    if (m_PreviousDeviceWeight != m_WeightLayerForCurrentDevice)
                     {
                         m_ItemLerp = 0;
                         m_PlayersAnimation.SetLayerWeight(m_PreviousDeviceWeight, 0);

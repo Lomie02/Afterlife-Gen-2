@@ -424,6 +424,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 4473373194715945084}
   - {fileID: 3157348689801726405}
+  - {fileID: 6096026182444693138}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -450,6 +451,7 @@ MonoBehaviour:
   m_HostGameSettings: {fileID: 7754596617064935007}
   m_HostSettingsMenu: {fileID: 7754596617064935007}
   m_ReadyUp: {fileID: 0}
+  m_ScoreBoard: {fileID: 4858355231484540056}
   m_PlayersFlashLight: {fileID: 871112805339886917}
   m_PlayersAnimations: {fileID: 6726932182529836231}
 --- !u!114 &1111290082601711141
@@ -1508,6 +1510,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6726932182529836231}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6c9b842cfc2ae53489cd66c37fa6a664,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6096026182444693138}
   m_SourcePrefab: {fileID: 100100000, guid: 6c9b842cfc2ae53489cd66c37fa6a664, type: 3}
 --- !u!4 &749231048431804978 stripped
 Transform:
@@ -1548,6 +1554,39 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6096026182444693138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2853328290850944289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 1
+    SynchronizeType: 2
+    Name: xPos
+  - Type: 1
+    SynchronizeType: 2
+    Name: yPos
+  - Type: 4
+    SynchronizeType: 2
+    Name: Sprinting
+  m_SynchronizeLayers:
+  - SynchronizeType: 2
+    LayerIndex: 0
+  - SynchronizeType: 2
+    LayerIndex: 1
+  - SynchronizeType: 2
+    LayerIndex: 2
+  - SynchronizeType: 2
+    LayerIndex: 3
 --- !u!4 &3229888361326866331 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6c9b842cfc2ae53489cd66c37fa6a664,
@@ -1925,6 +1964,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player_GUI
       objectReference: {fileID: 0}
+    - target: {fileID: 6182570038927558633, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
+        type: 3}
+      propertyPath: m_PlayerIndex
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6372232189734312788, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
         type: 3}
       propertyPath: m_Pivot.x
@@ -2105,6 +2149,12 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 8351715591776997926, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2a5e38f6058e9864e9ac5b264a634d64,
+        type: 3}
     - target: {fileID: 8545516708554244492, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
         type: 3}
       propertyPath: m_Sprite
@@ -2190,6 +2240,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 5857299034294731987}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4858355231484540056 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1307475626250973259, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
+    type: 3}
+  m_PrefabInstance: {fileID: 5857299034294731987}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5826768996518052816 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 114166655392122627, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,

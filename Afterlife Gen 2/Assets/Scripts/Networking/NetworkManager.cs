@@ -102,6 +102,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         else
             m_PlayerProps.TryAdd("PlayerLevel", m_Level);
 
+        if (m_PlayerProps.ContainsKey("Specialist"))
+            m_PlayerProps["Specialist"] = m_Level;
+        else
+            m_PlayerProps.TryAdd("Specialist", 1);
 
         if (m_PlayerProps.ContainsKey("Developer"))
             m_PlayerProps["Developer"] = m_IsDeveloper;

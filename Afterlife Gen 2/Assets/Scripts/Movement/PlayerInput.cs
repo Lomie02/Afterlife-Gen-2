@@ -45,6 +45,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     public ReadyZone m_ReadyUp;
     InventoryManager m_Inventory;
 
+    [SerializeField] Image m_ScoreBoard;
     [SerializeField] NetworkObject m_PlayersFlashLight;
     [SerializeField] Animator m_PlayersAnimations;
 
@@ -186,6 +187,11 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                     m_PlayersFlashLight.TurnOn();
                 }
             }
+
+            if (Input.GetKey(KeyCode.Tab))
+                m_ScoreBoard.gameObject.SetActive(true);
+            else
+                m_ScoreBoard.gameObject.SetActive(false);
 
             if (m_PlayersFlashLight.gameObject.activeSelf)
             {

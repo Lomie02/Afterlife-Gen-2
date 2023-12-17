@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.Windows.Speech;
 [System.Serializable]
 struct ItemPoolObject
 {
@@ -32,12 +33,19 @@ public class NetworkItemSpawner : MonoBehaviour
     [Header("Item Pool")]
     [SerializeField] ItemPoolObject[] m_NetworkPool;
 
+    [Header("Spiritbox")]
+    [SerializeField] string[] m_GhostBoxQuestions = new string[] { "Hello", "Where are you"};
+    [SerializeField] ConfidenceLevel m_Confidence = ConfidenceLevel.High;
+    KeywordRecognizer recognizer;
+
     [HideInInspector]
     [SerializeField] Transform[] m_SpawnLocations;
 
     int m_PreviousItemSpawned = 0;
     void Start()
     {
+        recognizer = new KeywordRecognizer(m_GhostBoxQuestions, m_Confidence);
+        recognizer.Start();
         if (!PhotonNetwork.IsMasterClient)
             return;
 
@@ -51,6 +59,20 @@ public class NetworkItemSpawner : MonoBehaviour
 
         AssignPoolObjects();
     }
+    public KeywordRecognizer GetReconizer()
+    {
+        return recognizer;
+    }
+
+    private void OnDestroy()
+    {
+        if (recognizer != null)
+        {
+            recognizer.Stop();
+            recognizer.Dispose();
+        }
+    }
+
     void AssignPoolObjects()
     {
         for (int i = 0; i < m_SpawnLocations.Length; i++)

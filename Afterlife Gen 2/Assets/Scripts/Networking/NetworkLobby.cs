@@ -12,7 +12,6 @@ enum LobbyNetworkMode
 }
 public class NetworkLobby : MonoBehaviourPunCallbacks
 {
-
     [SerializeField] LobbyNetworkMode m_NetworkMode = LobbyNetworkMode.Lobby;
     [SerializeField] Text m_Code;
     [Header("Player Models")]

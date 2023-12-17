@@ -10,11 +10,8 @@ public class GhostBox : MonoBehaviour
     [SerializeField] float m_DetectionRange = 10f;
 
     [Header("Responses")]
-    string[] m_GhostBoxQuestions = new string[] { "Hello", "Speak", "Is Someone Here", "Talk", "Reveal yourself", "Hide and seek" };
-    [SerializeField] ConfidenceLevel m_Confidence = ConfidenceLevel.High;
     KeywordRecognizer recognizer;
     [Space]
-
 
     [SerializeField] Text m_2nd;
     [SerializeField] Text m_3rd;
@@ -23,11 +20,13 @@ public class GhostBox : MonoBehaviour
     [SerializeField] GhostAI m_Ghost;
 
     [SerializeField] bool m_CanGiveResponses = false;
+    NetworkItemSpawner m_Spawner;
     private void Start()
     {
         m_MyNetworkData = GetComponent<NetworkObject>();
+        m_Spawner = FindObjectOfType<NetworkItemSpawner>();
 
-        recognizer = new KeywordRecognizer(m_GhostBoxQuestions, m_Confidence);
+        recognizer = m_Spawner.GetReconizer();
         recognizer.OnPhraseRecognized += Recognizer_OnPhraseRecognized;
 
         if (m_Ghost)
@@ -38,8 +37,18 @@ public class GhostBox : MonoBehaviour
 
     }
 
+    private void OnDestroy()
+    {
+        if (recognizer != null)
+        {
+            recognizer.Stop();
+            recognizer.Dispose();
+        }
+    }
+
     private void Recognizer_OnPhraseRecognized(PhraseRecognizedEventArgs args)
     {
+
         float DistanceFromGhost;
 
         if (transform.parent)
@@ -50,7 +59,6 @@ public class GhostBox : MonoBehaviour
         if (DistanceFromGhost <= m_DetectionRange && m_CanGiveResponses)
         {
             Debug.Log(args.text);
-            //TODO Give Random Respones
         }
     }
     void Update()

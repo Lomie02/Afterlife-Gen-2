@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 26
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2814481542880334280
 MonoBehaviour:
@@ -44,8 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e6b2b937b9ae904787d6282cc17cfa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SpawnMode: 0
+  m_RandomOdds: 3
   m_MaxItemsAllowed: 2
-  m_SpawnMode: 3
   m_NetworkPool:
   - m_ItemsName: Ghostbox
     m_ItemObject: {fileID: 5590050550129788072, guid: d467726d02ad9574d93f0b0bec197d52,
@@ -71,5 +72,10 @@ MonoBehaviour:
     m_ItemObject: {fileID: 1769186673438237266, guid: 4af48b22f47af1f448750c35e67dce8c,
       type: 3}
     m_MaxAmount: 2
+    m_AmountSpawned: 0
+  - m_ItemsName: Ghostbox T9
+    m_ItemObject: {fileID: 5590050550129788072, guid: 36f6c517d292ee04e958d02eb71af09d,
+      type: 3}
+    m_MaxAmount: 1
     m_AmountSpawned: 0
   m_SpawnLocations: []

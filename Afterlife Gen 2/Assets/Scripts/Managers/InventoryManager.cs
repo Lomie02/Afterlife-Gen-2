@@ -240,6 +240,22 @@ public class InventoryManager : MonoBehaviour
         {
             LerpItem(0);
         }
+    }
 
+    public ItemID GetCurrentItemsId()
+    {
+        return m_Items[m_CurrentSlotSelected].GetItemID();
+    }
+
+    public void DestroyCurrentItem()
+    {
+        PhotonNetwork.Destroy(m_Items[m_CurrentSlotSelected].gameObject);
+
+        m_Items[m_CurrentSlotSelected] = null;
+
+        for (int i = 0; i < m_FirstPersonObjects.Length; i++)
+        {
+            m_FirstPersonObjects[i].RPC_SetObjectState(false);
+        }
     }
 }

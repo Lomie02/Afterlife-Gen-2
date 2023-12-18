@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 33
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2896043918744179327
 MonoBehaviour:
@@ -44,5 +44,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df6a29c24ff492041b2ab469c32a1d0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_GhostProfiles:
+  - m_GhostName: Phantom
+    m_Evidence1: 0
+    m_Evidence2: 1
+    m_Evidence3: 3
+  - m_GhostName: Poltergeist
+    m_Evidence1: 0
+    m_Evidence2: 1
+    m_Evidence3: 3
   m_Ghost: {fileID: 4969133573146898243, guid: e96cff2a475f99849991e6dc7f81875f, type: 3}
   m_GhostSpawnLocations: []
+  m_GhostAi: {fileID: 0}

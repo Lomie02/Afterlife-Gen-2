@@ -53,6 +53,10 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     float m_FlashLightLerp = 0;
 
     ReadyZone m_ReadyDoorsHost;
+
+    [Header("Use Items")]
+    [SerializeField] Image m_UseImage;
+    [SerializeField] Text m_UseText;
     void Start()
     {
         //SearchForElements();
@@ -188,6 +192,11 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 }
             }
 
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                m_Inventory.DropItemsOnPerson();
+            }
+
             if (Input.GetKey(KeyCode.Tab))
                 m_ScoreBoard.gameObject.SetActive(true);
             else
@@ -259,6 +268,29 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             {
                 CheckForItem();
             }
+
+            CheckHoverItem();
+        }
+    }
+
+    void CheckHoverItem()
+    {
+        if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_ItemCast, 5f))
+        {
+            if (m_ItemCast.collider.GetComponent<NetworkObject>() != null)
+            {
+                m_UseImage.gameObject.SetActive(true);
+                m_UseText.text = "Press E To Pick Up " + m_ItemCast.collider.GetComponent<NetworkObject>().GetItemsName();
+            }
+            else if (m_ItemCast.collider.tag == "ReadyMonitor" || m_ItemCast.collider.tag == "Door")
+            {
+                m_UseImage.gameObject.SetActive(true);
+                m_UseText.text = "Press E To Interact.";
+            }
+            else
+            {
+                m_UseImage.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -273,13 +305,23 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                     m_Inventory.AssignItem(m_ItemCast.collider.GetComponent<NetworkObject>());
                 }
             }
-            if (m_ItemCast.collider.tag == "ReadyMonitor" && PhotonNetwork.IsMasterClient)
+            else if (m_ItemCast.collider.GetComponent<GhostTrap>() != null)
+            {
+                if (m_Inventory.IsCurrentSlotTaken())
+                {
+                    if (m_ItemCast.collider.GetComponent<GhostTrap>().CollectedPart(m_Inventory.GetCurrentItemsId()))
+                    {
+                        m_Inventory.DestroyCurrentItem();
+                    }
+                }
+            }
+            else if (m_ItemCast.collider.tag == "ReadyMonitor" && PhotonNetwork.IsMasterClient)
             {
                 m_MyCamera.MouseLockState(false);
                 m_MyController.SetMovement(false);
                 m_HostGameSettings.SetActive(true);
             }
-            if (m_ItemCast.collider.tag == "Door")
+            else if (m_ItemCast.collider.tag == "Door")
             {
                 m_ItemCast.collider.GetComponentInParent<DoorManager>().CycleDoor();
             }

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Windows.Speech;
-
+using Photon.Pun;
 public class GhostBox : MonoBehaviour
 {
     [Header("General")]
+    PhotonView m_MyView;
     [SerializeField] float m_DetectionRange = 10f;
 
     [Header("Responses")]
@@ -21,11 +22,16 @@ public class GhostBox : MonoBehaviour
 
     [SerializeField] bool m_CanGiveResponses = false;
     NetworkItemSpawner m_Spawner;
+
+    AudioSource m_AudioSource;
+    [SerializeField] AudioClip[] m_AudioResponses;
     private void Start()
     {
         m_MyNetworkData = GetComponent<NetworkObject>();
         m_Spawner = FindObjectOfType<NetworkItemSpawner>();
 
+        m_MyView = GetComponent<PhotonView>();
+        m_AudioSource = GetComponent<AudioSource>();
         recognizer = m_Spawner.GetReconizer();
         recognizer.OnPhraseRecognized += Recognizer_OnPhraseRecognized;
 
@@ -45,9 +51,10 @@ public class GhostBox : MonoBehaviour
             recognizer.Dispose();
         }
     }
-
     private void Recognizer_OnPhraseRecognized(PhraseRecognizedEventArgs args)
     {
+        if (!m_MyNetworkData.GetPowerState())
+            return;
 
         float DistanceFromGhost;
 
@@ -58,6 +65,7 @@ public class GhostBox : MonoBehaviour
 
         if (DistanceFromGhost <= m_DetectionRange && m_CanGiveResponses)
         {
+            m_MyView.RPC("RPC_GiveResponse", RpcTarget.All, Random.Range(0, m_AudioResponses.Length));
             Debug.Log(args.text);
         }
     }
@@ -77,6 +85,16 @@ public class GhostBox : MonoBehaviour
                 AssignGhost();
             }
         }
+    }
+
+    [PunRPC]
+    public void RPC_GiveResponse(int _response)
+    {
+        if (m_AudioSource.isPlaying)
+            return;
+
+        m_AudioSource.clip = m_AudioResponses[_response];
+        m_AudioSource.Play();
     }
 
     void AssignGhost()

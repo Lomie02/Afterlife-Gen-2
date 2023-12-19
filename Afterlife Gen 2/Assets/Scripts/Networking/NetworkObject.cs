@@ -17,11 +17,17 @@ public enum ItemID
     Candle,
     GhostTrap,
     SantiyPill,
-    Ghostbox_T9
+    Ghostbox_T9,
+    Useable,
+    TankCan,
+    SparkPlug,
+    TrapBattery,
 }
 
 public class NetworkObject : MonoBehaviourPunCallbacks
 {
+    [SerializeField] string m_ItemsName;
+
     public PhotonView m_MyView;
     [SerializeField] ItemID m_ItemsId;
     Rigidbody m_ItemsBody;
@@ -52,6 +58,11 @@ public class NetworkObject : MonoBehaviourPunCallbacks
             offset += array.Length;
         }
         return rv;
+    }
+
+    public string GetItemsName()
+    {
+        return m_ItemsName;
     }
     private void Start()
     {

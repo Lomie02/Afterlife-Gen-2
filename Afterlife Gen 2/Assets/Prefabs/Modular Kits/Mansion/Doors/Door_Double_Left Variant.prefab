@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 733bb76e1687f4b4f9df212a2a0d9ae7,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 733bb76e1687f4b4f9df212a2a0d9ae7,
         type: 3}
@@ -63,10 +63,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 733bb76e1687f4b4f9df212a2a0d9ae7,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: dba557473ef709d4082daff6b1ed7736, type: 2}
     - target: {fileID: 919132149155446097, guid: 733bb76e1687f4b4f9df212a2a0d9ae7,
         type: 3}
       propertyPath: m_Name
       value: Door_Double_Left Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 733bb76e1687f4b4f9df212a2a0d9ae7,
+        type: 3}
+      propertyPath: m_TagString
+      value: Door
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -75,7 +85,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 733bb76e1687f4b4f9df212a2a0d9ae7,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: -8803275842223327077}
+      addedObject: {fileID: 4188292007305121816}
   m_SourcePrefab: {fileID: 100100000, guid: 733bb76e1687f4b4f9df212a2a0d9ae7, type: 3}
 --- !u!1 &7889364403384842633 stripped
 GameObject:
@@ -83,7 +93,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 7043012930707670232}
   m_PrefabAsset: {fileID: 0}
---- !u!64 &-8803275842223327077
+--- !u!64 &4188292007305121816
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -104,4 +114,4 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: -5053925668127403250, guid: 733bb76e1687f4b4f9df212a2a0d9ae7, type: 3}
+  m_Mesh: {fileID: -1550514412580984892, guid: 733bb76e1687f4b4f9df212a2a0d9ae7, type: 3}

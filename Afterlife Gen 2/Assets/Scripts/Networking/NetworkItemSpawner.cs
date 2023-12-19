@@ -38,24 +38,44 @@ public class NetworkItemSpawner : MonoBehaviour
     [SerializeField] ConfidenceLevel m_Confidence = ConfidenceLevel.High;
     KeywordRecognizer recognizer;
 
+    [Header("Trap")]
+
+    [SerializeField] GameObject m_GhostTrap;
     [HideInInspector]
     [SerializeField] Transform[] m_SpawnLocations;
+    [SerializeField] Transform[] m_TrapSpawnLocations;
 
     int m_PreviousItemSpawned = 0;
     void Start()
     {
         recognizer = new KeywordRecognizer(m_GhostBoxQuestions, m_Confidence);
         recognizer.Start();
+
         if (!PhotonNetwork.IsMasterClient)
             return;
 
         GameObject[] m_ObjectSpawnList;
         m_ObjectSpawnList = GameObject.FindGameObjectsWithTag("ItemSpawn");
+
         m_SpawnLocations = new Transform[m_ObjectSpawnList.Length];
+
         for (int i = 0; i < m_ObjectSpawnList.Length; i++)
         {
             m_SpawnLocations[i] = m_ObjectSpawnList[i].transform;
         }
+
+        GameObject[] TrapSpawns;
+        TrapSpawns = GameObject.FindGameObjectsWithTag("TrapSpawn");
+
+        m_TrapSpawnLocations = new Transform[TrapSpawns.Length];
+
+        for (int i = 0; i < TrapSpawns.Length; i++)
+        {
+            m_TrapSpawnLocations[i] = TrapSpawns[i].transform;
+        }
+
+        int RandomSpawn = Random.Range(0, m_TrapSpawnLocations.Length);
+        PhotonNetwork.InstantiateRoomObject(m_GhostTrap.name, m_TrapSpawnLocations[RandomSpawn].position, m_TrapSpawnLocations[RandomSpawn].rotation);
 
         AssignPoolObjects();
     }

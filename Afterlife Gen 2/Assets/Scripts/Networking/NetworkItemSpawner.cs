@@ -104,7 +104,7 @@ public class NetworkItemSpawner : MonoBehaviour
 
                     if (m_NetworkPool[RandomItems_01].m_AmountSpawned < m_NetworkPool[RandomItems_01].m_MaxAmount)
                     {
-                        PhotonNetwork.InstantiateRoomObject(m_NetworkPool[RandomItems_01].m_ItemObject.name, m_SpawnLocations[i].position, Quaternion.identity);
+                        PhotonNetwork.InstantiateRoomObject(m_NetworkPool[RandomItems_01].m_ItemObject.name, m_SpawnLocations[i].position, m_NetworkPool[RandomItems_01].m_ItemObject.transform.rotation);
                         m_NetworkPool[RandomItems_01].m_AmountSpawned++;
                     }
                     break;
@@ -118,7 +118,7 @@ public class NetworkItemSpawner : MonoBehaviour
                     {
                         if (m_NetworkPool[RandomItems_02].m_AmountSpawned < m_NetworkPool[RandomItems_02].m_MaxAmount)
                         {
-                            PhotonNetwork.InstantiateRoomObject(m_NetworkPool[RandomItems_02].m_ItemObject.name, m_SpawnLocations[i].position, Quaternion.identity);
+                            PhotonNetwork.InstantiateRoomObject(m_NetworkPool[RandomItems_02].m_ItemObject.name, m_SpawnLocations[i].position, m_NetworkPool[RandomItems_02].m_ItemObject.transform.rotation);
                             m_NetworkPool[RandomItems_02].m_AmountSpawned++;
                         }
                     }
@@ -133,7 +133,7 @@ public class NetworkItemSpawner : MonoBehaviour
                     {
                         if (m_NetworkPool[RandomItems_03].m_AmountSpawned < m_NetworkPool[RandomItems_03].m_MaxAmount)
                         {
-                            PhotonNetwork.InstantiateRoomObject(m_NetworkPool[RandomItems_03].m_ItemObject.name, m_SpawnLocations[i].position, Quaternion.identity);
+                            PhotonNetwork.InstantiateRoomObject(m_NetworkPool[RandomItems_03].m_ItemObject.name, m_SpawnLocations[i].position, m_NetworkPool[RandomItems_03].m_ItemObject.transform.rotation);
                             m_NetworkPool[RandomItems_03].m_AmountSpawned++;
                             m_ItemsSpawned++;
                         }
@@ -148,7 +148,7 @@ public class NetworkItemSpawner : MonoBehaviour
                     {
                         if (m_NetworkPool[RandomItems_04].m_AmountSpawned < m_NetworkPool[RandomItems_04].m_MaxAmount)
                         {
-                            PhotonNetwork.InstantiateRoomObject(m_NetworkPool[RandomItems_04].m_ItemObject.name, m_SpawnLocations[i].position, Quaternion.identity);
+                            PhotonNetwork.InstantiateRoomObject(m_NetworkPool[RandomItems_04].m_ItemObject.name, m_SpawnLocations[i].position, m_NetworkPool[RandomItems_04].m_ItemObject.transform.rotation);
                             m_NetworkPool[RandomItems_04].m_AmountSpawned++;
                             m_ItemsSpawned++;
                         }

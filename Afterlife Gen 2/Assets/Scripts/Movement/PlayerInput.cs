@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
-
+using UnityEngine.Animations.Rigging;
 public class PlayerInput : MonoBehaviourPunCallbacks
 {
     [SerializeField] LayerMask m_ItemLayer;
@@ -57,6 +57,8 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     [Header("Use Items")]
     [SerializeField] Image m_UseImage;
     [SerializeField] Text m_UseText;
+    MultiAimConstraint m_LightAImConstrait;
+
     void Start()
     {
         //SearchForElements();
@@ -73,6 +75,9 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_PlayersFlashLight.gameObject.SetActive(false);
         m_HostSettingsMenu.SetActive(false);
 
+
+        m_LightAImConstrait = GetComponentInChildren<MultiAimConstraint>();
+        m_LightAImConstrait.weight = 0;
         if (m_ReadyHost)
         {
             m_ReadyHost.onClick.AddListener(m_ReadyUp.ReadyUpHost);
@@ -181,16 +186,20 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             {
                 if (m_PlayersFlashLight.gameObject.activeSelf)
                 {
+                    m_LightAImConstrait.weight = 0;
                     m_PlayersFlashLight.TurnOff();
                     m_PlayersFlashLight.RPC_SetObjectState(false);
 
                 }
                 else
                 {
+                    m_LightAImConstrait.weight = 1;
                     m_PlayersFlashLight.RPC_SetObjectState(true);
                     m_PlayersFlashLight.TurnOn();
                 }
             }
+
+
 
             if (Input.GetKeyDown(KeyCode.R))
             {
@@ -206,12 +215,14 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             {
                 if (m_MyController.IsTacticalSprinting())
                 {
-                    LerpFlashLight(0.5f);
+                    m_LightAImConstrait.weight = 0;
+                    LerpFlashLight(0f);
                 }
                 else
                 {
 
                     LerpFlashLight(1);
+                    m_LightAImConstrait.weight = 1;
                 }
             }
             else

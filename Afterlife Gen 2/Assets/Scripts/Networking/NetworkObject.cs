@@ -68,6 +68,7 @@ public class NetworkObject : MonoBehaviourPunCallbacks
     {
         m_ItemsBody = GetComponent<Rigidbody>();
         m_MyView = GetComponent<PhotonView>();
+
     }
 
     [PunRPC]

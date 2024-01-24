@@ -55,10 +55,22 @@ public class PlayerController : MonoBehaviour
     bool m_CanMove = true;
     bool m_IsSprinting = false;
     bool m_IsTacticalSprinting = false;
+
+    GhostAI m_Ghost;
+
+    float m_AnimationLerpSpeed = 4;
+    float m_AnimXPos;
+    float m_AnimYPos;
+
+    float m_CrouchLerpSpeed = 2;
+    float m_CrouchLerpAmount;
+    bool m_IsCrouched = false;
+
     void Start()
     {
         m_Body = GetComponent<Rigidbody>();
         m_MyView = GetComponent<PhotonView>();
+        m_Ghost = FindAnyObjectByType<GhostAI>();
 
         m_PlayerCollider = GetComponent<CapsuleCollider>();
         m_PlayersOverallSpeed = m_PlayerWalkSpeed;
@@ -67,6 +79,37 @@ public class PlayerController : MonoBehaviour
         m_PossessionBar.value = m_PossesionMeter;
     }
 
+    void ConvertMovementForAnimation(float _xPos, float _yPos)
+    {
+        if (_xPos > 0) // X Conversion
+        {
+            m_AnimXPos = Mathf.Lerp(m_AnimXPos, 1, m_AnimationLerpSpeed * Time.deltaTime);
+        }
+        else if (_xPos < 0)
+        {
+            m_AnimXPos = Mathf.Lerp(m_AnimXPos, -1, m_AnimationLerpSpeed * Time.deltaTime);
+        }
+        else
+        {
+            m_AnimXPos = Mathf.Lerp(m_AnimXPos, 0, m_AnimationLerpSpeed * Time.deltaTime);
+        }
+
+        if (_yPos > 0) // Y Conversion
+        {
+            m_AnimYPos = Mathf.Lerp(m_AnimYPos, 1, m_AnimationLerpSpeed * Time.deltaTime);
+        }
+        else if (_yPos < 0)
+        {
+            m_AnimYPos = Mathf.Lerp(m_AnimYPos, -1, m_AnimationLerpSpeed * Time.deltaTime);
+        }
+        else
+        {
+            m_AnimYPos = Mathf.Lerp(m_AnimYPos, 0, m_AnimationLerpSpeed * Time.deltaTime);
+        }
+
+        m_Anim.SetFloat("xPos", m_AnimXPos);
+        m_Anim.SetFloat("yPos", m_AnimYPos);
+    }
     void Update()
     {
         if (m_MyView.IsMine && m_CanMove)
@@ -78,10 +121,10 @@ public class PlayerController : MonoBehaviour
 
             m_Body.MovePosition(transform.position + MoveV.normalized * m_PlayersOverallSpeed * Time.deltaTime);
 
-            m_Anim.SetFloat("xPos", xPos);
-            m_Anim.SetFloat("yPos", yPos);
+            ConvertMovementForAnimation(xPos, yPos);
 
-            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.W))
+
+            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.W) && !m_IsCrouched)
             {
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
@@ -102,14 +145,24 @@ public class PlayerController : MonoBehaviour
                 m_IsSprinting = false;
             }
 
+            m_Anim.SetBool("TacSprint", m_IsTacticalSprinting);
 
-            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.C))
+            if (Input.GetKey(KeyCode.C))
             {
-                if (Physics.Raycast(transform.position, Vector3.down, 0.5f))
-                {
-                    Dive();
-                }
+                m_CrouchLerpAmount = Mathf.Lerp(m_CrouchLerpAmount, 1, m_CrouchLerpSpeed * Time.deltaTime);
+                m_PlayerCollider.center = new Vector3(0, 0.3788545f, 0);
+                m_PlayerCollider.height = 0.8057906f;
+                m_IsCrouched = true;
             }
+            else
+            {
+                m_CrouchLerpAmount = Mathf.Lerp(m_CrouchLerpAmount, 0, m_CrouchLerpSpeed * Time.deltaTime);
+                m_PlayerCollider.center = m_DefaultCollider;
+                m_PlayerCollider.height = m_DefaultHeight;
+                m_IsCrouched = false;
+            }
+
+            m_Anim.SetLayerWeight(4, m_CrouchLerpAmount);
 
             if (m_IsDiving)
             {
@@ -130,6 +183,27 @@ public class PlayerController : MonoBehaviour
 
             m_Anim.SetBool("Sprinting", m_IsSprinting);
         }
+
+
+        if (m_Ghost)
+        {
+            float DistanceToGhost = Vector3.Distance(transform.position, m_Ghost.transform.position);
+            if (DistanceToGhost < 10)
+            {
+                m_PossesionMeter += 1 * Time.deltaTime;
+            }
+        }
+        else
+        {
+            m_Ghost = FindObjectOfType<GhostAI>();
+        }
+
+        m_PossessionBar.value = m_PossesionMeter;
+    }
+
+    bool m_IsTacSprinting()
+    {
+        return m_IsTacticalSprinting;
     }
 
     public void TakeDamage(float _damageAmount)

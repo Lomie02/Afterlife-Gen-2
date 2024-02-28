@@ -51,6 +51,7 @@ GameObject:
   - component: {fileID: 4403835565637700296}
   - component: {fileID: 715021452052687023}
   - component: {fileID: 2466557655512925472}
+  - component: {fileID: 6863611255502145996}
   m_Layer: 2
   m_Name: Player_Pharmacist
   m_TagString: Player
@@ -71,6 +72,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7008664299855696570}
   - {fileID: 8011666196704324508}
   - {fileID: 4383376382092976261}
   - {fileID: 8298152123989145470}
@@ -94,7 +96,9 @@ MonoBehaviour:
   m_HealthBar: {fileID: 3950793118431524811}
   m_PossessionBar: {fileID: 7176045708344411864}
   m_MyView: {fileID: 7332863357866736548}
-  m_Anim: {fileID: 2722665327635426564}
+  m_BodyAnimations:
+  - {fileID: 2722665327635426564}
+  - {fileID: 7499205047027572069}
   m_PlayerWalkSpeed: 2
   m_PlayerSprintSpeed: 5
   m_PlayerTacticalSprintSpeed: 8
@@ -320,6 +324,21 @@ MonoBehaviour:
   m_Bone: {fileID: 0}
   m_Target: {fileID: 716439328367879131}
   m_Animator: {fileID: 0}
+--- !u!114 &6863611255502145996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5894786181902345269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec0b40007966b5b4aa23da73edfcb93f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BodyModel: {fileID: 8674818851125784004}
+  m_LegsModel: {fileID: 7640382746152142848}
+  m_ArmsModel: {fileID: 0}
 --- !u!1 &6657026250642602187
 GameObject:
   m_ObjectHideFlags: 0
@@ -849,6 +868,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 2174007600319750715, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2174007600319750715, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2394780454277060627, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
         type: 3}
@@ -1560,6 +1589,112 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 6521091262495621871}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7406590087735096657
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6268275269048071049}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 10eb0f89a7cad224db3f1de2ae624ce5,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 10eb0f89a7cad224db3f1de2ae624ce5,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 10eb0f89a7cad224db3f1de2ae624ce5,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 10eb0f89a7cad224db3f1de2ae624ce5,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 10eb0f89a7cad224db3f1de2ae624ce5,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 10eb0f89a7cad224db3f1de2ae624ce5,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 10eb0f89a7cad224db3f1de2ae624ce5,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 10eb0f89a7cad224db3f1de2ae624ce5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 10eb0f89a7cad224db3f1de2ae624ce5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 10eb0f89a7cad224db3f1de2ae624ce5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 10eb0f89a7cad224db3f1de2ae624ce5,
+        type: 3}
+      propertyPath: m_Name
+      value: Pharmacist_Legs
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 10eb0f89a7cad224db3f1de2ae624ce5,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7499205047027572069}
+  m_SourcePrefab: {fileID: 100100000, guid: 10eb0f89a7cad224db3f1de2ae624ce5, type: 3}
+--- !u!4 &7008664299855696570 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 10eb0f89a7cad224db3f1de2ae624ce5,
+    type: 3}
+  m_PrefabInstance: {fileID: 7406590087735096657}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7640382746152142848 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 10eb0f89a7cad224db3f1de2ae624ce5,
+    type: 3}
+  m_PrefabInstance: {fileID: 7406590087735096657}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &7499205047027572069
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7640382746152142848}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: f068998607992944595fcc8646febd05, type: 3}
+  m_Controller: {fileID: 9100000, guid: dbf2d1d2b2799c34a9bd7eeb554c4ea0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &8404363526297866389
 PrefabInstance:
   m_ObjectHideFlags: 0

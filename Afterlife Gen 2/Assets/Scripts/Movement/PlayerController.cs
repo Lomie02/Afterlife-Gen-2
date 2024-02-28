@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
     PlayerStance m_Stance = PlayerStance.Stand;
     [SerializeField] PhotonView m_MyView;
 
-    [SerializeField] Animator m_Anim;
+    [SerializeField] Animator[] m_BodyAnimations;
 
     float m_PlayersOverallSpeed = 0;
     [SerializeField] float m_PlayerWalkSpeed = 2;
@@ -77,6 +77,8 @@ public class PlayerController : MonoBehaviour
 
         m_HealthBar.value = m_PlayerHealth;
         m_PossessionBar.value = m_PossesionMeter;
+
+
     }
 
     void ConvertMovementForAnimation(float _xPos, float _yPos)
@@ -107,8 +109,12 @@ public class PlayerController : MonoBehaviour
             m_AnimYPos = Mathf.Lerp(m_AnimYPos, 0, m_AnimationLerpSpeed * Time.deltaTime);
         }
 
-        m_Anim.SetFloat("xPos", m_AnimXPos);
-        m_Anim.SetFloat("yPos", m_AnimYPos);
+
+        for (int i = 0; i < m_BodyAnimations.Length; i++)
+        {
+            m_BodyAnimations[i].SetFloat("xPos", m_AnimXPos);
+            m_BodyAnimations[i].SetFloat("yPos", m_AnimYPos);
+        }
     }
     void Update()
     {
@@ -145,7 +151,11 @@ public class PlayerController : MonoBehaviour
                 m_IsSprinting = false;
             }
 
-            m_Anim.SetBool("TacSprint", m_IsTacticalSprinting);
+
+            for (int i = 0; i < m_BodyAnimations.Length; i++)
+            {
+                m_BodyAnimations[i].SetBool("TacSprint", m_IsTacticalSprinting);
+            }
 
             if (Input.GetKey(KeyCode.C))
             {
@@ -162,7 +172,11 @@ public class PlayerController : MonoBehaviour
                 m_IsCrouched = false;
             }
 
-            m_Anim.SetLayerWeight(4, m_CrouchLerpAmount);
+
+            for (int i = 0; i < m_BodyAnimations.Length - 1; i++)
+            {
+                m_BodyAnimations[i].SetLayerWeight(4, m_CrouchLerpAmount);
+            }
 
             if (m_IsDiving)
             {
@@ -181,7 +195,11 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            m_Anim.SetBool("Sprinting", m_IsSprinting);
+
+            for (int i = 0; i < m_BodyAnimations.Length; i++)
+            {
+                m_BodyAnimations[i].SetBool("Sprinting", m_IsSprinting);
+            }
         }
 
 

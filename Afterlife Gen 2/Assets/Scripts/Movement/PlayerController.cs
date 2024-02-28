@@ -213,7 +213,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            m_Ghost = FindObjectOfType<GhostAI>();
+            m_Ghost = FindAnyObjectByType<GhostAI>();
         }
 
         m_PossessionBar.value = m_PossesionMeter;

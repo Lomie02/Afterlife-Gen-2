@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 using Photon.Pun;
 public class ModelHider : MonoBehaviour
@@ -16,7 +17,8 @@ public class ModelHider : MonoBehaviour
 
         if (m_MyView.IsMine)
         {
-            SetBodyToShadowsOnly();
+            SetBodyToShadowsOnly(m_BodyModel, ShadowCastingMode.ShadowsOnly);
+            SetBodyToShadowsOnly(m_LegsModel, ShadowCastingMode.Off);
         }
         else
         {
@@ -25,17 +27,17 @@ public class ModelHider : MonoBehaviour
         }
     }
 
-    void SetBodyToShadowsOnly()
+    void SetBodyToShadowsOnly(GameObject _target, ShadowCastingMode _mask)
     {
-        foreach (Transform Child in m_BodyModel.transform)
+        foreach (Transform Child in _target.transform)
         {
             if (Child.GetComponent<SkinnedMeshRenderer>())
             {
-                Child.GetComponent<SkinnedMeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+                Child.GetComponent<SkinnedMeshRenderer>().shadowCastingMode = _mask;
             }
             else if(Child.GetComponent<MeshRenderer>())
             {
-                Child.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+                Child.GetComponent<MeshRenderer>().shadowCastingMode = _mask;
             }
         }
     }

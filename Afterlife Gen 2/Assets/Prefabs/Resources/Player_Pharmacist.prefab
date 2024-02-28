@@ -605,7 +605,7 @@ Camera:
     height: 1
   near clip plane: 0.01
   far clip plane: 100
-  field of view: 90
+  field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -1652,6 +1652,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pharmacist_Legs
       objectReference: {fileID: 0}
+    - target: {fileID: 3840663961351933260, guid: 10eb0f89a7cad224db3f1de2ae624ce5,
+        type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b20ffda987136ba42a4978cbb2f3a6ff, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

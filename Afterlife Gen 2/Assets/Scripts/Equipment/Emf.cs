@@ -36,7 +36,7 @@ public class Emf : MonoBehaviour
 
             float DistanceToGhost = Vector3.Distance(transform.position, m_Ghost.gameObject.transform.position);
 
-            if (DistanceToGhost <= 2)
+            if (DistanceToGhost <= 2 && m_IsEvidence)
             {
                 m_EmfLevel = 6;
                 if (m_WarningIcon)

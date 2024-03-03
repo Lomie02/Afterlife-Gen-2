@@ -326,6 +326,10 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                     }
                 }
             }
+            else if (m_ItemCast.collider.GetComponent<Destructable_Object>() != null)
+            {
+                m_ItemCast.collider.GetComponent<Destructable_Object>().DestroyObject();
+            }
             else if (m_ItemCast.collider.tag == "ReadyMonitor" && PhotonNetwork.IsMasterClient)
             {
                 m_MyCamera.MouseLockState(false);
@@ -334,7 +338,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             }
             else if (m_ItemCast.collider.tag == "Door")
             {
-                m_ItemCast.collider.GetComponentInParent<DoorManager>().CycleDoor();
+                m_ItemCast.collider.GetComponentInParent<DoorModule>().CycleDoorState();
             }
         }
     }

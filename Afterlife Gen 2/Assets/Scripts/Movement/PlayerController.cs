@@ -172,11 +172,7 @@ public class PlayerController : MonoBehaviour
                 m_IsCrouched = false;
             }
 
-
-            for (int i = 0; i < m_BodyAnimations.Length - 1; i++)
-            {
-                m_BodyAnimations[i].SetLayerWeight(4, m_CrouchLerpAmount);
-            }
+            m_BodyAnimations[0].SetLayerWeight(4, m_CrouchLerpAmount);
 
             if (m_IsDiving)
             {

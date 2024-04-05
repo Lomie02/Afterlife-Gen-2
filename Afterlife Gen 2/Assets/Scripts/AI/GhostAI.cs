@@ -72,6 +72,17 @@ public class GhostAI : MonoBehaviour
         {
             m_MyAgent.SetDestination(RandomNavSphere(transform.position, m_RoamingDistance, -1));
         }
+
+        RaycastHit m_CastInfo;
+
+        if(Physics.Raycast(transform.position, transform.forward, out m_CastInfo, 4))
+        {
+
+            Debug.Log(m_CastInfo.collider.name);
+
+            if (m_CastInfo.collider.GetComponent<Destructable_Object>())
+                m_CastInfo.collider.GetComponent<Destructable_Object>().DestroyObject();
+        }
     }
 
     void CheckInteractions()
@@ -163,8 +174,18 @@ public class GhostAI : MonoBehaviour
 
     }
 
+    void StartGhostEvent()
+    {
+
+    }
+
     void CheckWriting()
     {
 
+    }
+
+    public GhostProfile GetGhostCurrentProfile()
+    {
+        return m_Profile;
     }
 }

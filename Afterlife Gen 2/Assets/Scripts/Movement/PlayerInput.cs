@@ -57,7 +57,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     [Header("Use Items")]
     [SerializeField] Image m_UseImage;
     [SerializeField] Text m_UseText;
-    MultiAimConstraint m_LightAImConstrait;
+    ChainIKConstraint m_LightAImConstrait;
 
     void Start()
     {
@@ -76,7 +76,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_HostSettingsMenu.SetActive(false);
 
 
-        m_LightAImConstrait = GetComponentInChildren<MultiAimConstraint>();
+        m_LightAImConstrait = GetComponentInChildren<ChainIKConstraint>();
         m_LightAImConstrait.weight = 0;
         if (m_ReadyHost)
         {
@@ -326,6 +326,10 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                     }
                 }
             }
+            else if (m_ItemCast.collider.GetComponent<Destructable_Object>() != null)
+            {
+                m_ItemCast.collider.GetComponent<Destructable_Object>().DestroyObject();
+            }
             else if (m_ItemCast.collider.tag == "ReadyMonitor" && PhotonNetwork.IsMasterClient)
             {
                 m_MyCamera.MouseLockState(false);
@@ -334,7 +338,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             }
             else if (m_ItemCast.collider.tag == "Door")
             {
-                m_ItemCast.collider.GetComponentInParent<DoorManager>().CycleDoor();
+                m_ItemCast.collider.GetComponentInParent<DoorModule>().CycleDoorState();
             }
         }
     }

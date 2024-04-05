@@ -374,7 +374,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4194092850428071733}
-  - component: {fileID: 2377744908136890449}
+  - component: {fileID: 6185852167493576972}
   m_Layer: 0
   m_Name: Arm
   m_TagString: Untagged
@@ -397,7 +397,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 770639763287854480}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2377744908136890449
+--- !u!114 &6185852167493576972
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -406,51 +406,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 6657026250642602187}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3c430f382484144e925c097c2d33cfe, type: 3}
+  m_Script: {fileID: 11500000, guid: 796b75e345bd64d47a31edd757bd2670, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Weight: 1
   m_Data:
-    m_ConstrainedObject: {fileID: 7686516203693875251}
-    m_SourceObjects:
-      m_Length: 1
-      m_Item0:
-        transform: {fileID: 1229449959445228989}
-        weight: 1
-      m_Item1:
-        transform: {fileID: 0}
-        weight: 0
-      m_Item2:
-        transform: {fileID: 0}
-        weight: 0
-      m_Item3:
-        transform: {fileID: 0}
-        weight: 0
-      m_Item4:
-        transform: {fileID: 0}
-        weight: 0
-      m_Item5:
-        transform: {fileID: 0}
-        weight: 0
-      m_Item6:
-        transform: {fileID: 0}
-        weight: 0
-      m_Item7:
-        transform: {fileID: 0}
-        weight: 0
-    m_Offset: {x: 0, y: 0, z: 0}
-    m_MinLimit: -180
-    m_MaxLimit: 180
-    m_AimAxis: 2
-    m_UpAxis: 4
-    m_WorldUpType: 0
-    m_WorldUpObject: {fileID: 0}
-    m_WorldUpAxis: 2
-    m_MaintainOffset: 0
-    m_ConstrainedAxes:
-      x: 1
-      y: 1
-      z: 1
+    m_Root: {fileID: 7686516203693875251}
+    m_Tip: {fileID: 8556180153992682474}
+    m_Target: {fileID: 1229449959445228989}
+    m_ChainRotationWeight: 1
+    m_TipRotationWeight: 1
+    m_MaxIterations: 15
+    m_Tolerance: 0.0001
+    m_MaintainTargetPositionOffset: 0
+    m_MaintainTargetRotationOffset: 0
 --- !u!1 &7725318905069915772
 GameObject:
   m_ObjectHideFlags: 0
@@ -553,13 +522,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8824010949111104461}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.425, y: -0.5, z: 0.569}
+  m_LocalRotation: {x: 0.021751564, y: -0.9831914, z: 0.14955443, w: 0.10244559}
+  m_LocalPosition: {x: -0.162, y: -0.136, z: 0.189}
   m_LocalScale: {x: 0.1444, y: 0.1444, z: 0.1444}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4383376382092976261}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 17.37, y: -168.214, z: -0.728}
 --- !u!1 &8839729155372969216
 GameObject:
   m_ObjectHideFlags: 0
@@ -637,7 +606,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 63
+    m_Bits: 319
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -669,7 +638,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23c1ce4fb46143f46bc5cb5224c934f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clearColorMode: 1
+  clearColorMode: 0
   backgroundColorHDR: {r: 0.5849056, g: 0.5849056, b: 0.5849056, a: 0}
   clearDepth: 1
   volumeLayerMask:
@@ -914,6 +883,11 @@ PrefabInstance:
     - target: {fileID: 2783490830867905746, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
         type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3386024621516043043, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
+        type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3698725562682359594, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
@@ -1175,6 +1149,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8156437951107866910, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8156437951107866910, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8156437951107866910, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8721250377458371355, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
         type: 3}
@@ -2906,6 +2895,10 @@ MonoBehaviour:
     LayerIndex: 3
   - SynchronizeType: 0
     LayerIndex: 4
+  - SynchronizeType: 0
+    LayerIndex: 5
+  - SynchronizeType: 0
+    LayerIndex: 6
 --- !u!114 &6728993900000640825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2947,6 +2940,16 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 978359167140733537, guid: 681b416784719784182fa39cb13a55ca,
+        type: 3}
+      propertyPath: m_Intensity
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 978359167140733537, guid: 681b416784719784182fa39cb13a55ca,
+        type: 3}
+      propertyPath: m_VolumetricDimmer
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 1002016423795194326, guid: 681b416784719784182fa39cb13a55ca,
         type: 3}
       propertyPath: m_Name
@@ -2986,6 +2989,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: -0.000000059604638
+      objectReference: {fileID: 0}
+    - target: {fileID: 4358991135805987753, guid: 681b416784719784182fa39cb13a55ca,
+        type: 3}
+      propertyPath: m_Range
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4358991135805987753, guid: 681b416784719784182fa39cb13a55ca,
+        type: 3}
+      propertyPath: m_Intensity
+      value: 50.665634
       objectReference: {fileID: 0}
     - target: {fileID: 5041052130301585351, guid: 681b416784719784182fa39cb13a55ca,
         type: 3}

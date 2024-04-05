@@ -57,7 +57,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     [Header("Use Items")]
     [SerializeField] Image m_UseImage;
     [SerializeField] Text m_UseText;
-    MultiAimConstraint m_LightAImConstrait;
+    ChainIKConstraint m_LightAImConstrait;
 
     void Start()
     {
@@ -76,7 +76,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_HostSettingsMenu.SetActive(false);
 
 
-        m_LightAImConstrait = GetComponentInChildren<MultiAimConstraint>();
+        m_LightAImConstrait = GetComponentInChildren<ChainIKConstraint>();
         m_LightAImConstrait.weight = 0;
         if (m_ReadyHost)
         {

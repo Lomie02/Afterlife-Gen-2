@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5777134166228223031}
-  - component: {fileID: 7858486063466884705}
+  - component: {fileID: 4318569044790428727}
   m_Layer: 0
   m_Name: Arm (1)
   m_TagString: Untagged
@@ -63,7 +63,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4018192073105415603}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7858486063466884705
+--- !u!114 &4318569044790428727
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -72,51 +72,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 2887963557704215299}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3c430f382484144e925c097c2d33cfe, type: 3}
+  m_Script: {fileID: 11500000, guid: 796b75e345bd64d47a31edd757bd2670, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Weight: 1
   m_Data:
-    m_ConstrainedObject: {fileID: 8710819118852080317}
-    m_SourceObjects:
-      m_Length: 1
-      m_Item0:
-        transform: {fileID: 1229449959445228989}
-        weight: 1
-      m_Item1:
-        transform: {fileID: 0}
-        weight: 0
-      m_Item2:
-        transform: {fileID: 0}
-        weight: 0
-      m_Item3:
-        transform: {fileID: 0}
-        weight: 0
-      m_Item4:
-        transform: {fileID: 0}
-        weight: 0
-      m_Item5:
-        transform: {fileID: 0}
-        weight: 0
-      m_Item6:
-        transform: {fileID: 0}
-        weight: 0
-      m_Item7:
-        transform: {fileID: 0}
-        weight: 0
-    m_Offset: {x: 0, y: 0, z: 0}
-    m_MinLimit: -180
-    m_MaxLimit: 180
-    m_AimAxis: 2
-    m_UpAxis: 4
-    m_WorldUpType: 0
-    m_WorldUpObject: {fileID: 0}
-    m_WorldUpAxis: 2
-    m_MaintainOffset: 0
-    m_ConstrainedAxes:
-      x: 1
-      y: 1
-      z: 1
+    m_Root: {fileID: 8710819118852080317}
+    m_Tip: {fileID: 7274824751566174564}
+    m_Target: {fileID: 1229449959445228989}
+    m_ChainRotationWeight: 1
+    m_TipRotationWeight: 1
+    m_MaxIterations: 15
+    m_Tolerance: 0.0001
+    m_MaintainTargetPositionOffset: 0
+    m_MaintainTargetRotationOffset: 0
 --- !u!1 &5894786181902345269
 GameObject:
   m_ObjectHideFlags: 0
@@ -552,13 +521,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8824010949111104461}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.283, y: -0.523, z: 0.567}
+  m_LocalRotation: {x: -0.004122321, y: -0.9873432, z: 0.032475308, w: 0.15518342}
+  m_LocalPosition: {x: -0.1618533, y: -0.1370534, z: 0.18900877}
   m_LocalScale: {x: 0.1444, y: 0.1444, z: 0.1444}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4383376382092976261}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 3.603, y: -162.103, z: 1.046}
 --- !u!1 &8839729155372969216
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
+using Steamworks;
 using UnityEngine.Events;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
@@ -43,6 +44,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
         m_BecomeDev.onClick.AddListener(BecomeDeveloper);
         m_BecomeDev.onClick.AddListener(delegate { m_DevScreen.SetActive(false); });
+
+        if (SteamManager.Initialized)
+        {
+            m_Username.text = SteamFriends.GetPersonaName();
+        }
     }
 
     private void Update()
@@ -59,7 +65,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
         if (PlayerPrefs.HasKey("username"))
         {
-            PhotonNetwork.LocalPlayer.NickName = PlayerPrefs.GetString("username");
+            PhotonNetwork.LocalPlayer.NickName = SteamFriends.GetPersonaName();
         }
         else
         {

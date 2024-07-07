@@ -17,6 +17,7 @@ public class InventoryManager : MonoBehaviour
     [Header("First Person")]
     [SerializeField] NetworkObject[] m_FirstPersonObjects;
     [SerializeField] Animator m_PlayersAnimation;
+    [SerializeField] Transform m_DropLocation;
 
     float m_ItemLerp;
     int m_WeightLayerForCurrentDevice;
@@ -168,7 +169,7 @@ public class InventoryManager : MonoBehaviour
         m_Items[m_CurrentSlotSelected].SetBodysState(true);
         m_Items[m_CurrentSlotSelected].RPC_SetObjectState(true);
 
-        m_Items[m_CurrentSlotSelected].transform.position = transform.position;
+        m_Items[m_CurrentSlotSelected].transform.position = m_DropLocation.position;
 
 
         for (int j = 0; j < m_FirstPersonObjects.Length; j++)

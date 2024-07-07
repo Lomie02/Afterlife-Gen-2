@@ -199,7 +199,10 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 }
             }
 
-
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                m_MyController.TakeDamage(20);
+            }
 
             if (Input.GetKeyDown(KeyCode.R))
             {

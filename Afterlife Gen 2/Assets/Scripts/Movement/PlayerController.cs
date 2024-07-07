@@ -8,8 +8,8 @@ using Photon.Pun;
 
 enum MovementType
 {
-    Default = 0,
-    Omnimovement,
+    Four_Directional = 0,
+    Omni_Directional,
 }
 enum PlayerStance
 {
@@ -18,12 +18,12 @@ enum PlayerStance
     Run,
     Crouch,
     Dive,
-    Revive,
+    Downed,
 }
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] MovementType m_MovementMode = MovementType.Default;
+    [SerializeField] MovementType m_MovementMode = MovementType.Four_Directional;
 
     [Space]
 
@@ -75,6 +75,19 @@ public class PlayerController : MonoBehaviour
     float m_CrouchLerpAmount;
     bool m_IsCrouched = false;
 
+    // Sliding Mechanics
+    bool m_IsSliding;
+    float m_SlideTimer = 0;
+    [SerializeField]float m_SlideDuration = 0;
+    [SerializeField]float m_SlidePower = 10;
+
+    [Header("Downed Stance")]
+    bool m_IsDowned = false;
+    float m_BleedoutTimer;
+    float m_BleedoutDuration = 20;
+
+    [SerializeField] GameObject m_BleedoutObject;
+    [SerializeField] Text m_BleedoutText;
     void Start()
     {
         m_Body = GetComponent<Rigidbody>();
@@ -87,7 +100,10 @@ public class PlayerController : MonoBehaviour
         m_HealthBar.value = m_PlayerHealth;
         m_PossessionBar.value = m_PossesionMeter;
 
+        m_BleedoutObject.SetActive(false);
 
+        m_SlideTimer = m_SlideDuration;
+        m_BleedoutTimer = m_BleedoutDuration;
     }
 
     void ConvertMovementForAnimation(float _xPos, float _yPos)
@@ -127,7 +143,10 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        if (m_MyView.IsMine && m_CanMove)
+        if (!m_MyView.IsMine)
+            return;
+
+        if (m_CanMove && !m_IsDowned)
         {
             float xPos = Input.GetAxisRaw("Horizontal") * Time.deltaTime;
             float yPos = Input.GetAxisRaw("Vertical") * Time.deltaTime;
@@ -149,7 +168,7 @@ public class PlayerController : MonoBehaviour
 
             switch (m_MovementMode)
             {
-                case MovementType.Default: // 4 Directional movement 
+                case MovementType.Four_Directional: // 4 Directional movement 
 
                     if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.W) && !m_IsCrouched)
                     {
@@ -173,7 +192,7 @@ public class PlayerController : MonoBehaviour
                     }
                     break;
 
-                case MovementType.Omnimovement:
+                case MovementType.Omni_Directional:
 
                     if (Input.GetKeyDown(KeyCode.Space) && Input.GetKeyDown(KeyCode.W) && Input.GetKey(KeyCode.LeftShift)) // tactical Sprint code
                     {
@@ -220,19 +239,44 @@ public class PlayerController : MonoBehaviour
                 m_BodyAnimations[i].SetBool("TacSprint", m_IsTacticalSprinting);
             }
 
-            if (Input.GetKey(KeyCode.C))
+            if (!m_IsSprinting)
             {
-                m_CrouchLerpAmount = Mathf.Lerp(m_CrouchLerpAmount, 1, m_CrouchLerpSpeed * Time.deltaTime);
-                m_PlayerCollider.center = new Vector3(0, 0.3788545f, 0);
-                m_PlayerCollider.height = 0.8057906f;
-                m_IsCrouched = true;
+                if (Input.GetKey(KeyCode.C))
+                {
+                    m_CrouchLerpAmount = Mathf.Lerp(m_CrouchLerpAmount, 1, m_CrouchLerpSpeed * Time.deltaTime);
+                    m_PlayerCollider.center = new Vector3(0, 0.3788545f, 0);
+                    m_PlayerCollider.height = 0.8057906f;
+                    m_IsCrouched = true;
+                }
+                else
+                {
+                    m_CrouchLerpAmount = Mathf.Lerp(m_CrouchLerpAmount, 0, m_CrouchLerpSpeed * Time.deltaTime);
+                    m_PlayerCollider.center = m_DefaultCollider;
+                    m_PlayerCollider.height = m_DefaultHeight;
+                    m_IsCrouched = false;
+                }
             }
             else
             {
-                m_CrouchLerpAmount = Mathf.Lerp(m_CrouchLerpAmount, 0, m_CrouchLerpSpeed * Time.deltaTime);
-                m_PlayerCollider.center = m_DefaultCollider;
-                m_PlayerCollider.height = m_DefaultHeight;
-                m_IsCrouched = false;
+                if (Input.GetKey(KeyCode.C)) // Slide 
+                {
+                    StartSliding();
+                }
+                
+            }
+
+            if (m_IsSliding)
+            {
+                m_SlideTimer -= Time.deltaTime;
+
+                if (m_SlideTimer <= 0)
+                {
+                    m_PlayerCollider.center = m_DefaultCollider;
+                    m_PlayerCollider.height = m_DefaultHeight;
+
+                    m_IsSliding = false;
+                    m_SlideTimer = m_SlideDuration;
+                }
             }
 
             m_BodyAnimations[0].SetLayerWeight(4, m_CrouchLerpAmount);
@@ -275,7 +319,35 @@ public class PlayerController : MonoBehaviour
             m_Ghost = FindAnyObjectByType<GhostAI>();
         }
 
+        if (m_IsDowned)
+        {
+            m_BleedoutTimer -= Time.deltaTime;
+            int ConvertedBleedoutTime = (int)m_BleedoutTimer;
+
+            m_BleedoutText.text = "Bleedout Time: " + ConvertedBleedoutTime.ToString();
+            if (m_BleedoutTimer <= 0)
+            {
+                m_IsDowned = false;
+                //TODO: Send player to spectate
+                m_MyView.RPC("RPC_RevivePlayer", RpcTarget.All);
+                m_BleedoutTimer = m_BleedoutDuration;
+            }
+        }
+
         m_PossessionBar.value = m_PossesionMeter;
+    }
+
+    void StartSliding()
+    {
+        if (m_IsSliding)
+            return;
+
+        m_PlayerCollider.center = new Vector3(0, 0.3788545f, 0);
+        m_PlayerCollider.height = 0.8057906f;
+
+        m_BodyAnimations[0].SetTrigger("Slide");
+        m_IsSliding = true;
+        m_Body.AddForce(transform.forward * m_SlidePower, ForceMode.Impulse);
     }
 
     bool m_IsTacSprinting()
@@ -306,13 +378,32 @@ public class PlayerController : MonoBehaviour
 
     void CheckHealth()
     {
+        if(!m_MyView.IsMine)
+
         if (m_PlayerHealth <= 50)
         {
             m_PostProcessing.profile.TryGet(out m_Colour);
 
             m_Colour.colorFilter.value = Color.red;
         }
-        //TODO Check health & if health is low then die
+
+        if (m_PlayerHealth <= 0)
+        {
+            m_MyView.RPC("RPC_EnterDownedStance", RpcTarget.All);
+        }
+    }
+
+    [PunRPC]
+    public void RPC_EnterDownedStance()
+    {
+        if (!m_MyView.IsMine)
+            return;
+
+        m_BleedoutObject.SetActive(true);
+
+        m_IsDowned = true;
+        m_BodyAnimations[0].SetBool("IsDowned", m_IsDowned);
+        m_PlayerHealth = 100;
     }
 
     public bool IsTacticalSprinting()
@@ -333,9 +424,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void RevivePlayer()
+    [PunRPC]
+    public void RPC_RevivePlayer() // Revived by another player
     {
-
+        m_BleedoutObject.SetActive(false);
+        m_IsDowned = false;
+        m_BodyAnimations[0].SetBool("IsDowned", m_IsDowned);
     }
 
     public void SetMovement(bool _state)

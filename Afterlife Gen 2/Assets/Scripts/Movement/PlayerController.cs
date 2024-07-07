@@ -6,6 +6,11 @@ using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.UI;
 using Photon.Pun;
 
+enum MovementType
+{
+    Default = 0,
+    Omnimovement,
+}
 enum PlayerStance
 {
     Stand = 0,
@@ -18,6 +23,10 @@ enum PlayerStance
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] MovementType m_MovementMode = MovementType.Default;
+
+    [Space]
+
     [SerializeField] Volume m_PostProcessing;
     ColorAdjustments m_Colour;
 
@@ -129,28 +138,82 @@ public class PlayerController : MonoBehaviour
 
             ConvertMovementForAnimation(xPos, yPos);
 
+            // Emotes
 
-            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.W) && !m_IsCrouched)
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
             {
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    m_IsTacticalSprinting = true;
-                }
-
-                if (m_IsTacticalSprinting)
-                    m_PlayersOverallSpeed = m_PlayerSprintSpeed + 1;
-                else
-                    m_PlayersOverallSpeed = m_PlayerSprintSpeed;
-
-                m_IsSprinting = true;
-            }
-            else
-            {
-                m_PlayersOverallSpeed = m_PlayerWalkSpeed;
-                m_IsTacticalSprinting = false;
-                m_IsSprinting = false;
+                m_BodyAnimations[0].SetInteger("IsEmoting", 0);
             }
 
+            // Players Movement 
+
+            switch (m_MovementMode)
+            {
+                case MovementType.Default: // 4 Directional movement 
+
+                    if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.W) && !m_IsCrouched)
+                    {
+                        if (Input.GetKeyDown(KeyCode.Space))
+                        {
+                            m_IsTacticalSprinting = true;
+                        }
+
+                        if (m_IsTacticalSprinting)
+                            m_PlayersOverallSpeed = m_PlayerSprintSpeed + 1;
+                        else
+                            m_PlayersOverallSpeed = m_PlayerSprintSpeed;
+
+                        m_IsSprinting = true;
+                    }
+                    else
+                    {
+                        m_PlayersOverallSpeed = m_PlayerWalkSpeed;
+                        m_IsTacticalSprinting = false;
+                        m_IsSprinting = false;
+                    }
+                    break;
+
+                case MovementType.Omnimovement:
+
+                    if (Input.GetKeyDown(KeyCode.Space) && Input.GetKeyDown(KeyCode.W) && Input.GetKey(KeyCode.LeftShift)) // tactical Sprint code
+                    {
+                        m_IsTacticalSprinting = true;
+                    }
+
+                    if (Input.GetKey(KeyCode.LeftShift) && !m_IsCrouched) // Omni directional movement code
+                    {
+
+                        if (m_IsTacticalSprinting)
+                            m_PlayersOverallSpeed = m_PlayerSprintSpeed + 1;
+                        else
+                            m_PlayersOverallSpeed = m_PlayerSprintSpeed;
+
+                        m_IsSprinting = true;
+                    }
+                    else
+                    {
+                        m_PlayersOverallSpeed = m_PlayerWalkSpeed;
+                        m_IsTacticalSprinting = false;
+                        m_IsSprinting = false;
+                    }
+                    break;
+            }
+
+
+            if (Input.GetKeyDown(KeyCode.Alpha1) && !Input.GetKeyDown(KeyCode.W)) // Emote Dance 1
+            {
+                m_BodyAnimations[0].SetInteger("IsEmoting", 1);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha2) && !Input.GetKeyDown(KeyCode.W)) // Emote Dance 2
+            {
+                m_BodyAnimations[0].SetInteger("IsEmoting", 2);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha3) && !Input.GetKeyDown(KeyCode.W)) // Emote Dance 3
+            {
+                m_BodyAnimations[0].SetInteger("IsEmoting", 3);
+            }
 
             for (int i = 0; i < m_BodyAnimations.Length; i++)
             {
@@ -172,11 +235,7 @@ public class PlayerController : MonoBehaviour
                 m_IsCrouched = false;
             }
 
-
-            for (int i = 0; i < m_BodyAnimations.Length - 1; i++)
-            {
-                m_BodyAnimations[i].SetLayerWeight(4, m_CrouchLerpAmount);
-            }
+            m_BodyAnimations[0].SetLayerWeight(4, m_CrouchLerpAmount);
 
             if (m_IsDiving)
             {

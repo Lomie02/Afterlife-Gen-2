@@ -81,11 +81,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField]float m_SlideDuration = 0;
     [SerializeField]float m_SlidePower = 10;
 
-    // Player Downed
+    [Header("Downed Stance")]
     bool m_IsDowned = false;
     float m_BleedoutTimer;
     float m_BleedoutDuration = 20;
 
+    [SerializeField] GameObject m_BleedoutObject;
+    [SerializeField] Text m_BleedoutText;
     void Start()
     {
         m_Body = GetComponent<Rigidbody>();
@@ -97,6 +99,8 @@ public class PlayerController : MonoBehaviour
 
         m_HealthBar.value = m_PlayerHealth;
         m_PossessionBar.value = m_PossesionMeter;
+
+        m_BleedoutObject.SetActive(false);
 
         m_SlideTimer = m_SlideDuration;
         m_BleedoutTimer = m_BleedoutDuration;
@@ -139,7 +143,10 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        if (m_MyView.IsMine && m_CanMove && !m_IsDowned)
+        if (!m_MyView.IsMine)
+            return;
+
+        if (m_CanMove && !m_IsDowned)
         {
             float xPos = Input.GetAxisRaw("Horizontal") * Time.deltaTime;
             float yPos = Input.GetAxisRaw("Vertical") * Time.deltaTime;
@@ -315,6 +322,9 @@ public class PlayerController : MonoBehaviour
         if (m_IsDowned)
         {
             m_BleedoutTimer -= Time.deltaTime;
+            int ConvertedBleedoutTime = (int)m_BleedoutTimer;
+
+            m_BleedoutText.text = "Bleedout Time: " + ConvertedBleedoutTime.ToString();
             if (m_BleedoutTimer <= 0)
             {
                 m_IsDowned = false;
@@ -389,6 +399,8 @@ public class PlayerController : MonoBehaviour
         if (!m_MyView.IsMine)
             return;
 
+        m_BleedoutObject.SetActive(true);
+
         m_IsDowned = true;
         m_BodyAnimations[0].SetBool("IsDowned", m_IsDowned);
         m_PlayerHealth = 100;
@@ -415,6 +427,7 @@ public class PlayerController : MonoBehaviour
     [PunRPC]
     public void RPC_RevivePlayer() // Revived by another player
     {
+        m_BleedoutObject.SetActive(false);
         m_IsDowned = false;
         m_BodyAnimations[0].SetBool("IsDowned", m_IsDowned);
     }

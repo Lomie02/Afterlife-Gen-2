@@ -5,6 +5,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.UI;
 using Photon.Pun;
+using Photon.Realtime;
 
 enum MovementType
 {
@@ -21,7 +22,7 @@ enum PlayerStance //TODO
     Downed,
 }
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviourPunCallbacks
 {
     [SerializeField] MovementType m_MovementMode = MovementType.Four_Directional;
 
@@ -29,7 +30,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] Volume m_PostProcessing;
     ColorAdjustments m_Colour;
-    Rigidbody m_Body;
+    public Rigidbody m_Body;
 
     Transform m_NewPos;
     [SerializeField] float m_PlayerHealth = 100;
@@ -47,7 +48,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float m_PlayerSprintSpeed = 5;
     [SerializeField] float m_PlayerTacticalSprintSpeed = 8;
 
-    CapsuleCollider m_PlayerCollider;
+    public CapsuleCollider m_PlayerCollider;
 
     Vector3 m_DefaultCollider = new Vector3(0, 0.8321516f, 0);
     float m_DefaultHeight = 1.712385f;
@@ -69,7 +70,7 @@ public class PlayerController : MonoBehaviour
     float m_AnimXPos;
     float m_AnimYPos;
 
-    float m_CrouchLerpSpeed = 2;
+    [SerializeField] float m_CrouchLerpSpeed = 2;
     float m_CrouchLerpAmount;
     bool m_IsCrouched = false;
 
@@ -93,13 +94,26 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] Camera m_PlayersCamera;
     SpectateSystem m_SpectateSystem;
+    [SerializeField] Camera m_SpectateCamera;
 
     void Start()
     {
+        m_MyView = GetComponent<PhotonView>();
         m_SpectateSystem = FindAnyObjectByType<SpectateSystem>();
 
-        m_Body = GetComponent<Rigidbody>();
-        m_MyView = GetComponent<PhotonView>();
+
+        if (!m_MyView.IsMine) // Submit Camera only if its not mine
+        {
+            m_SpectateSystem.SubmitCamera(m_SpectateCamera);
+            m_SpectateCamera.gameObject.SetActive(false);
+        }
+        else
+        {
+            m_SpectateCamera.gameObject.SetActive(false);
+        }
+
+        //========================================= 
+
         m_Ghost = FindAnyObjectByType<GhostAI>();
 
         m_PlayerCollider = GetComponent<CapsuleCollider>();
@@ -117,7 +131,26 @@ public class PlayerController : MonoBehaviour
         {
             Physics.IgnoreCollision(m_RagdollColliders[i], m_PlayerCollider, true);
         }
+
+        DisablePlayerCollision();
         SetRagdoll(false);
+        //m_SpectateSystem.CollectCameraData();
+    }
+
+    void DisablePlayerCollision()
+    {
+        GameObject[] PlayerColliders = GameObject.FindGameObjectsWithTag("Player");
+
+        for (int i = 0; i < PlayerColliders.Length; i++)
+        {
+            Physics.IgnoreCollision(m_PlayerCollider, PlayerColliders[i].GetComponent<Collider>());
+        }
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer) // Get Rid of player collision
+    {
+        base.OnPlayerEnteredRoom(newPlayer);
+        DisablePlayerCollision();
     }
 
     void ConvertMovementForAnimation(float _xPos, float _yPos)
@@ -341,8 +374,8 @@ public class PlayerController : MonoBehaviour
             m_BleedoutText.text = "Bleedout Time: " + ConvertedBleedoutTime.ToString();
             if (m_BleedoutTimer <= 0)
             {
-                m_SpectateSystem.SetSpectateMode(true);
-                m_PlayersCamera.gameObject.SetActive(false);
+                //m_SpectateSystem.SetSpectateMode(true, false);
+                //m_PlayersCamera.gameObject.SetActive(false);
                 m_MyView.RPC("RPC_PlayerDeath", RpcTarget.All);
                 m_BleedoutTimer = m_BleedoutDuration;
             }
@@ -364,7 +397,7 @@ public class PlayerController : MonoBehaviour
         m_Body.AddForce(transform.forward * m_SlidePower, ForceMode.Impulse);
     }
 
-    void SetRagdoll(bool _state)
+    void SetRagdoll(bool _state) // Sets players ragdoll mode
     {
         m_BodyAnimations[0].enabled = !_state;
 
@@ -425,7 +458,7 @@ public class PlayerController : MonoBehaviour
 
         if (m_PlayerHealth <= 0 && PhotonNetwork.PlayerList.Length == 1)
         {
-            m_SpectateSystem.SetSpectateMode(true);
+            m_SpectateSystem.SetSpectateMode(true, true);
             m_PlayersCamera.gameObject.SetActive(false);
             m_MyView.RPC("RPC_PlayerDeath", RpcTarget.All);
         }
@@ -440,7 +473,6 @@ public class PlayerController : MonoBehaviour
     {
         SetRagdoll(true);
         this.enabled = false;
-        m_PlayerCollider.enabled = false;
     }
 
     [PunRPC]

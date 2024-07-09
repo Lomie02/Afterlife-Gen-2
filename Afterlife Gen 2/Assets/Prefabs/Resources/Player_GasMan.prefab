@@ -775,6 +775,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MovementMode: 1
   m_PostProcessing: {fileID: 1029340009321572742}
+  m_Body: {fileID: 1667172815035673275}
   m_PlayerHealth: 100
   m_PossesionMeter: 0
   m_HealthBar: {fileID: 3950793118431524811}
@@ -786,6 +787,8 @@ MonoBehaviour:
   m_PlayerWalkSpeed: 1.5
   m_PlayerSprintSpeed: 4
   m_PlayerTacticalSprintSpeed: 8
+  m_PlayerCollider: {fileID: 5000556251193296026}
+  m_CrouchLerpSpeed: 10
   m_SlideDuration: 1
   m_SlidePower: 10
   m_BleedoutObject: {fileID: 8168681137256387505}
@@ -815,6 +818,7 @@ MonoBehaviour:
   - {fileID: 5812101313372235625}
   - {fileID: 2891189703435707485}
   m_PlayersCamera: {fileID: 4987427523715596555}
+  m_SpectateCamera: {fileID: 1515342301421697402}
 --- !u!54 &1667172815035673275
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -67,11 +67,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.LocalPlayer.NickName = SteamFriends.GetPersonaName();
         }
-        else
-        {
-            int num = Random.Range(50, 999);
-            PhotonNetwork.LocalPlayer.NickName = "Employee_" + num.ToString();
-        }
 
         if (PlayerPrefs.HasKey("players_level"))
         {
@@ -163,7 +158,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void JoinLobby()
     {
         m_NetworkScreenObject.SetActive(true);
-        PhotonNetwork.JoinRoom(m_CodeInput.text);
+        PhotonNetwork.JoinRoom("au-"+ m_CodeInput.text);
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)

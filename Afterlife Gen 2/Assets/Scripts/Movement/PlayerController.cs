@@ -88,6 +88,12 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] GameObject m_BleedoutObject;
     [SerializeField] Text m_BleedoutText;
+
+    [SerializeField] Rigidbody[] m_RagdollBodys;
+    [SerializeField] Collider[] m_RagdollColliders;
+    bool m_isDead = false;
+
+
     void Start()
     {
         m_Body = GetComponent<Rigidbody>();
@@ -104,6 +110,12 @@ public class PlayerController : MonoBehaviour
 
         m_SlideTimer = m_SlideDuration;
         m_BleedoutTimer = m_BleedoutDuration;
+
+        for (int i = 0; i < m_RagdollColliders.Length; i++)
+        {
+            Physics.IgnoreCollision(m_RagdollColliders[i], m_PlayerCollider, true);
+        }
+        SetRagdoll(false);
     }
 
     void ConvertMovementForAnimation(float _xPos, float _yPos)
@@ -146,7 +158,7 @@ public class PlayerController : MonoBehaviour
         if (!m_MyView.IsMine)
             return;
 
-        if (m_CanMove && !m_IsDowned)
+        if (m_CanMove && !m_IsDowned && !m_isDead)
         {
             float xPos = Input.GetAxisRaw("Horizontal") * Time.deltaTime;
             float yPos = Input.GetAxisRaw("Vertical") * Time.deltaTime;
@@ -241,7 +253,7 @@ public class PlayerController : MonoBehaviour
 
             if (!m_IsSprinting)
             {
-                if (Input.GetKey(KeyCode.C))
+                if (Input.GetKey(KeyCode.LeftControl))
                 {
                     m_CrouchLerpAmount = Mathf.Lerp(m_CrouchLerpAmount, 1, m_CrouchLerpSpeed * Time.deltaTime);
                     m_PlayerCollider.center = new Vector3(0, 0.3788545f, 0);
@@ -327,9 +339,9 @@ public class PlayerController : MonoBehaviour
             m_BleedoutText.text = "Bleedout Time: " + ConvertedBleedoutTime.ToString();
             if (m_BleedoutTimer <= 0)
             {
-                m_IsDowned = false;
+               
                 //TODO: Send player to spectate
-                m_MyView.RPC("RPC_RevivePlayer", RpcTarget.All);
+               m_MyView.RPC("RPC_PlayerDeath", RpcTarget.All);
                 m_BleedoutTimer = m_BleedoutDuration;
             }
         }
@@ -348,6 +360,28 @@ public class PlayerController : MonoBehaviour
         m_BodyAnimations[0].SetTrigger("Slide");
         m_IsSliding = true;
         m_Body.AddForce(transform.forward * m_SlidePower, ForceMode.Impulse);
+    }
+
+    void SetRagdoll(bool _state)
+    {
+        m_BodyAnimations[0].enabled = !_state;
+
+        for (int i = 0; i < m_RagdollBodys.Length; i++)
+        {
+            m_RagdollBodys[i].isKinematic = !_state;
+
+            if (_state)
+            {
+                m_RagdollBodys[i].AddForce(Vector3.up * 5, ForceMode.Impulse);
+            }
+
+            m_RagdollBodys[i].useGravity = _state;
+        }
+        for (int i = 0; i < m_RagdollColliders.Length; i++)
+        {
+            m_RagdollColliders[i].enabled = _state;
+        }
+
     }
 
     bool m_IsTacSprinting()
@@ -387,10 +421,23 @@ public class PlayerController : MonoBehaviour
             m_Colour.colorFilter.value = Color.red;
         }
 
-        if (m_PlayerHealth <= 0)
+        if (m_PlayerHealth <= 0 && PhotonNetwork.PlayerList.Length == 1)
+        {
+            m_MyView.RPC("RPC_PlayerDeath", RpcTarget.All);
+        }
+        else if(m_PlayerHealth <= 0 && PhotonNetwork.PlayerList.Length > 1)
         {
             m_MyView.RPC("RPC_EnterDownedStance", RpcTarget.All);
         }
+    }
+
+    [PunRPC]
+    public void RPC_PlayerDeath()
+    {
+        
+        SetRagdoll(true);
+
+        m_PlayerCollider.enabled = false;
     }
 
     [PunRPC]
@@ -400,10 +447,9 @@ public class PlayerController : MonoBehaviour
             return;
 
         m_BleedoutObject.SetActive(true);
-
+        m_BodyAnimations[0].SetInteger("IsEmoting", 0);
         m_IsDowned = true;
         m_BodyAnimations[0].SetBool("IsDowned", m_IsDowned);
-        m_PlayerHealth = 100;
     }
 
     public bool IsTacticalSprinting()
@@ -429,6 +475,7 @@ public class PlayerController : MonoBehaviour
     {
         m_BleedoutObject.SetActive(false);
         m_IsDowned = false;
+        m_PlayerHealth = 100;
         m_BodyAnimations[0].SetBool("IsDowned", m_IsDowned);
     }
 

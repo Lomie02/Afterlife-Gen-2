@@ -11,7 +11,7 @@ enum MovementType
     Four_Directional = 0,
     Omni_Directional,
 }
-enum PlayerStance
+enum PlayerStance //TODO 
 {
     Stand = 0,
     Walk,
@@ -29,8 +29,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] Volume m_PostProcessing;
     ColorAdjustments m_Colour;
-
     Rigidbody m_Body;
+
     Transform m_NewPos;
     [SerializeField] float m_PlayerHealth = 100;
     [SerializeField] float m_PossesionMeter = 0;
@@ -40,7 +40,6 @@ public class PlayerController : MonoBehaviour
 
     PlayerStance m_Stance = PlayerStance.Stand;
     [SerializeField] PhotonView m_MyView;
-
     [SerializeField] Animator[] m_BodyAnimations;
 
     float m_PlayersOverallSpeed = 0;
@@ -57,7 +56,6 @@ public class PlayerController : MonoBehaviour
     float m_DiveHeight = 0.621664f;
 
     bool m_IsDiving = false;
-
     float m_DiveWaitTimer = 0;
     float m_DiveWaitDuration = 1;
 
@@ -78,8 +76,8 @@ public class PlayerController : MonoBehaviour
     // Sliding Mechanics
     bool m_IsSliding;
     float m_SlideTimer = 0;
-    [SerializeField]float m_SlideDuration = 0;
-    [SerializeField]float m_SlidePower = 10;
+    [SerializeField] float m_SlideDuration = 0;
+    [SerializeField] float m_SlidePower = 10;
 
     [Header("Downed Stance")]
     bool m_IsDowned = false;
@@ -93,9 +91,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Collider[] m_RagdollColliders;
     bool m_isDead = false;
 
+    [SerializeField] Camera m_PlayersCamera;
+    SpectateSystem m_SpectateSystem;
 
     void Start()
     {
+        m_SpectateSystem = FindAnyObjectByType<SpectateSystem>();
+
         m_Body = GetComponent<Rigidbody>();
         m_MyView = GetComponent<PhotonView>();
         m_Ghost = FindAnyObjectByType<GhostAI>();
@@ -274,7 +276,7 @@ public class PlayerController : MonoBehaviour
                 {
                     StartSliding();
                 }
-                
+
             }
 
             if (m_IsSliding)
@@ -339,9 +341,9 @@ public class PlayerController : MonoBehaviour
             m_BleedoutText.text = "Bleedout Time: " + ConvertedBleedoutTime.ToString();
             if (m_BleedoutTimer <= 0)
             {
-               
-                //TODO: Send player to spectate
-               m_MyView.RPC("RPC_PlayerDeath", RpcTarget.All);
+                m_SpectateSystem.SetSpectateMode(true);
+                m_PlayersCamera.gameObject.SetActive(false);
+                m_MyView.RPC("RPC_PlayerDeath", RpcTarget.All);
                 m_BleedoutTimer = m_BleedoutDuration;
             }
         }
@@ -412,20 +414,22 @@ public class PlayerController : MonoBehaviour
 
     void CheckHealth()
     {
-        if(!m_MyView.IsMine)
+        if (!m_MyView.IsMine)
 
-        if (m_PlayerHealth <= 50)
-        {
-            m_PostProcessing.profile.TryGet(out m_Colour);
+            if (m_PlayerHealth <= 50)
+            {
+                m_PostProcessing.profile.TryGet(out m_Colour);
 
-            m_Colour.colorFilter.value = Color.red;
-        }
+                m_Colour.colorFilter.value = Color.red;
+            }
 
         if (m_PlayerHealth <= 0 && PhotonNetwork.PlayerList.Length == 1)
         {
+            m_SpectateSystem.SetSpectateMode(true);
+            m_PlayersCamera.gameObject.SetActive(false);
             m_MyView.RPC("RPC_PlayerDeath", RpcTarget.All);
         }
-        else if(m_PlayerHealth <= 0 && PhotonNetwork.PlayerList.Length > 1)
+        else if (m_PlayerHealth <= 0 && PhotonNetwork.PlayerList.Length > 1)
         {
             m_MyView.RPC("RPC_EnterDownedStance", RpcTarget.All);
         }
@@ -434,9 +438,8 @@ public class PlayerController : MonoBehaviour
     [PunRPC]
     public void RPC_PlayerDeath()
     {
-        
         SetRagdoll(true);
-
+        this.enabled = false;
         m_PlayerCollider.enabled = false;
     }
 

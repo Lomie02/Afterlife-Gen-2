@@ -62,6 +62,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     void Start()
     {
         //SearchForElements();
+
         m_MyView = GetComponent<PhotonView>();
         m_ReadyUp = FindObjectOfType<ReadyZone>();
         m_Inventory = GetComponent<InventoryManager>();
@@ -85,6 +86,8 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             m_ReadyHost.onClick.AddListener(delegate { m_MyCamera.MouseLockState(true); });
             m_ReadyHost.onClick.AddListener(delegate { m_MyController.SetMovement(true); });
         }
+        m_LeaveButton = GameObject.Find("Leave Game").GetComponent<Button>();
+        m_LeaveButton.onClick.AddListener(delegate { PhotonNetwork.LeaveRoom(); });
 
         m_PauseMenu.SetActive(false);
         m_SpecialistMenu.SetActive(false);
@@ -110,7 +113,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_CancelButton = GameObject.Find("Cancel").GetComponent<Button>();
         m_ResumeButton = GameObject.Find("Resume").GetComponent<Button>();
 
-        m_LeaveButton = GameObject.Find("Leave Game").GetComponent<Button>();
+        m_LeaveButton = GameObject.Find("LeaveGame").GetComponent<Button>();
         m_CopyButton = GameObject.Find("CopyCode").GetComponent<Button>();
 
         m_SpecialistMenu = GameObject.Find("SpecialistMenu");
@@ -129,6 +132,8 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
         if (m_SpecialistMenu)
             m_SpecialistMenu.SetActive(false);
+
+        m_LeaveButton.onClick.AddListener(delegate { PhotonNetwork.LeaveRoom(); });
 
         m_CancelGameStart.onClick.AddListener(delegate { m_MyController.SetMovement(true); });
         m_CancelGameStart.onClick.AddListener(delegate { m_MyCamera.MouseLockState(true); });

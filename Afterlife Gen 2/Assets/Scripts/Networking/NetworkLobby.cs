@@ -74,7 +74,6 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
             }
         }
 
-
         if (m_NetworkMode == LobbyNetworkMode.Lobby)
         {
             PhotonNetwork.Instantiate(m_Pharmacist.name, m_PlayerSpawns[Location].position, Quaternion.identity);
@@ -128,6 +127,7 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
     public void CopyCode()
     {
         TextEditor te = new TextEditor();
+
         te.text = PhotonNetwork.CurrentRoom.Name;
         te.SelectAll();
         te.Copy();

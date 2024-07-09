@@ -11,7 +11,7 @@ enum MovementType
     Four_Directional = 0,
     Omni_Directional,
 }
-enum PlayerStance
+enum PlayerStance //TODO 
 {
     Stand = 0,
     Walk,
@@ -29,8 +29,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] Volume m_PostProcessing;
     ColorAdjustments m_Colour;
-
     Rigidbody m_Body;
+
     Transform m_NewPos;
     [SerializeField] float m_PlayerHealth = 100;
     [SerializeField] float m_PossesionMeter = 0;
@@ -40,7 +40,6 @@ public class PlayerController : MonoBehaviour
 
     PlayerStance m_Stance = PlayerStance.Stand;
     [SerializeField] PhotonView m_MyView;
-
     [SerializeField] Animator[] m_BodyAnimations;
 
     float m_PlayersOverallSpeed = 0;
@@ -57,7 +56,6 @@ public class PlayerController : MonoBehaviour
     float m_DiveHeight = 0.621664f;
 
     bool m_IsDiving = false;
-
     float m_DiveWaitTimer = 0;
     float m_DiveWaitDuration = 1;
 
@@ -78,8 +76,8 @@ public class PlayerController : MonoBehaviour
     // Sliding Mechanics
     bool m_IsSliding;
     float m_SlideTimer = 0;
-    [SerializeField]float m_SlideDuration = 0;
-    [SerializeField]float m_SlidePower = 10;
+    [SerializeField] float m_SlideDuration = 0;
+    [SerializeField] float m_SlidePower = 10;
 
     [Header("Downed Stance")]
     bool m_IsDowned = false;
@@ -88,8 +86,18 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] GameObject m_BleedoutObject;
     [SerializeField] Text m_BleedoutText;
+
+    [SerializeField] Rigidbody[] m_RagdollBodys;
+    [SerializeField] Collider[] m_RagdollColliders;
+    bool m_isDead = false;
+
+    [SerializeField] Camera m_PlayersCamera;
+    SpectateSystem m_SpectateSystem;
+
     void Start()
     {
+        m_SpectateSystem = FindAnyObjectByType<SpectateSystem>();
+
         m_Body = GetComponent<Rigidbody>();
         m_MyView = GetComponent<PhotonView>();
         m_Ghost = FindAnyObjectByType<GhostAI>();
@@ -104,6 +112,12 @@ public class PlayerController : MonoBehaviour
 
         m_SlideTimer = m_SlideDuration;
         m_BleedoutTimer = m_BleedoutDuration;
+
+        for (int i = 0; i < m_RagdollColliders.Length; i++)
+        {
+            Physics.IgnoreCollision(m_RagdollColliders[i], m_PlayerCollider, true);
+        }
+        SetRagdoll(false);
     }
 
     void ConvertMovementForAnimation(float _xPos, float _yPos)
@@ -146,7 +160,7 @@ public class PlayerController : MonoBehaviour
         if (!m_MyView.IsMine)
             return;
 
-        if (m_CanMove && !m_IsDowned)
+        if (m_CanMove && !m_IsDowned && !m_isDead)
         {
             float xPos = Input.GetAxisRaw("Horizontal") * Time.deltaTime;
             float yPos = Input.GetAxisRaw("Vertical") * Time.deltaTime;
@@ -241,7 +255,7 @@ public class PlayerController : MonoBehaviour
 
             if (!m_IsSprinting)
             {
-                if (Input.GetKey(KeyCode.C))
+                if (Input.GetKey(KeyCode.LeftControl))
                 {
                     m_CrouchLerpAmount = Mathf.Lerp(m_CrouchLerpAmount, 1, m_CrouchLerpSpeed * Time.deltaTime);
                     m_PlayerCollider.center = new Vector3(0, 0.3788545f, 0);
@@ -262,7 +276,7 @@ public class PlayerController : MonoBehaviour
                 {
                     StartSliding();
                 }
-                
+
             }
 
             if (m_IsSliding)
@@ -327,9 +341,9 @@ public class PlayerController : MonoBehaviour
             m_BleedoutText.text = "Bleedout Time: " + ConvertedBleedoutTime.ToString();
             if (m_BleedoutTimer <= 0)
             {
-                m_IsDowned = false;
-                //TODO: Send player to spectate
-                m_MyView.RPC("RPC_RevivePlayer", RpcTarget.All);
+                m_SpectateSystem.SetSpectateMode(true);
+                m_PlayersCamera.gameObject.SetActive(false);
+                m_MyView.RPC("RPC_PlayerDeath", RpcTarget.All);
                 m_BleedoutTimer = m_BleedoutDuration;
             }
         }
@@ -348,6 +362,28 @@ public class PlayerController : MonoBehaviour
         m_BodyAnimations[0].SetTrigger("Slide");
         m_IsSliding = true;
         m_Body.AddForce(transform.forward * m_SlidePower, ForceMode.Impulse);
+    }
+
+    void SetRagdoll(bool _state)
+    {
+        m_BodyAnimations[0].enabled = !_state;
+
+        for (int i = 0; i < m_RagdollBodys.Length; i++)
+        {
+            m_RagdollBodys[i].isKinematic = !_state;
+
+            if (_state)
+            {
+                m_RagdollBodys[i].AddForce(Vector3.up * 5, ForceMode.Impulse);
+            }
+
+            m_RagdollBodys[i].useGravity = _state;
+        }
+        for (int i = 0; i < m_RagdollColliders.Length; i++)
+        {
+            m_RagdollColliders[i].enabled = _state;
+        }
+
     }
 
     bool m_IsTacSprinting()
@@ -378,19 +414,33 @@ public class PlayerController : MonoBehaviour
 
     void CheckHealth()
     {
-        if(!m_MyView.IsMine)
+        if (!m_MyView.IsMine)
 
-        if (m_PlayerHealth <= 50)
+            if (m_PlayerHealth <= 50)
+            {
+                m_PostProcessing.profile.TryGet(out m_Colour);
+
+                m_Colour.colorFilter.value = Color.red;
+            }
+
+        if (m_PlayerHealth <= 0 && PhotonNetwork.PlayerList.Length == 1)
         {
-            m_PostProcessing.profile.TryGet(out m_Colour);
-
-            m_Colour.colorFilter.value = Color.red;
+            m_SpectateSystem.SetSpectateMode(true);
+            m_PlayersCamera.gameObject.SetActive(false);
+            m_MyView.RPC("RPC_PlayerDeath", RpcTarget.All);
         }
-
-        if (m_PlayerHealth <= 0)
+        else if (m_PlayerHealth <= 0 && PhotonNetwork.PlayerList.Length > 1)
         {
             m_MyView.RPC("RPC_EnterDownedStance", RpcTarget.All);
         }
+    }
+
+    [PunRPC]
+    public void RPC_PlayerDeath()
+    {
+        SetRagdoll(true);
+        this.enabled = false;
+        m_PlayerCollider.enabled = false;
     }
 
     [PunRPC]
@@ -400,10 +450,9 @@ public class PlayerController : MonoBehaviour
             return;
 
         m_BleedoutObject.SetActive(true);
-
+        m_BodyAnimations[0].SetInteger("IsEmoting", 0);
         m_IsDowned = true;
         m_BodyAnimations[0].SetBool("IsDowned", m_IsDowned);
-        m_PlayerHealth = 100;
     }
 
     public bool IsTacticalSprinting()
@@ -429,6 +478,7 @@ public class PlayerController : MonoBehaviour
     {
         m_BleedoutObject.SetActive(false);
         m_IsDowned = false;
+        m_PlayerHealth = 100;
         m_BodyAnimations[0].SetBool("IsDowned", m_IsDowned);
     }
 

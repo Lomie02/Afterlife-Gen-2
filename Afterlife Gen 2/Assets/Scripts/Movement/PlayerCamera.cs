@@ -23,6 +23,8 @@ public class PlayerCamera : MonoBehaviour
         if (!m_MyView.IsMine)
         {
             gameObject.GetComponent<AudioSource>().enabled = false;
+            gameObject.GetComponent<Camera>().enabled = false;
+
             this.enabled = false;
         }
 

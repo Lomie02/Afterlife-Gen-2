@@ -1316,7 +1316,7 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 6763463374394090382}
-    m_Position: {x: 158.94122, y: 238.70131, z: 0}
+    m_Position: {x: 160, y: 240, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -1839,6 +1839,32 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!1102 &5418965464996883284
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Lighter_Open
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: 92427e38a4aee9e4bbec04bc9a69b115, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1101 &5470254778176888303
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -2083,6 +2109,12 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: -5132356682676248720}
     m_Position: {x: -820, y: -150, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 5418965464996883284}
+    m_Position: {x: -785, y: -85, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 9195137335416602238}
+    m_Position: {x: -750, y: -20, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -2252,6 +2284,32 @@ AnimatorState:
   m_TimeParameterActive: 0
   m_Motion: {fileID: 3142420352803715515, guid: 36989f6373111bb478e68e069852a23a,
     type: 3}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
+--- !u!1102 &9195137335416602238
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Lighter_Closed
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: 515d435e02443ed4eaf9c0743d39d743, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

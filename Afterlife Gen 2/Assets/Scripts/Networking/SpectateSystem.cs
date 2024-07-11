@@ -6,48 +6,46 @@ using Photon.Realtime;
 
 public class SpectateSystem : MonoBehaviourPunCallbacks
 {
-    [SerializeField] GameObject[] m_SpectateCameras = new GameObject[4];
-    bool m_IsSpectating = false;
-
     int m_CurrentPlayerSpectating = 0;
-    void Start()
+    int m_PrevousCPlayerCamera = 0;
+
+    //=============================== New system test stuff
+    public List<Camera> m_CameraList;
+
+    public void SetSpectateMode(bool _state, bool _IsSolo)
     {
-        GameObject[] CamerasFound = GameObject.FindGameObjectsWithTag("3rdPersonCamera");
-        for (int i = 0; i < CamerasFound.Length; i++)
+        if (_IsSolo)
         {
-            m_SpectateCameras[i] = CamerasFound[i];
+            m_CurrentPlayerSpectating = 0;
         }
-
-
-        for (int i = 0; i < m_SpectateCameras.Length; i++)
-        {
-            m_SpectateCameras[i].SetActive(false);
-        }
-    }
-
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-
-        GameObject[] CamerasFound = GameObject.FindGameObjectsWithTag("3rdPersonCamera");
-        for (int i = 0; i > m_SpectateCameras.Length; i++)
-        {
-            if (m_SpectateCameras[i] == null && CamerasFound[i] != null)
-            {
-                m_SpectateCameras[i] = CamerasFound[i];
-            }
-        }
-    }
-
-    public void SetSpectateMode(bool _state)
-    {
-        m_IsSpectating = _state;
         UpdateSpectate();
+    }
+
+    public void CyclePlayer() // Cycle through the specating Screens
+    {
+        if (m_CameraList.Count > 1)
+        {
+            m_PrevousCPlayerCamera = m_CurrentPlayerSpectating;
+            m_CurrentPlayerSpectating++;
+
+            if (m_CurrentPlayerSpectating >= m_CameraList.Count)
+            {
+                m_CurrentPlayerSpectating = 0;
+            }
+
+            UpdateSpectate();
+        }
     }
 
     void UpdateSpectate()
     {
-        m_SpectateCameras[m_CurrentPlayerSpectating].SetActive(m_IsSpectating);
-        //TODO Make Cameras cycle
+        m_CameraList[m_PrevousCPlayerCamera].gameObject.SetActive(false);
+        m_CameraList[m_CurrentPlayerSpectating].gameObject.SetActive(true);
+    }
+
+    public void SubmitCamera(Camera _cameraObject) // Submit cameras to the Specator System
+    {
+        m_CameraList.Add(_cameraObject);
     }
 
 }

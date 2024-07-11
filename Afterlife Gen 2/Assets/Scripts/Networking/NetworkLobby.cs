@@ -15,10 +15,10 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
     [SerializeField] LobbyNetworkMode m_NetworkMode = LobbyNetworkMode.Lobby;
     [SerializeField] Text m_Code;
     [Header("Player Models")]
+    [SerializeField] GameObject m_Exterminator;
     [SerializeField] GameObject m_Pharmacist;
     [SerializeField] GameObject m_Trapper;
-    [SerializeField] GameObject m_Excercist;
-    [SerializeField] GameObject m_Mechanic;
+    [SerializeField] GameObject m_Cultist;
     [Space]
     int Location = 0;
     [SerializeField] Transform[] m_PlayerSpawns;
@@ -26,11 +26,15 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
     DataManager m_SaveManager;
     public string m_CodeValue;
 
+    int m_PlayerSelected;
     [SerializeField] GameObject m_HostButton;
     void Start()
     {
         m_SaveManager = FindAnyObjectByType<DataManager>();
-        SpawnPlayer();
+
+        m_PlayerSelected = PlayerPrefs.GetInt("Selected_specialist");
+
+        SpawnPlayerByID(m_PlayerSelected);
 
 
         if (m_NetworkMode == LobbyNetworkMode.Lobby)
@@ -76,8 +80,8 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
 
         if (m_NetworkMode == LobbyNetworkMode.Lobby)
         {
-            PhotonNetwork.Instantiate(m_Pharmacist.name, m_PlayerSpawns[Location].position, Quaternion.identity);
-            m_SaveManager.SetPlayersSavedSpecialist(m_Pharmacist.name);
+            PhotonNetwork.Instantiate(m_Exterminator.name, m_PlayerSpawns[Location].position, Quaternion.identity);
+            m_SaveManager.SetPlayersSavedSpecialist(m_Exterminator.name);
         }
         else
         {
@@ -96,7 +100,13 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
             }
         }
 
-        if (_index == 1)
+        if (_index == 0)
+        {
+            PhotonNetwork.Instantiate(m_Exterminator.name, m_PlayerSpawns[Location].position, Quaternion.identity);
+            m_SaveManager.SetPlayersSavedSpecialist(m_Exterminator.name);
+            return true;
+        }
+        else if (_index == 1)
         {
             PhotonNetwork.Instantiate(m_Pharmacist.name, m_PlayerSpawns[Location].position, Quaternion.identity);
             m_SaveManager.SetPlayersSavedSpecialist(m_Pharmacist.name);
@@ -110,14 +120,8 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
         }
         else if (_index == 3)
         {
-            PhotonNetwork.Instantiate(m_Excercist.name, m_PlayerSpawns[Location].position, Quaternion.identity);
-            m_SaveManager.SetPlayersSavedSpecialist(m_Excercist.name);
-            return true;
-        }
-        else if (_index == 4)
-        {
-            PhotonNetwork.Instantiate(m_Mechanic.name, m_PlayerSpawns[Location].position, Quaternion.identity);
-            m_SaveManager.SetPlayersSavedSpecialist(m_Mechanic.name);
+            PhotonNetwork.Instantiate(m_Cultist.name, m_PlayerSpawns[Location].position, Quaternion.identity);
+            m_SaveManager.SetPlayersSavedSpecialist(m_Cultist.name);
             return true;
         }
 

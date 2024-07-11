@@ -360,7 +360,15 @@ public class PlayerController : MonoBehaviourPunCallbacks
             m_BodyAnimations[i].SetBool("Sprinting", m_IsSprinting);
         }
     }
+    
+    public void RestorePossesion() // Pharmacist Specialist
+    {
+        m_PossesionMeter -= 25;
+        m_PossessionBar.value = m_PossesionMeter;
 
+        m_PlayerHealth += 50;
+        m_HealthBar.value = m_PlayerHealth;
+    }
     void UpdateDownedState()
     {
         m_BleedoutTimer -= Time.deltaTime;

@@ -63,10 +63,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.ConnectUsingSettings();
 
-        if (PlayerPrefs.HasKey("username"))
-        {
-            PhotonNetwork.LocalPlayer.NickName = SteamFriends.GetPersonaName();
-        }
+        PhotonNetwork.LocalPlayer.NickName = SteamFriends.GetPersonaName();
 
         if (PlayerPrefs.HasKey("players_level"))
         {
@@ -104,9 +101,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             m_PlayerProps.TryAdd("PlayerLevel", m_Level);
 
         if (m_PlayerProps.ContainsKey("Specialist"))
-            m_PlayerProps["Specialist"] = m_Level;
+            m_PlayerProps["Specialist"] = PlayerPrefs.GetInt("Selected_specialist");
         else
-            m_PlayerProps.TryAdd("Specialist", 1);
+            m_PlayerProps.TryAdd("Specialist", PlayerPrefs.GetInt("Selected_specialist"));
 
         if (m_PlayerProps.ContainsKey("Developer"))
             m_PlayerProps["Developer"] = m_IsDeveloper;
@@ -158,7 +155,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void JoinLobby()
     {
         m_NetworkScreenObject.SetActive(true);
-        PhotonNetwork.JoinRoom("au-"+ m_CodeInput.text);
+        PhotonNetwork.JoinRoom("au-" + m_CodeInput.text);
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)
@@ -178,7 +175,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void ChangeUsername()
     {
         PhotonNetwork.LocalPlayer.NickName = m_UsernameInput.text;
-        PlayerPrefs.SetString("username", m_UsernameInput.text);
         m_Username.text = PhotonNetwork.LocalPlayer.NickName;
     }
 

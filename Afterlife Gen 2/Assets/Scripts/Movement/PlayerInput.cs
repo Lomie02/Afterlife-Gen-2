@@ -167,6 +167,8 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     void LerpFlashLight(float _index)
     {
         m_FlashLightLerp = Mathf.Lerp(m_FlashLightLerp, _index, 5 * Time.deltaTime);
+
+        m_PlayersAnimations.SetLayerWeight(1,m_FlashLightLerp);
         m_LightAImConstrait.weight = m_FlashLightLerp;
     }
     public void LeaveGame()

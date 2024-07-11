@@ -145,7 +145,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85723c1c5cbc8cf4c9285bf060e135c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_MovementMode: 0
   m_PostProcessing: {fileID: 1029340009321572742}
+  m_Body: {fileID: 0}
   m_PlayerHealth: 100
   m_PossesionMeter: 0
   m_HealthBar: {fileID: 3950793118431524811}
@@ -156,6 +158,19 @@ MonoBehaviour:
   m_PlayerWalkSpeed: 2
   m_PlayerSprintSpeed: 5
   m_PlayerTacticalSprintSpeed: 8
+  m_PlayerCollider: {fileID: 0}
+  m_CrouchLerpSpeed: 2
+  m_SlideDuration: 0
+  m_SlidePower: 10
+  m_BleedoutObject: {fileID: 0}
+  m_BleedoutText: {fileID: 0}
+  m_RagdollBodys: []
+  m_RagdollColliders: []
+  m_PlayersCamera: {fileID: 0}
+  m_SpectateCamera: {fileID: 0}
+  m_StaminaAmount: 100
+  m_StaminaUsageRate: 10
+  m_StaminaBar: {fileID: 0}
 --- !u!54 &1667172815035673275
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -203,9 +218,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.25
-  m_Height: 1.7079107
+  m_Height: 1.6806163
   m_Direction: 1
-  m_Center: {x: 0, y: 0.8299145, z: 0}
+  m_Center: {x: 0, y: 0.8435617, z: 0}
 --- !u!114 &7217235933313483381
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -323,6 +338,7 @@ MonoBehaviour:
   m_PlayersAnimations: {fileID: 5030338940879888408}
   m_UseImage: {fileID: 6063311124298542682}
   m_UseText: {fileID: 8968139011262790249}
+  m_LighterAnimator: {fileID: 0}
 --- !u!114 &4403835565637700296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -362,6 +378,8 @@ MonoBehaviour:
   - {fileID: 7571185438904498785}
   - {fileID: 8484924184351725792}
   m_PlayersAnimation: {fileID: 5030338940879888408}
+  m_DropLocation: {fileID: 0}
+  m_RightArmConstraint: {fileID: 0}
 --- !u!114 &2466557655512925472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -599,7 +617,7 @@ Camera:
     height: 1
   near clip plane: 0.01
   far clip plane: 100
-  field of view: 60
+  field of view: 80
   orthographic: 0
   orthographic size: 5
   m_Depth: -1

@@ -22,8 +22,10 @@ public class PlayerCamera : MonoBehaviour
         m_MyView = GetComponent<PhotonView>();
         if (!m_MyView.IsMine)
         {
+            gameObject.GetComponent<Camera>().enabled = false;
             gameObject.GetComponent<AudioSource>().enabled = false;
-            this.enabled = false;
+
+            enabled = false;
         }
 
         if (m_MyView)

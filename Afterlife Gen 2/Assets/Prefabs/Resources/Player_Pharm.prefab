@@ -5965,9 +5965,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.25
-  m_Height: 1.7079107
+  m_Height: 1.6835362
   m_Direction: 1
-  m_Center: {x: 0, y: 0.8299145, z: 0}
+  m_Center: {x: 0, y: 0.84210175, z: 0}
 --- !u!114 &7217235933313483381
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8401,7 +8401,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 1
   prewarm: 1
-  playOnAwake: 0
+  playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -14291,6 +14291,11 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: f409c46849b83c1439e363c31a0f5ac7, type: 2}
+    - target: {fileID: 3081534920362982372, guid: 68453a5aeb1c13341b37ad14990e257b,
+        type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: e3f903052d6ffb042a19c805778cfff2, type: 2}
     - target: {fileID: 3840663961351933260, guid: 68453a5aeb1c13341b37ad14990e257b,
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'

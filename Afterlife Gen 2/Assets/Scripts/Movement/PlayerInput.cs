@@ -59,6 +59,8 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     [SerializeField] Text m_UseText;
     ChainIKConstraint m_LightAImConstrait;
 
+    bool m_isLighterOpen = false;
+    [SerializeField] Animator m_LighterAnimator;
     void Start()
     {
         //SearchForElements();
@@ -165,9 +167,8 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     void LerpFlashLight(float _index)
     {
         m_FlashLightLerp = Mathf.Lerp(m_FlashLightLerp, _index, 5 * Time.deltaTime);
-        m_PlayersAnimations.SetLayerWeight(1, m_FlashLightLerp);
+        m_LightAImConstrait.weight = m_FlashLightLerp;
     }
-
     public void LeaveGame()
     {
         PhotonNetwork.LeaveRoom();
@@ -187,20 +188,34 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 m_MyController.SetMovement(false);
             }
 
+            if (Input.GetKeyDown(KeyCode.T) && m_PlayersFlashLight.gameObject.activeSelf)
+            {
+                if (m_isLighterOpen)
+                {
+                    m_PlayersFlashLight.TurnOff();
+                    m_isLighterOpen = false;
+
+                }
+                else
+                {
+                    m_PlayersFlashLight.TurnOn();
+                    m_isLighterOpen = true;
+                }
+
+                m_LighterAnimator.SetBool("IsOpened", m_isLighterOpen);
+            }
+
             if (Input.GetKeyDown(KeyCode.F))
             {
                 if (m_PlayersFlashLight.gameObject.activeSelf)
                 {
-                    m_LightAImConstrait.weight = 0;
-                    m_PlayersFlashLight.TurnOff();
+
                     m_PlayersFlashLight.RPC_SetObjectState(false);
 
                 }
                 else
                 {
-                    m_LightAImConstrait.weight = 1;
                     m_PlayersFlashLight.RPC_SetObjectState(true);
-                    m_PlayersFlashLight.TurnOn();
                 }
             }
 
@@ -219,24 +234,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             else
                 m_ScoreBoard.gameObject.SetActive(false);
 
-            if (m_PlayersFlashLight.gameObject.activeSelf)
-            {
-                if (m_MyController.IsTacticalSprinting())
-                {
-                    m_LightAImConstrait.weight = 0;
-                    LerpFlashLight(0f);
-                }
-                else
-                {
-
-                    LerpFlashLight(1);
-                    m_LightAImConstrait.weight = 1;
-                }
-            }
-            else
-            {
-                LerpFlashLight(0);
-            }
+            m_MyView.RPC("RPC_UpdatePlayerFlashlight", RpcTarget.All); //Update Players flashlight lerp over network too.
 
             // bring up pause menu
             if (Input.GetKeyDown(KeyCode.Escape) && m_PauseMenu && !m_IsPaused)
@@ -289,6 +287,27 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             }
 
             CheckHoverItem();
+        }
+    }
+
+    [PunRPC]
+    public void RPC_UpdatePlayerFlashlight()
+    {
+        if (m_PlayersFlashLight.gameObject.activeSelf)
+        {
+            if (m_MyController.IsSprinting())
+            {
+                LerpFlashLight(0.5f);
+            }
+            else
+            {
+
+                LerpFlashLight(1);
+            }
+        }
+        else
+        {
+            LerpFlashLight(0);
         }
     }
 

@@ -211,7 +211,8 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 {
 
                     m_PlayersFlashLight.RPC_SetObjectState(false);
-
+                    m_PlayersFlashLight.TurnOff();
+                    m_isLighterOpen = false;
                 }
                 else
                 {
@@ -369,7 +370,6 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             }
         }
     }
-
 
     public void ResumeGame()
     {

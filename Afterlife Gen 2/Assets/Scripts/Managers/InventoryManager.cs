@@ -233,10 +233,10 @@ public class InventoryManager : MonoBehaviour
 
     public void Update()
     {
-        if (!m_MyView.IsMine)
-            return;
-
-        m_MyView.RPC("RPC_UpdateItemLerp", RpcTarget.All);
+        if (m_MyView.IsMine)
+        {
+            m_MyView.RPC("RPC_UpdateItemLerp", RpcTarget.All);
+        }
     }
 
     [PunRPC]

@@ -303,6 +303,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             }
         }
 
+        m_StaminaAmount = Mathf.Clamp(m_StaminaAmount, 0, 100);
         m_StaminaBar.value = m_StaminaAmount;
 
         UpdateEmotes();
@@ -485,6 +486,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public void RPC_PlayerDeath()
     {
         SetRagdoll(true);
+        gameObject.GetComponent<PlayerCamera>().enabled = false;
+        gameObject.GetComponent<InventoryManager>().DropItemsOnPerson();
         this.enabled = false;
     }
 

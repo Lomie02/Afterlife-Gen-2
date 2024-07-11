@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using Photon.Pun;
 public class InventoryManager : MonoBehaviour
 {
     [SerializeField] GameObject m_ObjectsParent;
-    int m_ItemSlots = 3;
     [SerializeField] NetworkObject[] m_Items;
+    int m_ItemSlots = 3;
 
     PhotonView m_MyView;
     int m_CurrentSlotSelected = 0;
@@ -22,6 +23,8 @@ public class InventoryManager : MonoBehaviour
     float m_ItemLerp;
     int m_WeightLayerForCurrentDevice;
     int m_PreviousDeviceWeight;
+
+    [SerializeField] ChainIKConstraint m_RightArmConstraint;
     void Start()
     {
         m_HitBoxPlayer = gameObject.GetComponent<CapsuleCollider>();
@@ -225,15 +228,24 @@ public class InventoryManager : MonoBehaviour
     void LerpItem(float _index)
     {
         m_ItemLerp = Mathf.Lerp(m_ItemLerp, _index, 5 * Time.deltaTime);
-        m_PlayersAnimation.SetLayerWeight(m_WeightLayerForCurrentDevice, m_ItemLerp);
+        m_RightArmConstraint.weight = m_ItemLerp;
     }
 
     public void Update()
     {
+        if (!m_MyView.IsMine)
+            return;
+
+        m_MyView.RPC("RPC_UpdateItemLerp", RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void RPC_UpdateItemLerp()
+    {
         if (m_Items[m_CurrentSlotSelected])
         {
-            if (m_PlayerController.IsTacticalSprinting())
-                LerpItem(0);
+            if (m_PlayerController.IsSprinting())
+                LerpItem(0.5f);
             else
                 LerpItem(1);
         }
@@ -241,7 +253,9 @@ public class InventoryManager : MonoBehaviour
         {
             LerpItem(0);
         }
+
     }
+
 
     public ItemID GetCurrentItemsId()
     {

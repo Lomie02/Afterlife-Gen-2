@@ -81,19 +81,19 @@ public class PlayerIconManager : MonoBehaviourPunCallbacks
 
                 switch ((int)PhotonNetwork.PlayerList[i].CustomProperties["Specialist"])
                 {
-                    case 1:
+                    case 0:
                         m_PlayerIcons[m_CurrentPlayerIcon].sprite = m_SpecialistImages[0];
                         m_PlayerScoreIcons[m_CurrentPlayerIcon].sprite = m_SpecialistImages[0];
                         break;
-                    case 2:
+                    case 1:
                         m_PlayerIcons[m_CurrentPlayerIcon].sprite = m_SpecialistImages[1];
                         m_PlayerScoreIcons[m_CurrentPlayerIcon].sprite = m_SpecialistImages[1];
                         break;
-                    case 3:
+                    case 2:
                         m_PlayerIcons[m_CurrentPlayerIcon].sprite = m_SpecialistImages[2];
                         m_PlayerScoreIcons[m_CurrentPlayerIcon].sprite = m_SpecialistImages[2];
                         break;
-                    case 4:
+                    case 3:
                         m_PlayerIcons[m_CurrentPlayerIcon].sprite = m_SpecialistImages[3];
                         m_PlayerScoreIcons[m_CurrentPlayerIcon].sprite = m_SpecialistImages[3];
                         break;

@@ -215,6 +215,7 @@ public class InventoryManager : MonoBehaviour
                     if (m_PreviousDeviceWeight != m_WeightLayerForCurrentDevice)
                     {
                         m_ItemLerp = 0;
+                        m_MyView.RPC("RPC_LerpItem", RpcTarget.All, 0f);
                         m_PlayersAnimation.SetLayerWeight(m_PreviousDeviceWeight, 0);
                     }
 
@@ -224,8 +225,8 @@ public class InventoryManager : MonoBehaviour
             }
         }
     }
-
-    void LerpItem(float _index)
+    [PunRPC]
+    public void RPC_LerpItem(float _index)
     {
         m_ItemLerp = Mathf.Lerp(m_ItemLerp, _index, 5 * Time.deltaTime);
         m_RightArmConstraint.weight = m_ItemLerp;
@@ -235,23 +236,22 @@ public class InventoryManager : MonoBehaviour
     {
         if (m_MyView.IsMine)
         {
-            m_MyView.RPC("RPC_UpdateItemLerp", RpcTarget.All);
+            UpdateItemLerp();
         }
     }
 
-    [PunRPC]
-    public void RPC_UpdateItemLerp()
+    public void UpdateItemLerp()
     {
         if (m_Items[m_CurrentSlotSelected])
         {
             if (m_PlayerController.IsSprinting())
-                LerpItem(0.5f);
+                m_MyView.RPC("RPC_LerpItem", RpcTarget.All, 0.5f);
             else
-                LerpItem(1);
+                m_MyView.RPC("RPC_LerpItem", RpcTarget.All, 1f);
         }
         else
         {
-            LerpItem(0);
+            m_MyView.RPC("RPC_LerpItem", RpcTarget.All, 0f);
         }
 
     }

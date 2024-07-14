@@ -3456,7 +3456,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 8310778344654527682}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 100
+  m_MaxValue: 1
   m_WholeNumbers: 0
   m_Value: 0
   m_OnValueChanged:
@@ -6941,6 +6941,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6158886692250619784}
+  - component: {fileID: 8717172807012899856}
   m_Layer: 0
   m_Name: Equipment_Aim
   m_TagString: Untagged
@@ -6963,6 +6964,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4383376382092976261}
   m_LocalEulerAnglesHint: {x: -6.456, y: -144.569, z: -76.366}
+--- !u!114 &8717172807012899856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6587399391735394859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65165a7eb90c00b4facaaa169df97f5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  swayAmount: 0.02
+  maxSwayAmount: 0.06
+  smoothAmount: 6
 --- !u!1 &6591984943782431193
 GameObject:
   m_ObjectHideFlags: 0
@@ -13613,6 +13629,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1229449959445228989}
+  - component: {fileID: 5788352829282243081}
   m_Layer: 0
   m_Name: Light Aim
   m_TagString: Untagged
@@ -13635,6 +13652,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4383376382092976261}
   m_LocalEulerAnglesHint: {x: 6.736, y: -261.125, z: 84.375}
+--- !u!114 &5788352829282243081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8824010949111104461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65165a7eb90c00b4facaaa169df97f5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  swayAmount: 0.02
+  maxSwayAmount: 0.06
+  smoothAmount: 6
 --- !u!1 &8839729155372969216
 GameObject:
   m_ObjectHideFlags: 0

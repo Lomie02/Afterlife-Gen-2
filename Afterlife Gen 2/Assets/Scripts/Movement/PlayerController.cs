@@ -101,6 +101,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] float m_StaminaUsageRate = 10;
     [SerializeField] Slider m_StaminaBar;
     bool m_isRecoveryingStamina = false;
+    [SerializeField] int m_SkinWalkerModelToUse = 0;
+
+    Skinwalker m_SkinWalkerDemon;
     void Start()
     {
         m_MyView = GetComponent<PhotonView>();
@@ -115,6 +118,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
         else
         {
             m_SpectateCamera.gameObject.SetActive(false);
+        }
+
+        if (m_MyView.IsMine)
+        {
+            m_SkinWalkerDemon = FindAnyObjectByType<Skinwalker>();
+            if (m_SkinWalkerDemon)
+                m_SkinWalkerDemon.AssignTarget(transform, m_PlayersCamera, m_SkinWalkerModelToUse);
         }
 
         //========================================= 
@@ -359,15 +369,19 @@ public class PlayerController : MonoBehaviourPunCallbacks
         {
             m_BodyAnimations[i].SetBool("Sprinting", m_IsSprinting);
         }
+
     }
-    
+
     public void RestorePossesion() // Pharmacist Specialist
     {
-        m_PossesionMeter -= 25;
+        m_PossesionMeter -= 0.7f;
         m_PossessionBar.value = m_PossesionMeter;
 
+        m_PossesionMeter = Mathf.Clamp(m_PossesionMeter, 0, 1);
         m_PlayerHealth += 50;
         m_HealthBar.value = m_PlayerHealth;
+
+        CheckHealth();
     }
     void UpdateDownedState()
     {
@@ -391,14 +405,25 @@ public class PlayerController : MonoBehaviourPunCallbacks
             float DistanceToGhost = Vector3.Distance(transform.position, m_Ghost.transform.position);
             if (DistanceToGhost < 10)
             {
-                m_PossesionMeter += 1 * Time.deltaTime;
+                m_PossesionMeter += 0.01f * Time.deltaTime;
+
+                Vignette m_Venette;
+                m_PostProcessing.profile.TryGet(out m_Venette);
+                m_Venette.intensity.value = Mathf.Lerp(m_PossessionBar.value, m_PossesionMeter, Time.deltaTime);
             }
         }
         else
         {
             m_Ghost = FindAnyObjectByType<GhostAI>();
         }
-        m_PossessionBar.value = m_PossesionMeter;
+
+        if (m_PossesionMeter >= 0.4f)
+        {
+            m_SkinWalkerDemon.SummonSkinwalker();
+        }
+
+        m_PossesionMeter = Mathf.Clamp(m_PossesionMeter, 0, 1);
+        m_PossessionBar.value = Mathf.Lerp(m_PossessionBar.value, m_PossesionMeter, Time.deltaTime);
     }
 
     void UpdateEmotes() // Add emotes here.
@@ -462,6 +487,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         m_PlayerHealth += _amountRetored;
         m_HealthBar.value = m_PlayerHealth;
+        CheckHealth();
     }
 
     public void ResetHealth()
@@ -472,13 +498,18 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     void CheckHealth()
     {
-        if (!m_MyView.IsMine)
+        if (!m_MyView.IsMine) return;
 
-            if (m_PlayerHealth <= 50)
-            {
-                m_PostProcessing.profile.TryGet(out m_Colour);
-                m_Colour.colorFilter.value = Color.red;
-            }
+        if (m_PlayerHealth <= 50)
+        {
+            m_PostProcessing.profile.TryGet(out m_Colour);
+            m_Colour.colorFilter.value = Color.red;
+        }
+        else
+        {
+            m_PostProcessing.profile.TryGet(out m_Colour);
+            m_Colour.colorFilter.value = Color.white;
+        }
 
         if (m_PlayerHealth <= 0 && PhotonNetwork.PlayerList.Length == 1)
         {
@@ -504,6 +535,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         if (!m_MyView.IsMine)
             return;
+
+
 
         m_BleedoutObject.SetActive(true);
         m_BodyAnimations[0].SetInteger("IsEmoting", 0);

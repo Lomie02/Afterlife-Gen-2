@@ -55,7 +55,6 @@ public class Skinwalker : MonoBehaviour
         m_Behavour = SkinwalkerBehaviour.Follow;
     }
 
-
     private void Update()
     {
         switch (m_Behavour)
@@ -63,28 +62,15 @@ public class Skinwalker : MonoBehaviour
             case SkinwalkerBehaviour.Follow:
                 FollowSkinwalkersTarget();
                 m_BodyAnimations.SetBool("Sprinting", false);
+
                 m_NavMeshBody.speed = m_RegularStalkSpeed;
-                break;
-
-            case SkinwalkerBehaviour.Hide:
-                m_NavMeshBody.speed = m_HideSpeed;
-                m_BodyAnimations.SetBool("Sprinting", true);
-                if (m_NavMeshBody.remainingDistance <= 4f)
-                    m_Behavour = SkinwalkerBehaviour.Wait;
-
+                m_NavMeshBody.isStopped = false;
                 break;
 
             case SkinwalkerBehaviour.Wait:
 
-                m_BodyAnimations.SetFloat("yPos", 0f);
-                m_BodyAnimations.SetBool("Sprinting", false);
-                m_SkinWalkerWaitTimer -= Time.deltaTime;
+                m_NavMeshBody.isStopped = true;
 
-                if (m_SkinWalkerWaitTimer <= 0)
-                {
-                    m_SkinWalkerWaitTimer = m_SkinWalkerWaitDuration;
-                    m_Behavour = SkinwalkerBehaviour.Follow;
-                }
                 break;
         }
 
@@ -94,11 +80,13 @@ public class Skinwalker : MonoBehaviour
         }
         else
         {
-            m_BodyAnimations.SetFloat("yPos", 0.9f);
+            m_BodyAnimations.SetFloat("yPos", m_NavMeshBody.velocity.z);
         }
 
-        //if (IsPlayerLookingAtMe() && m_Behavour == SkinwalkerBehaviour.Follow || IsPlayerLookingAtMe() && m_Behavour == SkinwalkerBehaviour.Wait)
-        //    HideFromPlayersView();
+        if (IsPlayerLookingAtMe())
+            m_Behavour = SkinwalkerBehaviour.Wait;
+        else
+            m_Behavour = SkinwalkerBehaviour.Follow;
     }
 
     void HideFromPlayersView()

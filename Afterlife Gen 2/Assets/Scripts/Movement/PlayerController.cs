@@ -374,12 +374,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public void RestorePossesion() // Pharmacist Specialist
     {
-        m_PossesionMeter -= 0.1f;
+        m_PossesionMeter -= 0.7f;
         m_PossessionBar.value = m_PossesionMeter;
 
         m_PossesionMeter = Mathf.Clamp(m_PossesionMeter, 0, 1);
         m_PlayerHealth += 50;
         m_HealthBar.value = m_PlayerHealth;
+
+        CheckHealth();
     }
     void UpdateDownedState()
     {

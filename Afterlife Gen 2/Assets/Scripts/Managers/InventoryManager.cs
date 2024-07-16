@@ -24,7 +24,9 @@ public class InventoryManager : MonoBehaviour
     int m_WeightLayerForCurrentDevice;
     int m_PreviousDeviceWeight;
 
-    [SerializeField] ChainIKConstraint m_RightArmConstraint;
+    int m_CurrentWeightHandle = 0;
+
+    [SerializeField] ChainIKConstraint[] m_RightArmConstraint;
     void Start()
     {
         m_HitBoxPlayer = gameObject.GetComponent<CapsuleCollider>();
@@ -93,6 +95,13 @@ public class InventoryManager : MonoBehaviour
         if (_object.GetItemID() == ItemID.Useable)
         {
             _object.UseItem();
+            PhotonNetwork.Destroy(_object.GetComponent<PhotonView>());
+            return;
+        }
+
+        if (_object.GetItemID() == ItemID.SantiyPill)
+        {
+            GetComponent<PlayerController>().RestorePossesion();
             PhotonNetwork.Destroy(_object.GetComponent<PhotonView>());
             return;
         }
@@ -212,6 +221,16 @@ public class InventoryManager : MonoBehaviour
                     m_PreviousDeviceWeight = m_WeightLayerForCurrentDevice;
                     m_WeightLayerForCurrentDevice = m_FirstPersonObjects[j].GetLayerWeight();
 
+                    if (m_Items[m_CurrentSlotSelected].GetItemID() == ItemID.CamCorder)
+                    {
+                        m_CurrentWeightHandle = 1;
+                    }
+                    else if(m_Items[m_CurrentSlotSelected].GetItemID() != ItemID.CamCorder && m_CurrentWeightHandle == 1)
+                    {
+                        m_MyView.RPC("RPC_LerpItem", RpcTarget.All, 0f);
+                        m_CurrentWeightHandle = 0;
+                    }
+
                     if (m_PreviousDeviceWeight != m_WeightLayerForCurrentDevice)
                     {
                         m_ItemLerp = 0;
@@ -229,7 +248,7 @@ public class InventoryManager : MonoBehaviour
     public void RPC_LerpItem(float _index)
     {
         m_ItemLerp = Mathf.Lerp(m_ItemLerp, _index, 5 * Time.deltaTime);
-        m_RightArmConstraint.weight = m_ItemLerp;
+        m_RightArmConstraint[m_CurrentWeightHandle].weight = m_ItemLerp;
     }
 
     public void Update()

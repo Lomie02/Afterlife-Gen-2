@@ -22,6 +22,11 @@ public enum ItemID
     TankCan,
     SparkPlug,
     TrapBattery,
+    TeddyBear,
+    Urn,
+    Locket,
+    Cranium,
+    Doll,
 }
 
 public class NetworkObject : MonoBehaviourPunCallbacks

@@ -316,17 +316,22 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
     void CheckHoverItem()
     {
-        if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_ItemCast, 5f))
+        if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_ItemCast, 1.5f))
         {
             if (m_ItemCast.collider.GetComponent<NetworkObject>() != null)
             {
                 m_UseImage.gameObject.SetActive(true);
-                m_UseText.text = "Press E To Pick Up " + m_ItemCast.collider.GetComponent<NetworkObject>().GetItemsName();
+                m_UseText.text = "Press [E] To Pick Up " + m_ItemCast.collider.GetComponent<NetworkObject>().GetItemsName();
             }
             else if (m_ItemCast.collider.tag == "ReadyMonitor" || m_ItemCast.collider.tag == "Door")
             {
                 m_UseImage.gameObject.SetActive(true);
-                m_UseText.text = "Press E To Interact.";
+                m_UseText.text = "Press [E] To Interact.";
+            }
+            else if (m_ItemCast.collider.name == "PartPlace")
+            {
+                m_UseImage.gameObject.SetActive(true);
+                m_UseText.text = "Press [E] To Place Part.";
             }
             else
             {
@@ -337,7 +342,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
     void CheckForItem()
     {
-        if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_ItemCast, 5f))
+        if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_ItemCast, 1.5f))
         {
             if (m_ItemCast.collider.GetComponent<NetworkObject>() != null)
             {
@@ -346,11 +351,11 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                     m_Inventory.AssignItem(m_ItemCast.collider.GetComponent<NetworkObject>());
                 }
             }
-            else if (m_ItemCast.collider.GetComponent<GhostTrap>() != null)
+            else if (m_ItemCast.collider.name == "PartPlace")
             {
                 if (m_Inventory.IsCurrentSlotTaken())
                 {
-                    if (m_ItemCast.collider.GetComponent<GhostTrap>().CollectedPart(m_Inventory.GetCurrentItemsId()))
+                    if (m_ItemCast.collider.GetComponentInParent<GhostTrap>().CollectedPart(m_Inventory.GetCurrentItemsId()))
                     {
                         m_Inventory.DestroyCurrentItem();
                     }

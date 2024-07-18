@@ -35,8 +35,6 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     [SerializeField] GameObject m_PauseMenu;
     [SerializeField] GameObject m_HostGameSettings;
 
-    [SerializeField] GameObject m_HostSettingsMenu;
-
     NetworkLobby m_NetworkLobby;
     bool m_IsPaused = false;
     RaycastHit m_ItemCast;
@@ -79,15 +77,16 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_ReadyHost = GameObject.Find("ReadyUpHost").GetComponent<Button>();
 
         m_PlayersFlashLight.gameObject.SetActive(false);
+        m_HostGameSettings.SetActive(false);
 
         m_LightAImConstrait = GetComponentInChildren<ChainIKConstraint>();
         m_LightAImConstrait.weight = 0;
         if (m_ReadyHost)
         {
             m_ReadyHost.onClick.AddListener(m_ReadyUp.ReadyUpHost);
-            m_ReadyHost.onClick.AddListener(delegate { m_HostSettingsMenu.SetActive(false); });
             m_ReadyHost.onClick.AddListener(delegate { m_HostGameSettings.SetActive(false); });
             m_ReadyHost.onClick.AddListener(delegate { m_MyController.SetMovement(true); });
+            m_ReadyHost.onClick.AddListener(delegate { m_MyCamera.MouseLockState(true); });
         }
         m_LeaveButton = GameObject.Find("Leave Game").GetComponent<Button>();
         m_LeaveButton.onClick.AddListener(delegate { PhotonNetwork.LeaveRoom(); });

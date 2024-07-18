@@ -27,6 +27,7 @@ public enum ItemID
     Locket,
     Cranium,
     Doll,
+    Perma_Item,
 }
 
 public class NetworkObject : MonoBehaviourPunCallbacks
@@ -173,9 +174,5 @@ public class NetworkObject : MonoBehaviourPunCallbacks
     public int GetLayerWeight()
     {
         return m_WeightLayer;
-    }
-    public ItemID GetItemsID()
-    {
-        return m_ItemsId;
     }
 }

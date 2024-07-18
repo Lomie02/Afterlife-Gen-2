@@ -189,7 +189,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '[REDACTED]'
+  m_Text: Laura Russell is an unstable individual working as the corporations lead
+    in pharmacy care for fellow team members. She is stingy & untrustworthy, she
+    has been diagnosed with Narcissistic Personality Disorder.
 --- !u!222 &35966642
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3113,6 +3115,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c31349758fbf6a145a14268d223c8644, type: 3}
+--- !u!4 &345018941 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2964626964277924158, guid: d0f01df2958cf1e4db09bd4f12148e87,
+    type: 3}
+  m_PrefabInstance: {fileID: 1416746572514327794}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &353256586
 GameObject:
   m_ObjectHideFlags: 0
@@ -5859,7 +5867,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 61afdfa9321506f4385191322db75df3,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7938,6 +7946,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 345018941}
   - {fileID: 1436549750}
   - {fileID: 1504872166}
   - {fileID: 1358706185}
@@ -8302,7 +8311,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &930734269
 Transform:
   m_ObjectHideFlags: 0
@@ -11207,7 +11216,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '[REDACTED]'
+  m_Text: "Norwood Hopkins is a smart individual working as the corporations lead
+    in ghost trap tech. He is selfish & self-centered, often mocking fellow employees.
+    It is rumoured he is in a relationship with The Pharmacist.\r\n "
 --- !u!222 &1123406319
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -12325,7 +12336,10 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '[REDACTED]'
+  m_Text: Veronika Bain is a corrupt individual serving as the corporations gateway
+    to the spirit realm. She is known to be fairly quiet & sometimes rude towards
+    fellow employees. She is also delusional, serving herself to Astrid The Ruler
+    of the Afterlife.
 --- !u!222 &1286503030
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -13228,7 +13242,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '[REDACTED]'
+  m_Text: '[REDACTED] is a mystery among other employees, not much is known about
+    The Exterminator. He is very professional in the field & is always determined
+    to get the job done.'
 --- !u!222 &1387260603
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -13955,6 +13971,11 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 16ae895a3c5673f4b945052bae77405c, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 9ab5f453e3860ca47a0b65d5a0ccdb8b,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: dbf2d1d2b2799c34a9bd7eeb554c4ea0, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -19298,27 +19319,32 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 858579541}
     m_Modifications:
     - target: {fileID: 1604313691598669902, guid: d0f01df2958cf1e4db09bd4f12148e87,
         type: 3}
       propertyPath: m_Name
       value: Ability_Explosion_Particle
       objectReference: {fileID: 0}
+    - target: {fileID: 1604313691598669902, guid: d0f01df2958cf1e4db09bd4f12148e87,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2964626964277924158, guid: d0f01df2958cf1e4db09bd4f12148e87,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.5144963
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2964626964277924158, guid: d0f01df2958cf1e4db09bd4f12148e87,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.8175418
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2964626964277924158, guid: d0f01df2958cf1e4db09bd4f12148e87,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.1066236
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2964626964277924158, guid: d0f01df2958cf1e4db09bd4f12148e87,
         type: 3}
@@ -19354,6 +19380,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9141185735593603194, guid: d0f01df2958cf1e4db09bd4f12148e87,
+        type: 3}
+      propertyPath: m_SortMode
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -19916,4 +19947,3 @@ SceneRoots:
   - {fileID: 1325307998}
   - {fileID: 930734269}
   - {fileID: 551076628}
-  - {fileID: 1416746572514327794}

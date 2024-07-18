@@ -66,18 +66,19 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         //SearchForElements();
 
         m_MyView = GetComponent<PhotonView>();
-        m_ReadyUp = FindObjectOfType<ReadyZone>();
+        m_ReadyUp = FindFirstObjectByType<ReadyZone>();
         m_Inventory = GetComponent<InventoryManager>();
 
         m_MyCamera = GetComponent<PlayerCamera>();
         m_MyController = GetComponent<PlayerController>();
-        m_GameManager = FindObjectOfType<GameManager>();
+        m_GameManager = FindFirstObjectByType<GameManager>();
         m_Ability = GetComponent<SpecialstAbility>();
 
-        m_Network = FindObjectOfType<NetworkLobby>();
-        m_PlayersFlashLight.gameObject.SetActive(false);
-        m_HostSettingsMenu.SetActive(false);
+        m_Network = FindFirstObjectByType<NetworkLobby>();
+        m_HostGameSettings = GameObject.Find("MapSelection");
+        m_ReadyHost = GameObject.Find("ReadyUpHost").GetComponent<Button>();
 
+        m_PlayersFlashLight.gameObject.SetActive(false);
 
         m_LightAImConstrait = GetComponentInChildren<ChainIKConstraint>();
         m_LightAImConstrait.weight = 0;
@@ -85,7 +86,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         {
             m_ReadyHost.onClick.AddListener(m_ReadyUp.ReadyUpHost);
             m_ReadyHost.onClick.AddListener(delegate { m_HostSettingsMenu.SetActive(false); });
-            m_ReadyHost.onClick.AddListener(delegate { m_MyCamera.MouseLockState(true); });
+            m_ReadyHost.onClick.AddListener(delegate { m_HostGameSettings.SetActive(false); });
             m_ReadyHost.onClick.AddListener(delegate { m_MyController.SetMovement(true); });
         }
         m_LeaveButton = GameObject.Find("Leave Game").GetComponent<Button>();
@@ -328,7 +329,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 m_UseImage.gameObject.SetActive(true);
                 m_UseText.text = "Press [E] To Interact.";
             }
-            else if (m_ItemCast.collider.name == "PartPlace")
+            else if (m_ItemCast.collider.name == "PartPlace" || m_ItemCast.collider.name == "PartPlace_Bat")
             {
                 m_UseImage.gameObject.SetActive(true);
                 m_UseText.text = "Press [E] To Place Part.";
@@ -346,12 +347,12 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         {
             if (m_ItemCast.collider.GetComponent<NetworkObject>() != null)
             {
-                if (!m_Inventory.IsCurrentSlotTaken())
+                if (!m_Inventory.IsCurrentSlotTaken() || m_ItemCast.collider.GetComponent<NetworkObject>().GetItemID() == ItemID.SantiyPill)
                 {
                     m_Inventory.AssignItem(m_ItemCast.collider.GetComponent<NetworkObject>());
                 }
             }
-            else if (m_ItemCast.collider.name == "PartPlace")
+            else if (m_ItemCast.collider.name == "PartPlace" || m_ItemCast.collider.name == "PartPlace_Bat")
             {
                 if (m_Inventory.IsCurrentSlotTaken())
                 {

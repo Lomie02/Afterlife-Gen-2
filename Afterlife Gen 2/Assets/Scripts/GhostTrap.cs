@@ -5,21 +5,25 @@ using Photon.Pun;
 public class GhostTrap : MonoBehaviour
 {
     [SerializeField] GameObject m_PlaceHolderCan;
+    [SerializeField] GameObject m_BatteryPlaceholder;
     [SerializeField] bool m_IsRepaired = false;
 
     bool m_HasBattery = false;
     bool m_HasTankCan = false;
-    bool m_HasSparkplug = false;
 
     PhotonView m_MyView;
 
     [Header("Colliders")]
     [SerializeField] GameObject m_OxygenTankCollider;
+    [SerializeField] GameObject m_BatteryCollider;
     [SerializeField] GameObject m_UseTrapButtonCollider;
+
+    [SerializeField] Light m_TrapStateLight;
 
     private void Start()
     {
         m_MyView = GetComponent<PhotonView>();
+        m_TrapStateLight.color = Color.red;
     }
 
     public bool CollectedPart(ItemID _itemId)
@@ -31,9 +35,6 @@ public class GhostTrap : MonoBehaviour
                 return true;
             case ItemID.TankCan:
                 m_MyView.RPC("RPC_ShowTank", RpcTarget.All);
-                return true;
-            case ItemID.SparkPlug:
-                m_MyView.RPC("RPC_GotSparkPlug", RpcTarget.All);
                 return true;
         }
 
@@ -53,20 +54,17 @@ public class GhostTrap : MonoBehaviour
     public void RPC_GotBattery()
     {
         m_HasBattery = true;
+        m_BatteryCollider.SetActive(false);
+        m_BatteryPlaceholder.SetActive(true);
         CheckTrapPartsList();
     }
 
-    [PunRPC]
-    public void RPC_GotSparkPlug()
-    {
-        m_HasSparkplug = true;
-        CheckTrapPartsList();
-    }
 
     void CheckTrapPartsList()
     {
         if (IsTrapFullyRepaird())
         {
+            m_TrapStateLight.color = Color.green;
             m_UseTrapButtonCollider.SetActive(true);
         }
     }
@@ -74,7 +72,7 @@ public class GhostTrap : MonoBehaviour
 
     bool IsTrapFullyRepaird()
     {
-        if (m_HasBattery && m_HasTankCan && m_HasSparkplug)
+        if (m_HasBattery && m_HasTankCan)
         {
 
             return true;

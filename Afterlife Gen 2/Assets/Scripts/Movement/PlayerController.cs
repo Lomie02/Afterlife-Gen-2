@@ -104,11 +104,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] int m_SkinWalkerModelToUse = 0;
 
     Skinwalker m_SkinWalkerDemon;
+    SpecialstAbility m_SpecialistAbility;
+
     void Start()
     {
         m_MyView = GetComponent<PhotonView>();
         m_SpectateSystem = FindAnyObjectByType<SpectateSystem>();
-
+        m_SpecialistAbility = GetComponent<SpecialstAbility>();
 
         if (!m_MyView.IsMine) // Submit Camera only if its not mine
         {
@@ -370,6 +372,21 @@ public class PlayerController : MonoBehaviourPunCallbacks
             m_BodyAnimations[i].SetBool("Sprinting", m_IsSprinting);
         }
 
+        switch (m_SpecialistAbility.GetSpecialistType())
+        {
+            case SpecialistSelected.Exterminator:
+
+                break;
+            case SpecialistSelected.Pharmacist:
+                UpdateHealingAura();
+                break;
+            case SpecialistSelected.Trapper:
+
+                break;
+            case SpecialistSelected.Cultist:
+
+                break;
+        }
     }
 
     public void RestorePossesion() // Pharmacist Specialist
@@ -396,6 +413,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
             m_MyView.RPC("RPC_PlayerDeath", RpcTarget.All);
             m_BleedoutTimer = m_BleedoutDuration;
         }
+    }
+
+    void UpdateHealingAura()
+    {
     }
 
     void UpdatePossession()
@@ -483,10 +504,19 @@ public class PlayerController : MonoBehaviourPunCallbacks
         CheckHealth();
     }
 
-    public void RestoreHealth(float _amountRetored)
+    [PunRPC]
+    public void RPC_RestoreHealth(float _amountRetored)
     {
         m_PlayerHealth += _amountRetored;
         m_HealthBar.value = m_PlayerHealth;
+        CheckHealth();
+    }
+
+    [PunRPC]
+    public void RPC_RestoreSanity(float _amountRetored)
+    {
+        m_PossesionMeter -= _amountRetored;
+        m_PossessionBar.value = m_PossesionMeter;
         CheckHealth();
     }
 

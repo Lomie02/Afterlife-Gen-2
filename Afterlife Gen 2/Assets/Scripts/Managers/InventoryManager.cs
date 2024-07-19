@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Animations.Rigging;
 using Photon.Pun;
 public class InventoryManager : MonoBehaviour
 {
     [SerializeField] GameObject m_ObjectsParent;
     [SerializeField] NetworkObject[] m_Items;
-    int m_ItemSlots = 3;
+    [SerializeField] int m_ItemSlots = 3;
 
     PhotonView m_MyView;
     int m_CurrentSlotSelected = 0;
@@ -24,7 +25,17 @@ public class InventoryManager : MonoBehaviour
     int m_WeightLayerForCurrentDevice;
     int m_PreviousDeviceWeight;
 
-    [SerializeField] ChainIKConstraint m_RightArmConstraint;
+    int m_CurrentWeightHandle = 0;
+    [SerializeField] ChainIKConstraint[] m_RightArmConstraint;
+
+    [Header("Interface")]
+    [SerializeField] Text m_ItemSlowName;
+    [SerializeField] Text m_ItemCurrentlyOnSlot;
+    int m_MaxSlotsCurrent = 0;
+
+    [Header("Cultist Only")]
+    [SerializeField] NetworkObject m_BookObject;
+
     void Start()
     {
         m_HitBoxPlayer = gameObject.GetComponent<CapsuleCollider>();
@@ -35,6 +46,21 @@ public class InventoryManager : MonoBehaviour
         {
             m_FirstPersonObjects[i].RPC_SetObjectState(false);
         }
+
+        m_MaxSlotsCurrent = m_Items.Length;
+        m_ItemSlowName.text = "";
+
+        int _convertedSlotNumber = m_CurrentSlotSelected;
+        _convertedSlotNumber++;
+
+        m_ItemCurrentlyOnSlot.text = "Slot " + _convertedSlotNumber.ToString() + "/" + m_MaxSlotsCurrent.ToString();
+
+        if (GetComponent<SpecialstAbility>().GetSpecialistType() == SpecialistSelected.Cultist)
+        {
+            AssignItem(m_BookObject);
+        }
+
+
     }
     public void CycleInvetory()
     {
@@ -97,7 +123,15 @@ public class InventoryManager : MonoBehaviour
             return;
         }
 
+        if (_object.GetItemID() == ItemID.SantiyPill)
+        {
+            GetComponent<PlayerController>().RestorePossesion();
+            PhotonNetwork.Destroy(_object.GetComponent<PhotonView>());
+            return;
+        }
+
         m_Items[m_CurrentSlotSelected] = _object;
+        m_ItemSlowName.text = m_Items[m_CurrentSlotSelected].GetItemsName();
 
         if (m_Items[m_CurrentSlotSelected] != null)
         {
@@ -122,7 +156,7 @@ public class InventoryManager : MonoBehaviour
 
         for (int i = 0; i < m_ItemSlots; i++)
         {
-            if (m_Items[i] != null)
+            if (m_Items[i] != null && m_Items[i].GetItemID() != ItemID.Perma_Item)
             {
                 m_Items[i].SetBodysState(true);
                 m_Items[i].RPC_SetObjectState(true);
@@ -156,7 +190,7 @@ public class InventoryManager : MonoBehaviour
         {
             for (int i = 0; i < m_FirstPersonObjects.Length; i++)
             {
-                if (m_Items[m_CurrentSlotSelected].GetItemsID() == m_FirstPersonObjects[i].GetItemsID())
+                if (m_Items[m_CurrentSlotSelected].GetItemID() == m_FirstPersonObjects[i].GetItemID())
                 {
                     m_FirstPersonObjects[i].CyclePowerStage();
                 }
@@ -166,7 +200,7 @@ public class InventoryManager : MonoBehaviour
 
     public void DropItem()
     {
-        if (!m_MyView.IsMine)
+        if (!m_MyView.IsMine || m_Items[m_CurrentSlotSelected].GetItemID() == ItemID.Perma_Item)
             return;
 
         m_Items[m_CurrentSlotSelected].SetBodysState(true);
@@ -202,6 +236,8 @@ public class InventoryManager : MonoBehaviour
                     m_FirstPersonObjects[j].RPC_SetObjectState(false);
                 }
             }
+
+            m_ItemSlowName.text = "";
         }
         if (m_Items[m_CurrentSlotSelected] != null)
         {
@@ -211,6 +247,17 @@ public class InventoryManager : MonoBehaviour
                 {
                     m_PreviousDeviceWeight = m_WeightLayerForCurrentDevice;
                     m_WeightLayerForCurrentDevice = m_FirstPersonObjects[j].GetLayerWeight();
+
+                    m_ItemSlowName.text = m_Items[m_CurrentSlotSelected].GetItemsName();
+                    if (m_Items[m_CurrentSlotSelected].GetItemID() == ItemID.CamCorder)
+                    {
+                        m_CurrentWeightHandle = 1;
+                    }
+                    else if (m_Items[m_CurrentSlotSelected].GetItemID() != ItemID.CamCorder && m_CurrentWeightHandle == 1)
+                    {
+                        m_MyView.RPC("RPC_LerpItem", RpcTarget.All, 0f);
+                        m_CurrentWeightHandle = 0;
+                    }
 
                     if (m_PreviousDeviceWeight != m_WeightLayerForCurrentDevice)
                     {
@@ -224,12 +271,16 @@ public class InventoryManager : MonoBehaviour
                 }
             }
         }
+        int _convertedSlotNumber = m_CurrentSlotSelected;
+        _convertedSlotNumber++;
+
+        m_ItemCurrentlyOnSlot.text = "Slot " + _convertedSlotNumber.ToString() + "/" + m_MaxSlotsCurrent.ToString();
     }
     [PunRPC]
     public void RPC_LerpItem(float _index)
     {
         m_ItemLerp = Mathf.Lerp(m_ItemLerp, _index, 5 * Time.deltaTime);
-        m_RightArmConstraint.weight = m_ItemLerp;
+        m_RightArmConstraint[m_CurrentWeightHandle].weight = m_ItemLerp;
     }
 
     public void Update()
@@ -264,6 +315,8 @@ public class InventoryManager : MonoBehaviour
 
     public void DestroyCurrentItem()
     {
+        if (m_Items[m_CurrentSlotSelected].GetItemID() == ItemID.Perma_Item) return;
+
         PhotonNetwork.Destroy(m_Items[m_CurrentSlotSelected].gameObject);
 
         m_Items[m_CurrentSlotSelected] = null;

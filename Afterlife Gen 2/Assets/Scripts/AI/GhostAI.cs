@@ -15,7 +15,7 @@ enum GhostBehaviour
 public class GhostAI : MonoBehaviour
 {
     [SerializeField] GhostProfile m_Profile;
-
+    PowerManager m_PowerManager;
     [SerializeField] PhotonView m_View;
     GhostBehaviour m_GhostsBehaviour = GhostBehaviour.Seeking;
 
@@ -24,11 +24,17 @@ public class GhostAI : MonoBehaviour
     [SerializeField] GhostManager m_GhostManager;
     [SerializeField] float m_RoamingDistance = 50;
 
+    bool m_LightInteractionOnCooldown = false;
+    float m_TimerCooldownLights;
+    float m_TimerCooldownLightsDuration = 4;
+
     private void Start()
     {
         m_MyAgent = GetComponent<NavMeshAgent>();
+        m_PowerManager = FindFirstObjectByType<PowerManager>();
         if (PhotonNetwork.IsMasterClient)
         {
+            m_TimerCooldownLights = m_TimerCooldownLightsDuration;
             m_MyAgent.SetDestination(RandomNavSphere(transform.position, m_RoamingDistance, -1));
         }
     }
@@ -59,6 +65,16 @@ public class GhostAI : MonoBehaviour
         }
 
         CheckInteractions();
+
+        if (m_LightInteractionOnCooldown)
+        {
+            m_TimerCooldownLights -= Time.deltaTime;
+            if (m_TimerCooldownLights <= 0)
+            {
+                m_TimerCooldownLights = m_TimerCooldownLightsDuration;
+                m_LightInteractionOnCooldown = false;
+            }
+        }
     }
 
     void UpdateIdle()
@@ -75,7 +91,7 @@ public class GhostAI : MonoBehaviour
 
         RaycastHit m_CastInfo;
 
-        if(Physics.Raycast(transform.position, transform.forward, out m_CastInfo, 4))
+        if (Physics.Raycast(transform.position, transform.forward, out m_CastInfo, 4))
         {
 
             Debug.Log(m_CastInfo.collider.name);
@@ -87,6 +103,18 @@ public class GhostAI : MonoBehaviour
 
     void CheckInteractions()
     {
+        float Distance = Vector3.Distance(transform.position, m_PowerManager.gameObject.transform.position);
+        if (Distance < 12 && m_PowerManager.GetPowerState() && !m_LightInteractionOnCooldown)
+        {
+            int RandomNum = Random.Range(0, 3);
+
+            if (RandomNum == 2)
+                m_PowerManager.CyclePower();
+
+            m_LightInteractionOnCooldown = true;
+        }
+
+
         switch (m_Profile.m_Evidence1)
         {
             case EvidenceTypes.SpiritBox:

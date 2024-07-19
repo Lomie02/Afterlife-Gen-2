@@ -30,6 +30,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     [SerializeField] InputField m_DevCode;
     [SerializeField] Button m_BecomeDev;
 
+    [SerializeField] Dropdown m_RegionList;
+    public string m_CurrentRegion;
+    [SerializeField] Text m_LoadingTextStatus;
+
+    string[] m_RegionSupported = new string[] { "au", "eu", "us", "asia", "jp", "sa" };
+
     ExitGames.Client.Photon.Hashtable m_PlayerProps = new ExitGames.Client.Photon.Hashtable();
     int m_Level = 0;
     int m_IsDeveloper = 0;
@@ -39,31 +45,66 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             m_NetworkScreenObject.SetActive(true);
         }
-        m_GameManager = FindObjectOfType<GameManager>();
+        m_GameManager = FindFirstObjectByType<GameManager>();
         m_ErrorScreen.SetActive(false);
 
         m_BecomeDev.onClick.AddListener(BecomeDeveloper);
         m_BecomeDev.onClick.AddListener(delegate { m_DevScreen.SetActive(false); });
 
+        m_LoadingTextStatus.text = "Connecting To Regions...";
+
+        if (PlayerPrefs.HasKey("players_pref_region"))
+            SetRegion(PlayerPrefs.GetString("players_pref_region"));
+        else
+            TestClientsPing();
+
+        m_RegionList.onValueChanged.AddListener(OnRegionListUpdated);
+
+
+        m_LoadingTextStatus.text = "Connecting To Steam.";
         if (SteamManager.Initialized)
         {
             m_Username.text = SteamFriends.GetPersonaName();
         }
+        else // if failed to connect to steam then the entire game wont load. Needs to Restart
+        {
+            m_ErrorScreen.SetActive(true);
+            m_FailType.text = "Failed To Connect To Steam.";
+            m_FailMessage.text = "Afterlife has failed to connect to the steam network. Please restart & try again.";
+        }
     }
 
-    private void Update()
+    public void OnRegionListUpdated(int _index)
     {
-        if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.D))
+        SetRegion(m_RegionSupported[_index]);
+    }
+
+    void TestClientsPing()
+    {
+        if (!PhotonNetwork.ConnectToBestCloudServer())
         {
-            m_DevScreen.SetActive(true);
+            m_CurrentRegion = PhotonNetwork.BestRegionSummaryInPreferences;
+            SetRegion(m_CurrentRegion);
         }
+
+        m_CurrentRegion = PhotonNetwork.CloudRegion;
+    }
+
+    public void SetRegion(string _desiredRegion)
+    {
+        PhotonNetwork.ConnectToRegion(_desiredRegion);
+        m_CurrentRegion = PhotonNetwork.CloudRegion;
+        PlayerPrefs.SetString("players_pref_region", _desiredRegion);
     }
 
     public void ConnectToServer() // Connect to the server
     {
+        m_LoadingTextStatus.text = "Connecting To Afterlife Game Servers.";
+
         PhotonNetwork.ConnectUsingSettings();
 
         PhotonNetwork.LocalPlayer.NickName = SteamFriends.GetPersonaName();
+        
 
         if (PlayerPrefs.HasKey("players_level"))
         {
@@ -88,6 +129,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             PlayerPrefs.SetInt("developerState", m_IsDeveloper);
         }
+
+        
 
         SetUpPlayerProfile();
         m_Username.text = PhotonNetwork.LocalPlayer.NickName + " lvl: " + m_Level;
@@ -121,7 +164,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        ConnectToServer();
+        m_ErrorScreen.SetActive(true);
     }
 
     public override void OnJoinedLobby() // Join Main menu 

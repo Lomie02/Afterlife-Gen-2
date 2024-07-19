@@ -7,17 +7,28 @@ public class Emf : MonoBehaviour
 {
     [SerializeField] Text m_EmfText;
     [SerializeField] Image m_WarningIcon;
-    [SerializeField] GhostAI m_Ghost;
+    [SerializeField] CursedObject m_CursedObject;
     bool m_IsEvidence = false;
     NetworkObject m_NetworkObject;
 
     int m_EmfLevel = 0;
 
+    [System.Obsolete]
     void Start()
     {
-        m_Ghost = FindObjectOfType<GhostAI>();
+        CursedObject[] _Temp = GameObject.FindObjectsByType<CursedObject>(FindObjectsSortMode.None);
         m_NetworkObject = GetComponent<NetworkObject>();
-        if (m_Ghost.GetGhostProfile().m_Evidence1 == EvidenceTypes.Emf || m_Ghost.GetGhostProfile().m_Evidence2 == EvidenceTypes.Emf || m_Ghost.GetGhostProfile().m_Evidence3 == EvidenceTypes.Emf)
+
+        for (int i = 0; i < _Temp.Length; i++) // Find out the cursed objects position in the list.
+        {
+            if (_Temp[i].IsCursedObject())
+            {
+                m_CursedObject = _Temp[i];
+                break;
+            }
+        }
+
+        if (m_CursedObject.GetGhostProfile().m_Evidence1 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence2 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence3 == EvidenceTypes.Emf)
         {
             m_IsEvidence = true;
         }
@@ -25,18 +36,29 @@ public class Emf : MonoBehaviour
         m_EmfText.text = m_EmfLevel.ToString();
     }
 
+    [System.Obsolete]
+
     void Update()
     {
         if (m_NetworkObject.GetPowerState())
         {
-            if (!m_Ghost)
+            if (!m_CursedObject)
             {
-                m_Ghost = FindObjectOfType<GhostAI>();
+                CursedObject[] _Temp = GameObject.FindObjectsByType<CursedObject>(FindObjectsSortMode.None);
+
+                for (int i = 0; i < _Temp.Length; i++) // Find out the cursed objects position in the list.
+                {
+                    if (_Temp[i].IsCursedObject())
+                    {
+                        m_CursedObject = _Temp[i];
+                        break;
+                    }
+                }
             }
 
-            float DistanceToGhost = Vector3.Distance(transform.position, m_Ghost.gameObject.transform.position);
+            float DistanceToGhost = Vector3.Distance(transform.position, m_CursedObject.gameObject.transform.position);
 
-            if (DistanceToGhost <= 2 && m_IsEvidence)
+            if (DistanceToGhost <= 2 && m_IsEvidence && m_CursedObject.IsCursedObject())
             {
                 m_EmfLevel = 6;
                 if (m_WarningIcon)

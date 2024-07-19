@@ -35,8 +35,6 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     [SerializeField] GameObject m_PauseMenu;
     [SerializeField] GameObject m_HostGameSettings;
 
-    [SerializeField] GameObject m_HostSettingsMenu;
-
     NetworkLobby m_NetworkLobby;
     bool m_IsPaused = false;
     RaycastHit m_ItemCast;
@@ -66,27 +64,29 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         //SearchForElements();
 
         m_MyView = GetComponent<PhotonView>();
-        m_ReadyUp = FindObjectOfType<ReadyZone>();
+        m_ReadyUp = FindFirstObjectByType<ReadyZone>();
         m_Inventory = GetComponent<InventoryManager>();
 
         m_MyCamera = GetComponent<PlayerCamera>();
         m_MyController = GetComponent<PlayerController>();
-        m_GameManager = FindObjectOfType<GameManager>();
+        m_GameManager = FindFirstObjectByType<GameManager>();
         m_Ability = GetComponent<SpecialstAbility>();
 
-        m_Network = FindObjectOfType<NetworkLobby>();
-        m_PlayersFlashLight.gameObject.SetActive(false);
-        m_HostSettingsMenu.SetActive(false);
+        m_Network = FindFirstObjectByType<NetworkLobby>();
+        m_HostGameSettings = GameObject.Find("MapSelection");
+        m_ReadyHost = GameObject.Find("ReadyUpHost").GetComponent<Button>();
 
+        m_PlayersFlashLight.gameObject.SetActive(false);
+        m_HostGameSettings.SetActive(false);
 
         m_LightAImConstrait = GetComponentInChildren<ChainIKConstraint>();
         m_LightAImConstrait.weight = 0;
         if (m_ReadyHost)
         {
             m_ReadyHost.onClick.AddListener(m_ReadyUp.ReadyUpHost);
-            m_ReadyHost.onClick.AddListener(delegate { m_HostSettingsMenu.SetActive(false); });
-            m_ReadyHost.onClick.AddListener(delegate { m_MyCamera.MouseLockState(true); });
+            m_ReadyHost.onClick.AddListener(delegate { m_HostGameSettings.SetActive(false); });
             m_ReadyHost.onClick.AddListener(delegate { m_MyController.SetMovement(true); });
+            m_ReadyHost.onClick.AddListener(delegate { m_MyCamera.MouseLockState(true); });
         }
         m_LeaveButton = GameObject.Find("Leave Game").GetComponent<Button>();
         m_LeaveButton.onClick.AddListener(delegate { PhotonNetwork.LeaveRoom(); });
@@ -316,17 +316,27 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
     void CheckHoverItem()
     {
-        if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_ItemCast, 5f))
+        if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_ItemCast, 1.5f))
         {
             if (m_ItemCast.collider.GetComponent<NetworkObject>() != null)
             {
                 m_UseImage.gameObject.SetActive(true);
-                m_UseText.text = "Press E To Pick Up " + m_ItemCast.collider.GetComponent<NetworkObject>().GetItemsName();
+                m_UseText.text = "Press [E] To Pick Up " + m_ItemCast.collider.GetComponent<NetworkObject>().GetItemsName();
             }
             else if (m_ItemCast.collider.tag == "ReadyMonitor" || m_ItemCast.collider.tag == "Door")
             {
                 m_UseImage.gameObject.SetActive(true);
-                m_UseText.text = "Press E To Interact.";
+                m_UseText.text = "Press [E] To Interact.";
+            }
+            else if (m_ItemCast.collider.name == "PartPlace" || m_ItemCast.collider.name == "PartPlace_Bat")
+            {
+                m_UseImage.gameObject.SetActive(true);
+                m_UseText.text = "Press [E] To Place Part.";
+            }
+            else if (m_ItemCast.collider.name == "Switch_Board")
+            {
+                m_UseImage.gameObject.SetActive(true);
+                m_UseText.text = "Press [E] To Toggle Power.";
             }
             else
             {
@@ -337,20 +347,20 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
     void CheckForItem()
     {
-        if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_ItemCast, 5f))
+        if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_ItemCast, 1.5f))
         {
             if (m_ItemCast.collider.GetComponent<NetworkObject>() != null)
             {
-                if (!m_Inventory.IsCurrentSlotTaken())
+                if (!m_Inventory.IsCurrentSlotTaken() || m_ItemCast.collider.GetComponent<NetworkObject>().GetItemID() == ItemID.SantiyPill)
                 {
                     m_Inventory.AssignItem(m_ItemCast.collider.GetComponent<NetworkObject>());
                 }
             }
-            else if (m_ItemCast.collider.GetComponent<GhostTrap>() != null)
+            else if (m_ItemCast.collider.name == "PartPlace" || m_ItemCast.collider.name == "PartPlace_Bat")
             {
                 if (m_Inventory.IsCurrentSlotTaken())
                 {
-                    if (m_ItemCast.collider.GetComponent<GhostTrap>().CollectedPart(m_Inventory.GetCurrentItemsId()))
+                    if (m_ItemCast.collider.GetComponentInParent<GhostTrap>().CollectedPart(m_Inventory.GetCurrentItemsId()))
                     {
                         m_Inventory.DestroyCurrentItem();
                     }
@@ -359,6 +369,10 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             else if (m_ItemCast.collider.GetComponent<Destructable_Object>() != null)
             {
                 m_ItemCast.collider.GetComponent<Destructable_Object>().DestroyObject();
+            }
+            else if (m_ItemCast.collider.GetComponent<PowerManager>() != null)
+            {
+                m_ItemCast.collider.GetComponent<PowerManager>().CyclePower();
             }
             else if (m_ItemCast.collider.tag == "ReadyMonitor" && PhotonNetwork.IsMasterClient)
             {

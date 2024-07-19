@@ -5,10 +5,20 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 
+/*
+    eu
+    au
+    us
+    asia,
+    sa,
+    jp
+ 
+ */
 enum LobbyNetworkMode
 {
     Lobby = 0,
     Map,
+    MainMenu,
 }
 public class NetworkLobby : MonoBehaviourPunCallbacks
 {
@@ -28,10 +38,10 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
 
     int m_PlayerSelected;
     [SerializeField] GameObject m_HostButton;
+    
     void Start()
     {
         m_SaveManager = FindAnyObjectByType<DataManager>();
-
         m_PlayerSelected = PlayerPrefs.GetInt("Selected_specialist");
 
         SpawnPlayerByID(m_PlayerSelected);
@@ -42,17 +52,14 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
             if (PhotonNetwork.IsMasterClient)
             {
                 if (m_HostButton)
-                {
                     m_HostButton.SetActive(true);
-                }
             }
             else
             {
                 if (m_HostButton)
-                {
                     m_HostButton.SetActive(false);
-                }
             }
+
             m_Code.text = PhotonNetwork.CurrentRoom.Name;
             m_CodeValue = PhotonNetwork.CurrentRoom.Name;
 
@@ -63,68 +70,35 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         base.OnPlayerEnteredRoom(newPlayer);
-
         Debug.Log(newPlayer.NickName + " Joined.");
     }
-
-    public void SpawnPlayer()
-    {
-        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
-        {
-            Debug.Log(PhotonNetwork.PlayerList[i].NickName);
-            if (PhotonNetwork.PlayerList[i].IsLocal)
-            {
-                Location = i;
-            }
-        }
-
-        if (m_NetworkMode == LobbyNetworkMode.Lobby)
-        {
-            PhotonNetwork.Instantiate(m_Exterminator.name, m_PlayerSpawns[Location].position, Quaternion.identity);
-            m_SaveManager.SetPlayersSavedSpecialist(m_Exterminator.name);
-        }
-        else
-        {
-            PhotonNetwork.Instantiate(m_SaveManager.GetPlayersSavedSpecialist(), m_PlayerSpawns[Location].position, Quaternion.identity);
-        }
-
-    }
-
     public bool SpawnPlayerByID(int _index)
     {
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
         {
             if (PhotonNetwork.PlayerList[i].IsLocal)
-            {
                 Location = i;
-            }
         }
 
-        if (_index == 0)
+        switch (_index)
         {
-            PhotonNetwork.Instantiate(m_Exterminator.name, m_PlayerSpawns[Location].position, Quaternion.identity);
-            m_SaveManager.SetPlayersSavedSpecialist(m_Exterminator.name);
-            return true;
+            case 0:
+                PhotonNetwork.Instantiate(m_Exterminator.name, m_PlayerSpawns[Location].position, Quaternion.LookRotation(transform.forward));
+                m_SaveManager.SetPlayersSavedSpecialist(m_Exterminator.name);
+                return true;
+            case 1:
+                PhotonNetwork.Instantiate(m_Pharmacist.name, m_PlayerSpawns[Location].position, Quaternion.LookRotation(transform.forward));
+                m_SaveManager.SetPlayersSavedSpecialist(m_Pharmacist.name);
+                return true;
+            case 2:
+                PhotonNetwork.Instantiate(m_Trapper.name, m_PlayerSpawns[Location].position, Quaternion.LookRotation(transform.forward));
+                m_SaveManager.SetPlayersSavedSpecialist(m_Trapper.name);
+                return true;
+            case 3:
+                PhotonNetwork.Instantiate(m_Cultist.name, m_PlayerSpawns[Location].position, Quaternion.LookRotation(transform.forward));
+                m_SaveManager.SetPlayersSavedSpecialist(m_Cultist.name);
+                return true;
         }
-        else if (_index == 1)
-        {
-            PhotonNetwork.Instantiate(m_Pharmacist.name, m_PlayerSpawns[Location].position, Quaternion.identity);
-            m_SaveManager.SetPlayersSavedSpecialist(m_Pharmacist.name);
-            return true;
-        }
-        else if (_index == 2)
-        {
-            PhotonNetwork.Instantiate(m_Trapper.name, m_PlayerSpawns[Location].position, Quaternion.identity);
-            m_SaveManager.SetPlayersSavedSpecialist(m_Trapper.name);
-            return true;
-        }
-        else if (_index == 3)
-        {
-            PhotonNetwork.Instantiate(m_Cultist.name, m_PlayerSpawns[Location].position, Quaternion.identity);
-            m_SaveManager.SetPlayersSavedSpecialist(m_Cultist.name);
-            return true;
-        }
-
         return false;
     }
 

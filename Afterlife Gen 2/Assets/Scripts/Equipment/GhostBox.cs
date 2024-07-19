@@ -18,7 +18,7 @@ public class GhostBox : MonoBehaviour
     [SerializeField] Text m_3rd;
 
     NetworkObject m_MyNetworkData;
-    [SerializeField] GhostAI m_Ghost;
+    [SerializeField] CursedObject m_CursedObject;
 
     [SerializeField] bool m_CanGiveResponses = false;
     NetworkItemSpawner m_Spawner;
@@ -30,17 +30,33 @@ public class GhostBox : MonoBehaviour
         m_MyNetworkData = GetComponent<NetworkObject>();
         m_Spawner = FindObjectOfType<NetworkItemSpawner>();
 
+        LookForCursedOject();
+
         m_MyView = GetComponent<PhotonView>();
         m_AudioSource = GetComponent<AudioSource>();
         recognizer = m_Spawner.GetReconizer();
         recognizer.OnPhraseRecognized += Recognizer_OnPhraseRecognized;
 
-        if (m_Ghost)
+        if (m_CursedObject)
         {
-            m_Ghost = FindObjectOfType<GhostAI>();
+            LookForCursedOject();
             AssignGhost();
         }
 
+    }
+
+    void LookForCursedOject()
+    {
+        CursedObject[] TempListCursedObjects = GameObject.FindObjectsByType<CursedObject>(FindObjectsSortMode.None);
+
+        for (int i = 0; i < TempListCursedObjects.Length; i++)
+        {
+            if (TempListCursedObjects[i].IsCursedObject())
+            {
+                m_CursedObject = TempListCursedObjects[i];
+                break;
+            }
+        }
     }
 
     private void OnDestroy()
@@ -59,9 +75,9 @@ public class GhostBox : MonoBehaviour
         float DistanceFromGhost;
 
         if (transform.parent)
-            DistanceFromGhost = Vector3.Distance(transform.localPosition, m_Ghost.gameObject.transform.position);
+            DistanceFromGhost = Vector3.Distance(transform.localPosition, m_CursedObject.gameObject.transform.position);
         else
-            DistanceFromGhost = Vector3.Distance(transform.position, m_Ghost.gameObject.transform.position);
+            DistanceFromGhost = Vector3.Distance(transform.position, m_CursedObject.gameObject.transform.position);
 
         if (DistanceFromGhost <= m_DetectionRange && m_CanGiveResponses)
         {
@@ -79,9 +95,9 @@ public class GhostBox : MonoBehaviour
             m_2nd.text = _convertedInt2nd.ToString();
             m_3rd.text = _convertedInt3rd.ToString();
 
-            if (!m_Ghost)
+            if (!m_CursedObject)
             {
-                m_Ghost = FindObjectOfType<GhostAI>();
+                m_CursedObject = FindObjectOfType<CursedObject>();
                 AssignGhost();
             }
         }
@@ -99,7 +115,7 @@ public class GhostBox : MonoBehaviour
 
     void AssignGhost()
     {
-        if (m_Ghost.GetGhostProfile().m_Evidence1 == EvidenceTypes.SpiritBox || m_Ghost.GetGhostProfile().m_Evidence2 == EvidenceTypes.SpiritBox || m_Ghost.GetGhostProfile().m_Evidence3 == EvidenceTypes.SpiritBox)
+        if (m_CursedObject.GetGhostProfile().m_Evidence1 == EvidenceTypes.SpiritBox || m_CursedObject.GetGhostProfile().m_Evidence2 == EvidenceTypes.SpiritBox || m_CursedObject.GetGhostProfile().m_Evidence3 == EvidenceTypes.SpiritBox)
         {
             m_CanGiveResponses = true;
         }

@@ -338,6 +338,11 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 m_UseImage.gameObject.SetActive(true);
                 m_UseText.text = "Press [E] To Toggle Power.";
             }
+            else if (m_ItemCast.collider.name == "Monitor")
+            {
+                m_UseImage.gameObject.SetActive(true);
+                m_UseText.text = "Press [E] To Activate Trap.";
+            }
             else
             {
                 m_UseImage.gameObject.SetActive(false);
@@ -369,6 +374,10 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             else if (m_ItemCast.collider.GetComponent<Destructable_Object>() != null)
             {
                 m_ItemCast.collider.GetComponent<Destructable_Object>().DestroyObject();
+            }
+            else if (m_ItemCast.collider.GetComponentInParent<GhostTrap>() != null)
+            {
+                m_ItemCast.collider.GetComponentInParent<GhostTrap>().StartTrapSequence();
             }
             else if (m_ItemCast.collider.GetComponent<PowerManager>() != null)
             {

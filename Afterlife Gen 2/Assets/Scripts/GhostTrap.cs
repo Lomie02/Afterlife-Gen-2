@@ -1,9 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Photon.Pun;
+
+public enum TrapMode
+{
+    Needs_Repairs = 0,
+    Needs_Power,
+    ReadyForUse,
+    Cooldown,
+}
+
 public class GhostTrap : MonoBehaviour
 {
+    TrapMode m_TrapsMode = TrapMode.Needs_Repairs;
     [SerializeField] GameObject m_PlaceHolderCan;
     [SerializeField] GameObject m_BatteryPlaceholder;
     [SerializeField] bool m_IsRepaired = false;
@@ -20,10 +31,24 @@ public class GhostTrap : MonoBehaviour
 
     [SerializeField] Light m_TrapStateLight;
 
+    PowerManager m_PowerManager;
+    Canvas m_TrapInterface;
+    [SerializeField] Text m_PowerStatus;
+
+    [Header("Trap Stats")]
+    [SerializeField] float m_CooldownDuration = 10f;
+    float m_CooldownTimer;
+
     private void Start()
     {
         m_MyView = GetComponent<PhotonView>();
         m_TrapStateLight.color = Color.red;
+        m_TrapInterface = GetComponentInChildren<Canvas>();
+
+        m_UseTrapButtonCollider.SetActive(false);
+        m_TrapInterface.gameObject.SetActive(false);
+        m_CooldownTimer = m_CooldownDuration;
+        m_PowerManager = FindFirstObjectByType<PowerManager>();
     }
 
     public bool CollectedPart(ItemID _itemId)
@@ -50,6 +75,24 @@ public class GhostTrap : MonoBehaviour
         CheckTrapPartsList();
     }
 
+    private void Update()
+    {
+        if (m_TrapsMode == TrapMode.Cooldown)
+        {
+            m_CooldownTimer -= Time.deltaTime;
+
+            if (m_CooldownTimer <= 0)
+            {
+                m_CooldownTimer = m_CooldownDuration;
+
+                if (m_PowerManager.GetPowerState())
+                    m_MyView.RPC("RPC_SetTrapsState", RpcTarget.All, TrapMode.ReadyForUse);
+                else
+                    m_MyView.RPC("RPC_SetTrapsState", RpcTarget.All, TrapMode.Needs_Power);
+            }
+        }
+    }
+
     [PunRPC]
     public void RPC_GotBattery()
     {
@@ -59,6 +102,23 @@ public class GhostTrap : MonoBehaviour
         CheckTrapPartsList();
     }
 
+    public void UpdateTrapsMode()
+    {
+        if (!m_PowerManager.GetPowerState())
+            m_TrapsMode = TrapMode.Needs_Power;
+        else
+            m_TrapsMode = TrapMode.ReadyForUse;
+
+        m_MyView.RPC("RPC_SetTrapsState", RpcTarget.All, m_TrapsMode);
+    }
+
+    [PunRPC]
+    public void RPC_SetTrapsState(TrapMode _state)
+    {
+        m_TrapsMode = _state;
+
+        UpdateTrapInterface();
+    }
 
     void CheckTrapPartsList()
     {
@@ -66,19 +126,55 @@ public class GhostTrap : MonoBehaviour
         {
             m_TrapStateLight.color = Color.green;
             m_UseTrapButtonCollider.SetActive(true);
+            m_TrapInterface.gameObject.SetActive(true);
+
+            if (!m_PowerManager.GetPowerState())
+                m_TrapsMode = TrapMode.Needs_Power;
+            else
+                m_TrapsMode = TrapMode.ReadyForUse;
+
+            m_UseTrapButtonCollider.SetActive(true);
+            UpdateTrapInterface();
         }
     }
 
+    void UpdateTrapInterface()
+    {
+        switch (m_TrapsMode)
+        {
+            case TrapMode.Needs_Power:
+                m_PowerStatus.text = "POWER REQUIRED";
+                m_PowerStatus.color = Color.red;
+                break;
+
+            case TrapMode.ReadyForUse:
+                m_PowerStatus.text = "READY";
+                m_PowerStatus.color = Color.green;
+                break;
+
+            case TrapMode.Cooldown:
+                m_PowerStatus.text = "COOLING DOWN.";
+                m_PowerStatus.color = Color.gray;
+                break;
+        }
+    }
 
     bool IsTrapFullyRepaird()
     {
-        if (m_HasBattery && m_HasTankCan)
-        {
-
-            return true;
-        }
-        return false;
+        return m_HasBattery && m_HasTankCan;
     }
 
+    public void StartTrapSequence()
+    {
+        if (m_TrapsMode != TrapMode.Cooldown || m_TrapsMode != TrapMode.Needs_Power)
+            m_MyView.RPC("RPC_StartTrapSeq", RpcTarget.All);
+    }
 
+    [PunRPC]
+    public void RPC_StartTrapSeq()
+    {
+        //TODO: Make trap charge up & destroy the cursed object
+        m_TrapsMode = TrapMode.Cooldown;
+        UpdateTrapInterface();
+    }
 }

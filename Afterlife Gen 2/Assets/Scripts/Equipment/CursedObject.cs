@@ -16,13 +16,13 @@ public class CursedObject : MonoBehaviour
     int m_SeedForRandomSpawn = 12;
     public static Vector3 RandomNavSphere(Vector3 origin, int layermask = -1)
     {
-        Vector3 randomDirection = Random.insideUnitSphere * Random.Range(5f, 20f);
+        Vector3 randomDirection = Random.insideUnitSphere * Random.Range(5f, 15f);
 
         randomDirection += origin;
 
         NavMeshHit navHit;
 
-        NavMesh.SamplePosition(randomDirection, out navHit, Random.Range(5f,20f), layermask);
+        NavMesh.SamplePosition(randomDirection, out navHit, Random.Range(5f,15f), layermask);
 
         return navHit.position;
     }

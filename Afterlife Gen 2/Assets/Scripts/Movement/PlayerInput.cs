@@ -333,6 +333,11 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 m_UseImage.gameObject.SetActive(true);
                 m_UseText.text = "Press [E] To Place Part.";
             }
+            else if (m_ItemCast.collider.name == "Switch_Board")
+            {
+                m_UseImage.gameObject.SetActive(true);
+                m_UseText.text = "Press [E] To Toggle Power.";
+            }
             else
             {
                 m_UseImage.gameObject.SetActive(false);
@@ -364,6 +369,10 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             else if (m_ItemCast.collider.GetComponent<Destructable_Object>() != null)
             {
                 m_ItemCast.collider.GetComponent<Destructable_Object>().DestroyObject();
+            }
+            else if (m_ItemCast.collider.GetComponent<PowerManager>() != null)
+            {
+                m_ItemCast.collider.GetComponent<PowerManager>().CyclePower();
             }
             else if (m_ItemCast.collider.tag == "ReadyMonitor" && PhotonNetwork.IsMasterClient)
             {

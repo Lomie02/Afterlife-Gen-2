@@ -106,7 +106,7 @@ public class GhostAI : MonoBehaviour
         float Distance = Vector3.Distance(transform.position, m_PowerManager.gameObject.transform.position);
         if (Distance < 12 && m_PowerManager.GetPowerState() && !m_LightInteractionOnCooldown)
         {
-            int RandomNum = Random.Range(0, 3);
+            int RandomNum = Random.Range(0, 5);
 
             if (RandomNum == 2)
                 m_PowerManager.CyclePower();

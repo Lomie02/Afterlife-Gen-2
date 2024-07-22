@@ -161,6 +161,8 @@ public class InventoryManager : MonoBehaviour
                 m_Items[i].SetBodysState(true);
                 m_Items[i].RPC_SetObjectState(true);
 
+                m_ItemSlowName.text = "";
+
                 m_Items[i].transform.position = transform.position;
 
                 for (int j = 0; j < m_FirstPersonObjects.Length; j++)
@@ -208,7 +210,7 @@ public class InventoryManager : MonoBehaviour
 
         m_Items[m_CurrentSlotSelected].transform.position = m_DropLocation.position;
 
-
+        m_ItemSlowName.text = "";
         for (int j = 0; j < m_FirstPersonObjects.Length; j++)
         {
             if (m_Items[m_CurrentSlotSelected].GetItemID() == m_FirstPersonObjects[j].GetItemID())
@@ -318,7 +320,7 @@ public class InventoryManager : MonoBehaviour
         if (m_Items[m_CurrentSlotSelected].GetItemID() == ItemID.Perma_Item) return;
 
         PhotonNetwork.Destroy(m_Items[m_CurrentSlotSelected].gameObject);
-
+        m_ItemSlowName.text = "";
         m_Items[m_CurrentSlotSelected] = null;
 
         for (int i = 0; i < m_FirstPersonObjects.Length; i++)

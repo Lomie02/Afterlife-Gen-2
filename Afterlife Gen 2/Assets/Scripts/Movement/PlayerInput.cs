@@ -257,7 +257,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_ItemCast, 5f))
+                if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_ItemCast, 3f))
                 {
                     if (m_ItemCast.collider.GetComponent<NetworkObject>() != null)
                     {
@@ -316,7 +316,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
     void CheckHoverItem()
     {
-        if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_ItemCast, 1.5f))
+        if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_ItemCast, 2f))
         {
             if (m_ItemCast.collider.GetComponent<NetworkObject>() != null)
             {
@@ -352,7 +352,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
     void CheckForItem()
     {
-        if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_ItemCast, 1.5f))
+        if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_ItemCast, 2f))
         {
             if (m_ItemCast.collider.GetComponent<NetworkObject>() != null)
             {
@@ -375,7 +375,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             {
                 m_ItemCast.collider.GetComponent<Destructable_Object>().DestroyObject();
             }
-            else if (m_ItemCast.collider.GetComponentInParent<GhostTrap>() != null)
+            else if (m_ItemCast.collider.name == "Monitor")
             {
                 m_ItemCast.collider.GetComponentInParent<GhostTrap>().StartTrapSequence();
             }

@@ -10,6 +10,7 @@ public enum TrapMode
     Needs_Power,
     ReadyForUse,
     Cooldown,
+    Trapping,
 }
 
 public class GhostTrap : MonoBehaviour
@@ -38,9 +39,17 @@ public class GhostTrap : MonoBehaviour
     [Header("Trap Stats")]
     [SerializeField] float m_CooldownDuration = 10f;
     float m_CooldownTimer;
+    [SerializeField] GameObject m_ZapParticle;
+
+    // Trap zaping
+
+    float m_ZapTimer;
+    float m_ZapTimerDuration = 5;
 
     private void Start()
     {
+
+        m_ZapTimer = m_ZapTimerDuration;
         m_MyView = GetComponent<PhotonView>();
         m_TrapStateLight.color = Color.red;
         m_TrapInterface = GetComponentInChildren<Canvas>();
@@ -49,6 +58,8 @@ public class GhostTrap : MonoBehaviour
         m_TrapInterface.gameObject.SetActive(false);
         m_CooldownTimer = m_CooldownDuration;
         m_PowerManager = FindFirstObjectByType<PowerManager>();
+
+        m_ZapParticle.SetActive(false);
     }
 
     public bool CollectedPart(ItemID _itemId)
@@ -77,21 +88,52 @@ public class GhostTrap : MonoBehaviour
 
     private void Update()
     {
-        if (m_TrapsMode == TrapMode.Cooldown)
+        switch (m_TrapsMode)
         {
-            m_CooldownTimer -= Time.deltaTime;
+            case TrapMode.Cooldown:
+                m_CooldownTimer -= Time.deltaTime;
 
-            if (m_CooldownTimer <= 0)
-            {
-                m_CooldownTimer = m_CooldownDuration;
+                if (m_CooldownTimer <= 0)
+                {
+                    m_CooldownTimer = m_CooldownDuration;
 
-                if (m_PowerManager.GetPowerState())
-                    m_MyView.RPC("RPC_SetTrapsState", RpcTarget.All, TrapMode.ReadyForUse);
-                else
-                    m_MyView.RPC("RPC_SetTrapsState", RpcTarget.All, TrapMode.Needs_Power);
-            }
+                    if (m_PowerManager.GetPowerState())
+                        m_MyView.RPC("RPC_SetTrapsState", RpcTarget.All, TrapMode.ReadyForUse);
+                    else
+                        m_MyView.RPC("RPC_SetTrapsState", RpcTarget.All, TrapMode.Needs_Power);
+                }
+                break;
+            case TrapMode.Trapping:
+
+                m_ZapTimer -= Time.deltaTime;
+
+                if (m_ZapTimer <= 0)
+                {
+                    m_ZapTimer = m_ZapTimerDuration;
+                    m_TrapsMode = TrapMode.Cooldown;
+                    m_ZapParticle.SetActive(false);
+                }
+
+                break;
+
         }
     }
+
+    public void OnTriggerStay(Collider other)
+    {
+        if (m_TrapsMode != TrapMode.Trapping) return;
+
+        if (other.GetComponent<CursedObject>().IsCursedObject() && !other.GetComponent<CursedObject>().HasCursedBeenRemoved())
+        {
+            // Rename the object to have Cleansed at the end
+            string TempName = other.GetComponent<NetworkObject>().GetItemsName();
+            TempName += " (Cleansed)";
+
+            other.GetComponent<NetworkObject>().RenameObject(TempName);
+            other.GetComponent<CursedObject>().DestroyCursedObject();
+        }
+    }
+
 
     [PunRPC]
     public void RPC_GotBattery()
@@ -131,7 +173,7 @@ public class GhostTrap : MonoBehaviour
             if (!m_PowerManager.GetPowerState())
                 m_TrapsMode = TrapMode.Needs_Power;
             else
-                m_TrapsMode = TrapMode.ReadyForUse;
+                m_TrapsMode = TrapMode.Cooldown;
 
             m_UseTrapButtonCollider.SetActive(true);
             UpdateTrapInterface();
@@ -153,8 +195,8 @@ public class GhostTrap : MonoBehaviour
                 break;
 
             case TrapMode.Cooldown:
-                m_PowerStatus.text = "COOLING DOWN.";
-                m_PowerStatus.color = Color.gray;
+                m_PowerStatus.text = "CHARGING TRAP";
+                m_PowerStatus.color = Color.yellow;
                 break;
         }
     }
@@ -174,7 +216,9 @@ public class GhostTrap : MonoBehaviour
     public void RPC_StartTrapSeq()
     {
         //TODO: Make trap charge up & destroy the cursed object
-        m_TrapsMode = TrapMode.Cooldown;
+        m_ZapParticle.SetActive(true);
+
+        m_TrapsMode = TrapMode.Trapping;
         UpdateTrapInterface();
     }
 }

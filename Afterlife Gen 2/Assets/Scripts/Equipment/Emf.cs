@@ -17,6 +17,8 @@ public class Emf : MonoBehaviour
     void Start()
     {
         CursedObject[] _Temp = GameObject.FindObjectsByType<CursedObject>(FindObjectsSortMode.None);
+
+
         m_NetworkObject = GetComponent<NetworkObject>();
 
         for (int i = 0; i < _Temp.Length; i++) // Find out the cursed objects position in the list.

@@ -41,7 +41,6 @@ public class PowerManager : MonoBehaviour
         m_GhostTrap.UpdateTrapsMode();
     }
 
-
     public bool GetPowerState()
     {
         return m_IsPowerOn;

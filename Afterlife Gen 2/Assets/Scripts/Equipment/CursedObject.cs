@@ -10,10 +10,12 @@ public class CursedObject : MonoBehaviour
     [SerializeField] string m_ObjectsName;
     [SerializeField] bool m_IsCursedObject = false;
 
+    bool m_CursedHasBeenRemoved = false;
+
     int m_SelectedProfile;
     PhotonView m_MyView;
 
-    int m_SeedForRandomSpawn = 12;
+    int m_SeedForRandomSpawn = 2;
     public static Vector3 RandomNavSphere(Vector3 origin, int layermask = -1)
     {
         Vector3 randomDirection = Random.insideUnitSphere * Random.Range(5f, 15f);
@@ -64,5 +66,22 @@ public class CursedObject : MonoBehaviour
     public GhostProfile GetGhostProfile()
     {
         return m_Profiles[m_SelectedProfile];
+    }
+
+    public void DestroyCursedObject()
+    {
+        m_MyView.RPC("RPC_RemoveCurseFromObject", RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void RPC_RemoveCurseFromObject()
+    {
+        m_IsCursedObject = false;
+        m_CursedHasBeenRemoved = true;
+    }
+
+    public bool HasCursedBeenRemoved()
+    {
+        return m_CursedHasBeenRemoved;
     }
 }

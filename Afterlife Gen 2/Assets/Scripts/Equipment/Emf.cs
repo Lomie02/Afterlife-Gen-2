@@ -30,7 +30,7 @@ public class Emf : MonoBehaviour
             }
         }
 
-        if (m_CursedObject.GetGhostProfile().m_Evidence1 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence2 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence3 == EvidenceTypes.Emf)
+        if (m_CursedObject.GetGhostProfile().m_Evidence1 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence2 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence3 == EvidenceTypes.Emf && m_CursedObject)
         {
             m_IsEvidence = true;
         }
@@ -53,6 +53,12 @@ public class Emf : MonoBehaviour
                     if (_Temp[i].IsCursedObject())
                     {
                         m_CursedObject = _Temp[i];
+
+                        if (m_CursedObject.GetGhostProfile().m_Evidence1 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence2 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence3 == EvidenceTypes.Emf && m_CursedObject)
+                        {
+                            m_IsEvidence = true;
+                        }
+
                         break;
                     }
                 }

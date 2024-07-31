@@ -8,8 +8,8 @@ public class CursedObject : MonoBehaviour
 {
     [SerializeField] GhostProfile[] m_Profiles;
     [SerializeField] string m_ObjectsName;
-    [SerializeField] bool m_IsCursedObject = false;
 
+    bool m_IsCursedObject = false;
     bool m_CursedHasBeenRemoved = false;
 
     int m_SelectedProfile;
@@ -24,7 +24,7 @@ public class CursedObject : MonoBehaviour
 
         NavMeshHit navHit;
 
-        NavMesh.SamplePosition(randomDirection, out navHit, Random.Range(5f,15f), layermask);
+        NavMesh.SamplePosition(randomDirection, out navHit, Random.Range(5f, 15f), layermask);
 
         return navHit.position;
     }
@@ -35,9 +35,9 @@ public class CursedObject : MonoBehaviour
 
         if (PhotonNetwork.IsMasterClient)
         {
-            m_SelectedProfile = Random.Range(0,m_Profiles.Length);
+            m_SelectedProfile = Random.Range(0, m_Profiles.Length);
 
-            for (int i = 0; i < m_SeedForRandomSpawn; i++ )
+            for (int i = 0; i < m_SeedForRandomSpawn; i++)
             {
                 transform.position = RandomNavSphere(transform.position);
             }
@@ -45,6 +45,11 @@ public class CursedObject : MonoBehaviour
             m_MyView.RPC("RPC_AssignProfileList", RpcTarget.Others, m_SelectedProfile);
             m_MyView.RPC("RPC_AssignCursedObject", RpcTarget.All);
         }
+    }
+
+    public void BecomeCursedObject()
+    {
+        m_IsCursedObject = true;
     }
 
     [PunRPC]

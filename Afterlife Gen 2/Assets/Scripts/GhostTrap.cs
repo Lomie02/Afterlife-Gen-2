@@ -53,11 +53,11 @@ public class GhostTrap : MonoBehaviour
         m_MyView = GetComponent<PhotonView>();
         m_TrapStateLight.color = Color.red;
         m_TrapInterface = GetComponentInChildren<Canvas>();
+        m_PowerManager = FindFirstObjectByType<PowerManager>();
 
         m_UseTrapButtonCollider.SetActive(false);
         m_TrapInterface.gameObject.SetActive(false);
         m_CooldownTimer = m_CooldownDuration;
-        m_PowerManager = FindFirstObjectByType<PowerManager>();
 
         m_ZapParticle.SetActive(false);
     }
@@ -103,6 +103,7 @@ public class GhostTrap : MonoBehaviour
                         m_MyView.RPC("RPC_SetTrapsState", RpcTarget.All, TrapMode.Needs_Power);
                 }
                 break;
+
             case TrapMode.Trapping:
 
                 m_ZapTimer -= Time.deltaTime;

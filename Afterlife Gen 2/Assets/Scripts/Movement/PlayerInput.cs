@@ -59,9 +59,17 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
     bool m_isLighterOpen = false;
     [SerializeField] Animator m_LighterAnimator;
+
+    // Revive Interface 
+    [Header("Revive Interface")]
+    [SerializeField] Slider m_ReviveProgressBar;
+    [SerializeField] float m_ReviveDuration = 8f;
+    [SerializeField] float m_ReviveTimer = 0f;
     void Start()
     {
         //SearchForElements();
+
+        m_ReviveTimer = m_ReviveDuration;
 
         m_MyView = GetComponent<PhotonView>();
         m_ReadyUp = FindFirstObjectByType<ReadyZone>();
@@ -80,7 +88,18 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_HostGameSettings.SetActive(false);
 
         m_LightAImConstrait = GetComponentInChildren<ChainIKConstraint>();
-        m_LightAImConstrait.weight = 0;
+        if(m_LightAImConstrait) m_LightAImConstrait.weight = 0;
+
+        m_ResumeButton = GameObject.Find("Resume").GetComponent<Button>();
+        m_LeaveButton = GameObject.Find("Leave Game").GetComponent<Button>();
+
+        m_ResumeButton.onClick.AddListener(ResumeGame);
+        m_LeaveButton.onClick.AddListener(DisconnectFromLobbyDirect);
+
+        m_PauseMenu.SetActive(false);
+        
+        
+        m_SpecialistMenu.SetActive(false);
         if (m_ReadyHost)
         {
             m_ReadyHost.onClick.AddListener(m_ReadyUp.ReadyUpHost);
@@ -88,11 +107,14 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             m_ReadyHost.onClick.AddListener(delegate { m_MyController.SetMovement(true); });
             m_ReadyHost.onClick.AddListener(delegate { m_MyCamera.MouseLockState(true); });
         }
-        m_LeaveButton = GameObject.Find("Leave Game").GetComponent<Button>();
-        m_LeaveButton.onClick.AddListener(delegate { PhotonNetwork.LeaveRoom(); });
 
-        m_PauseMenu.SetActive(false);
-        m_SpecialistMenu.SetActive(false);
+
+    }
+
+    public void DisconnectFromLobbyDirect()
+    {
+        PhotonNetwork.LeaveRoom();
+        m_GameManager.ChangeScene("Main_Menu");
     }
 
     public void SearchForElements()
@@ -168,13 +190,25 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     {
         m_FlashLightLerp = Mathf.Lerp(m_FlashLightLerp, _index, 5 * Time.deltaTime);
 
-        m_PlayersAnimations.SetLayerWeight(1,m_FlashLightLerp);
+        m_PlayersAnimations.SetLayerWeight(1, m_FlashLightLerp);
         m_LightAImConstrait.weight = m_FlashLightLerp;
     }
     public void LeaveGame()
     {
         PhotonNetwork.LeaveRoom();
         m_GameManager.ChangeScene("Main_Menu");
+    }
+
+    bool IsLookingAtReviveTarget()
+    {
+        RaycastHit m_Cast;
+        if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_Cast, 2f))
+        {
+            if (m_Cast.collider.GetComponent<PlayerController>() != null)
+                if (m_Cast.collider.GetComponent<PlayerController>().IsPlayerDowned())
+                    return true;
+        }
+        return false;
     }
 
     void Update()
@@ -188,6 +222,30 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
                 m_MyCamera.MouseLockState(false);
                 m_MyController.SetMovement(false);
+            }
+
+            if (Input.GetKey(KeyCode.E) && IsLookingAtReviveTarget()) // revive player
+            {
+                m_ReviveTimer -= Time.deltaTime;
+                m_ReviveProgressBar.value += Time.deltaTime;
+                m_ReviveProgressBar.gameObject.SetActive(true);
+
+                if (m_ReviveTimer <= 0)
+                {
+                    RaycastHit m_Cast;
+                    if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_Cast, 2f))
+                    {
+                        if (m_Cast.collider.GetComponent<PlayerController>())
+                            m_Cast.collider.GetComponent<PlayerController>().GetPlayersPhotonView().RPC("RPC_RevivePlayer", RpcTarget.All);
+
+                    }
+                }
+            }
+            else
+            {
+                m_ReviveTimer = m_ReviveDuration;
+                m_ReviveProgressBar.value = 0;
+                m_ReviveProgressBar.gameObject.SetActive(false);
             }
 
             if (Input.GetKeyDown(KeyCode.T) && m_PlayersFlashLight.gameObject.activeSelf)
@@ -322,26 +380,40 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             {
                 m_UseImage.gameObject.SetActive(true);
                 m_UseText.text = "Press [E] To Pick Up " + m_ItemCast.collider.GetComponent<NetworkObject>().GetItemsName();
+                return;
             }
             else if (m_ItemCast.collider.tag == "ReadyMonitor" || m_ItemCast.collider.tag == "Door")
             {
                 m_UseImage.gameObject.SetActive(true);
                 m_UseText.text = "Press [E] To Interact.";
+                return;
             }
             else if (m_ItemCast.collider.name == "PartPlace" || m_ItemCast.collider.name == "PartPlace_Bat")
             {
                 m_UseImage.gameObject.SetActive(true);
                 m_UseText.text = "Press [E] To Place Part.";
+                return;
             }
             else if (m_ItemCast.collider.name == "Switch_Board")
             {
                 m_UseImage.gameObject.SetActive(true);
                 m_UseText.text = "Press [E] To Toggle Power.";
+                return;
             }
             else if (m_ItemCast.collider.name == "Monitor")
             {
                 m_UseImage.gameObject.SetActive(true);
                 m_UseText.text = "Press [E] To Activate Trap.";
+                return;
+            }
+            else if (m_ItemCast.collider.GetComponent<PlayerController>() != null)
+            {
+                if (m_ItemCast.collider.GetComponent<PlayerController>().IsPlayerDowned())
+                {
+                    m_UseImage.gameObject.SetActive(true);
+                    m_UseText.text = "Hold [E] To Revive.";
+                    return;
+                }
             }
             else
             {
@@ -359,6 +431,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 if (!m_Inventory.IsCurrentSlotTaken() || m_ItemCast.collider.GetComponent<NetworkObject>().GetItemID() == ItemID.SantiyPill)
                 {
                     m_Inventory.AssignItem(m_ItemCast.collider.GetComponent<NetworkObject>());
+                    return;
                 }
             }
             else if (m_ItemCast.collider.name == "PartPlace" || m_ItemCast.collider.name == "PartPlace_Bat")
@@ -368,30 +441,37 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                     if (m_ItemCast.collider.GetComponentInParent<GhostTrap>().CollectedPart(m_Inventory.GetCurrentItemsId()))
                     {
                         m_Inventory.DestroyCurrentItem();
+                        return;
                     }
                 }
             }
             else if (m_ItemCast.collider.GetComponent<Destructable_Object>() != null)
             {
                 m_ItemCast.collider.GetComponent<Destructable_Object>().DestroyObject();
+                return;
             }
+
             else if (m_ItemCast.collider.name == "Monitor")
             {
                 m_ItemCast.collider.GetComponentInParent<GhostTrap>().StartTrapSequence();
+                return;
             }
             else if (m_ItemCast.collider.GetComponent<PowerManager>() != null)
             {
                 m_ItemCast.collider.GetComponent<PowerManager>().CyclePower();
+                return;
             }
             else if (m_ItemCast.collider.tag == "ReadyMonitor" && PhotonNetwork.IsMasterClient)
             {
                 m_MyCamera.MouseLockState(false);
                 m_MyController.SetMovement(false);
                 m_HostGameSettings.SetActive(true);
+                return;
             }
             else if (m_ItemCast.collider.tag == "Door")
             {
                 m_ItemCast.collider.GetComponentInParent<DoorModule>().CycleDoorState();
+                return;
             }
         }
     }

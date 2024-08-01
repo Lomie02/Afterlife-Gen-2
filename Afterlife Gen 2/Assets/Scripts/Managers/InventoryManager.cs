@@ -48,7 +48,8 @@ public class InventoryManager : MonoBehaviour
         }
 
         m_MaxSlotsCurrent = m_Items.Length;
-        m_ItemSlowName.text = "";
+
+        if(m_ItemSlowName) m_ItemSlowName.text = "";
 
         int _convertedSlotNumber = m_CurrentSlotSelected;
         _convertedSlotNumber++;
@@ -276,8 +277,9 @@ public class InventoryManager : MonoBehaviour
         int _convertedSlotNumber = m_CurrentSlotSelected;
         _convertedSlotNumber++;
 
-        m_ItemCurrentlyOnSlot.text = "Slot " + _convertedSlotNumber.ToString() + "/" + m_MaxSlotsCurrent.ToString();
+        if(m_ItemCurrentlyOnSlot) m_ItemCurrentlyOnSlot.text = "Slot " + _convertedSlotNumber.ToString() + "/" + m_MaxSlotsCurrent.ToString();
     }
+
     [PunRPC]
     public void RPC_LerpItem(float _index)
     {

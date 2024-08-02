@@ -303,7 +303,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 m_MyController.SetMovement(false);
             }
 
-            if (Input.GetKeyDown(KeyCode.T) && !m_TextChatManager.IsTextChatShowing())
+            if (Input.GetKeyDown(KeyCode.Return) && !m_TextChatManager.IsTextChatShowing())
             {
                 m_TextChatManager.SetChatDisplay(true);
                 m_MyCamera.MouseLockState(false);

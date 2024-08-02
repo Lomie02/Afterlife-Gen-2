@@ -106,11 +106,15 @@ public class PlayerController : MonoBehaviourPunCallbacks
     Skinwalker m_SkinWalkerDemon;
     SpecialstAbility m_SpecialistAbility;
 
+    // Downed Flare
+    [SerializeField] GameObject m_DownedFlareObject;
     void Start()
     {
         m_MyView = GetComponent<PhotonView>();
         m_SpectateSystem = FindAnyObjectByType<SpectateSystem>();
         m_SpecialistAbility = GetComponent<SpecialstAbility>();
+
+        m_DownedFlareObject.SetActive(false);
 
         if (!m_MyView.IsMine) // Submit Camera only if its not mine
         {
@@ -152,6 +156,15 @@ public class PlayerController : MonoBehaviourPunCallbacks
         DisablePlayerCollision();
         SetRagdoll(false);
         //m_SpectateSystem.CollectCameraData();
+    }
+
+    public PhotonView GetPlayersPhotonView()
+    {
+        return m_MyView;
+    }
+    public bool IsPlayerDowned()
+    {
+        return m_IsDowned;
     }
 
     void DisablePlayerCollision()
@@ -555,7 +568,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public void RPC_PlayerDeath()
     {
         SetRagdoll(true);
+        m_DownedFlareObject.SetActive(false);
         gameObject.GetComponent<PlayerCamera>().enabled = false;
+        m_IsDowned = false;
         gameObject.GetComponent<InventoryManager>().DropItemsOnPerson();
         this.enabled = false;
     }
@@ -566,7 +581,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (!m_MyView.IsMine)
             return;
 
-
+        m_DownedFlareObject.SetActive(true);
 
         m_BleedoutObject.SetActive(true);
         m_BodyAnimations[0].SetInteger("IsEmoting", 0);

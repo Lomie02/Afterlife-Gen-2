@@ -90,7 +90,7 @@ PlayerSettings:
   usePlayerLog: 1
   dedicatedServerOptimizations: 0
   bakeCollisionMeshes: 0
-  forceSingleInstance: 0
+  forceSingleInstance: 1
   useFlipModelSwapchain: 1
   resizableWindow: 0
   useMacAppStoreValidation: 0
@@ -137,7 +137,8 @@ PlayerSettings:
   vulkanEnableCommandBufferRecycling: 1
   loadStoreDebugModeEnabled: 0
   bundleVersion: 0.1.0
-  preloadedAssets: []
+  preloadedAssets:
+  - {fileID: -180525301234523102, guid: 91ae734167e41e8408d75cb7be4b393d, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -551,7 +552,7 @@ PlayerSettings:
     m_EncodingQuality: 2
   m_BuildTargetGroupHDRCubemapEncodingQuality:
   - m_BuildTarget: Standalone
-    m_EncodingQuality: 2
+    m_EncodingQuality: 1
   - m_BuildTarget: Android
     m_EncodingQuality: 2
   - m_BuildTarget: Lumin
@@ -793,7 +794,8 @@ PlayerSettings:
   ps4IncludedModules: []
   ps4attribVROutputEnabled: 0
   monoEnv: 
-  splashScreenBackgroundSourceLandscape: {fileID: 0}
+  splashScreenBackgroundSourceLandscape: {fileID: 21300000, guid: 5270c06067dba504fb2caf4d2081e813,
+    type: 3}
   splashScreenBackgroundSourcePortrait: {fileID: 0}
   blurSplashScreenBackground: 1
   spritePackerPolicy: 

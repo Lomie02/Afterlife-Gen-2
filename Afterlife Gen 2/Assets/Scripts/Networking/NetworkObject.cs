@@ -66,6 +66,11 @@ public class NetworkObject : MonoBehaviourPunCallbacks
         return rv;
     }
 
+    public void RenameObject(string _name)
+    {
+        m_ItemsName = _name;
+    }
+
     public string GetItemsName()
     {
         return m_ItemsName;

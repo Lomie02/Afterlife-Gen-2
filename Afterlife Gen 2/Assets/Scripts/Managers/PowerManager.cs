@@ -11,12 +11,14 @@ public class PowerManager : MonoBehaviour
     Light[] m_LightsToPower;
     bool m_IsPowerOn = false;
 
+    GhostTrap m_GhostTrap;
     PhotonView m_MyView;
     void Start()
     {
         m_MyView = GetComponent<PhotonView>();
         m_LightsToPower = m_LightParent.GetComponentsInChildren<Light>();
 
+        m_GhostTrap = FindFirstObjectByType<GhostTrap>();
         if (m_IsPowerOn)
             m_MyView.RPC("RPC_SetPowerState", RpcTarget.AllBuffered, true);
         else
@@ -36,8 +38,8 @@ public class PowerManager : MonoBehaviour
         for (int i = 0; i < m_LightsToPower.Length; i++)
             m_LightsToPower[i].gameObject.SetActive(_state);
 
+        m_GhostTrap.UpdateTrapsMode();
     }
-
 
     public bool GetPowerState()
     {

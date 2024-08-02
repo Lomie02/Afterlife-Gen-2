@@ -17,6 +17,8 @@ public class Emf : MonoBehaviour
     void Start()
     {
         CursedObject[] _Temp = GameObject.FindObjectsByType<CursedObject>(FindObjectsSortMode.None);
+
+
         m_NetworkObject = GetComponent<NetworkObject>();
 
         for (int i = 0; i < _Temp.Length; i++) // Find out the cursed objects position in the list.
@@ -28,7 +30,7 @@ public class Emf : MonoBehaviour
             }
         }
 
-        if (m_CursedObject.GetGhostProfile().m_Evidence1 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence2 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence3 == EvidenceTypes.Emf)
+        if (m_CursedObject.GetGhostProfile().m_Evidence1 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence2 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence3 == EvidenceTypes.Emf && m_CursedObject)
         {
             m_IsEvidence = true;
         }
@@ -51,6 +53,12 @@ public class Emf : MonoBehaviour
                     if (_Temp[i].IsCursedObject())
                     {
                         m_CursedObject = _Temp[i];
+
+                        if (m_CursedObject.GetGhostProfile().m_Evidence1 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence2 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence3 == EvidenceTypes.Emf && m_CursedObject)
+                        {
+                            m_IsEvidence = true;
+                        }
+
                         break;
                     }
                 }

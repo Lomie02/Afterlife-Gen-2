@@ -65,6 +65,10 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     [SerializeField] Slider m_ReviveProgressBar;
     [SerializeField] float m_ReviveDuration = 8f;
     [SerializeField] float m_ReviveTimer = 0f;
+
+    // Text Chat
+    TextChatManager m_TextChatManager;
+
     void Start()
     {
         //SearchForElements();
@@ -88,7 +92,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_HostGameSettings.SetActive(false);
 
         m_LightAImConstrait = GetComponentInChildren<ChainIKConstraint>();
-        if(m_LightAImConstrait) m_LightAImConstrait.weight = 0;
+        if (m_LightAImConstrait) m_LightAImConstrait.weight = 0;
 
         m_ResumeButton = GameObject.Find("Resume").GetComponent<Button>();
         m_LeaveButton = GameObject.Find("Leave Game").GetComponent<Button>();
@@ -97,8 +101,9 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_LeaveButton.onClick.AddListener(DisconnectFromLobbyDirect);
 
         m_PauseMenu.SetActive(false);
-        
-        
+        m_TextChatManager = GetComponentInChildren<TextChatManager>();
+        m_TextChatManager.SetChatDisplay(false);
+
         m_SpecialistMenu.SetActive(false);
         if (m_ReadyHost)
         {
@@ -215,15 +220,6 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     {
         if (m_MyView.IsMine)
         {
-            // Change specialist
-            if (Input.GetKeyDown(KeyCode.H) && !m_IsPaused)
-            {
-                m_SpecialistMenu.SetActive(true);
-
-                m_MyCamera.MouseLockState(false);
-                m_MyController.SetMovement(false);
-            }
-
             if (Input.GetKey(KeyCode.E) && IsLookingAtReviveTarget()) // revive player
             {
                 m_ReviveTimer -= Time.deltaTime;
@@ -248,7 +244,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 m_ReviveProgressBar.gameObject.SetActive(false);
             }
 
-            if (Input.GetKeyDown(KeyCode.T) && m_PlayersFlashLight.gameObject.activeSelf)
+            if (Input.GetKeyDown(KeyCode.T) && m_PlayersFlashLight.gameObject.activeSelf && !m_TextChatManager.IsTextChatShowing())
             {
                 if (m_isLighterOpen)
                 {
@@ -265,7 +261,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 m_LighterAnimator.SetBool("IsOpened", m_isLighterOpen);
             }
 
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetKeyDown(KeyCode.F) && !m_TextChatManager.IsTextChatShowing())
             {
                 if (m_PlayersFlashLight.gameObject.activeSelf)
                 {
@@ -285,12 +281,12 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 m_MyController.TakeDamage(20);
             }
 
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.R) && !m_TextChatManager.IsTextChatShowing())
             {
                 m_Inventory.DropItemsOnPerson();
             }
 
-            if (Input.GetKey(KeyCode.Tab))
+            if (Input.GetKey(KeyCode.Tab) && !m_TextChatManager.IsTextChatShowing())
                 m_ScoreBoard.gameObject.SetActive(true);
             else
                 m_ScoreBoard.gameObject.SetActive(false);
@@ -298,7 +294,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             m_MyView.RPC("RPC_UpdatePlayerFlashlight", RpcTarget.All); //Update Players flashlight lerp over network too.
 
             // bring up pause menu
-            if (Input.GetKeyDown(KeyCode.Escape) && m_PauseMenu && !m_IsPaused)
+            if (Input.GetKeyDown(KeyCode.Escape) && m_PauseMenu && !m_IsPaused && !m_TextChatManager.IsTextChatShowing())
             {
                 m_PauseMenu.SetActive(true);
                 m_IsPaused = true;
@@ -306,6 +302,22 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 m_MyCamera.MouseLockState(false);
                 m_MyController.SetMovement(false);
             }
+
+            if (Input.GetKeyDown(KeyCode.Return) && !m_TextChatManager.IsTextChatShowing())
+            {
+                m_TextChatManager.SetChatDisplay(true);
+                m_MyCamera.MouseLockState(false);
+                m_MyController.SetMovement(false);
+            }
+            else if (Input.GetKeyDown(KeyCode.Escape) && m_TextChatManager.IsTextChatShowing())
+            {
+                m_TextChatManager.SetChatDisplay(false);
+                m_MyCamera.MouseLockState(true);
+                m_MyController.SetMovement(true);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Return) && m_TextChatManager.IsTextChatShowing())
+                m_TextChatManager.SendTextChatMessage();
 
             // Use ultimate
             if (Input.GetKeyDown(KeyCode.Q))

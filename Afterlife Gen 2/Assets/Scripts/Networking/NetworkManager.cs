@@ -110,17 +110,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
         PhotonNetwork.LocalPlayer.NickName = SteamFriends.GetPersonaName();
 
-
-        if (PlayerPrefs.HasKey("players_level"))
-        {
-            m_Level = PlayerPrefs.GetInt("player_levels");
-        }
-        else
-        {
-            m_Level = 1;
-            PlayerPrefs.SetInt("player_levels", m_Level);
-        }
-
         if (PlayerPrefs.HasKey("developerState"))
         {
             m_IsDeveloper = PlayerPrefs.GetInt("developerState");
@@ -136,9 +125,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
 
 
-
         SetUpPlayerProfile();
-        m_Username.text = PhotonNetwork.LocalPlayer.NickName + " lvl: " + m_Level;
     }
 
     void SetUpPlayerProfile()
@@ -175,6 +162,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby() // Join Main menu 
     {
         m_NetworkScreenObject.SetActive(false);
+
+        if (!SteamUserStats.GetStat("player_level_overall", out m_Level))
+        {
+            m_Level = 1;
+            SteamUserStats.SetStat("player_level_overall", m_Level);
+        }
+        
+        m_Username.text = SteamFriends.GetPersonaName() + " Lvl: " + m_Level.ToString();
         m_OnConnected.Invoke();
     }
 

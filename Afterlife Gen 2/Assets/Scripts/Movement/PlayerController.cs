@@ -86,6 +86,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     float m_BleedoutDuration = 20;
 
     [SerializeField] GameObject m_BleedoutObject;
+    [SerializeField] GameObject m_MainHudObject;
     [SerializeField] Text m_BleedoutText;
 
     [SerializeField] Rigidbody[] m_RagdollBodys;
@@ -108,15 +109,25 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     // Downed Flare
     [SerializeField] GameObject m_DownedFlareObject;
+
+    GameManager m_GameManager;
+    int m_PlayersDeadInGame = 0;
     void Start()
     {
         m_MyView = GetComponent<PhotonView>();
         m_SpectateSystem = FindAnyObjectByType<SpectateSystem>();
         m_SpecialistAbility = GetComponent<SpecialstAbility>();
 
+
+        m_GameManager = FindAnyObjectByType<GameManager>();
         m_DownedFlareObject.SetActive(false);
 
         if (!m_MyView.IsMine) // Submit Camera only if its not mine
+        {
+            m_SpectateSystem.SubmitCamera(m_SpectateCamera);
+            m_SpectateCamera.gameObject.SetActive(false);
+        }
+        else if (m_MyView.IsMine && PhotonNetwork.PlayerListOthers.Length == 0) // Playing Solo
         {
             m_SpectateSystem.SubmitCamera(m_SpectateCamera);
             m_SpectateCamera.gameObject.SetActive(false);
@@ -421,10 +432,27 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_BleedoutText.text = "Bleedout Time: " + ConvertedBleedoutTime.ToString();
         if (m_BleedoutTimer <= 0)
         {
-            m_SpectateSystem.SetSpectateMode(true, false);
+            if (PhotonNetwork.PlayerListOthers.Length == 0)
+                m_SpectateSystem.SetSpectateMode(true, true);
+            else
+                m_SpectateSystem.SetSpectateMode(true, false);
+
             m_PlayersCamera.gameObject.SetActive(false);
+
+            m_MyView.RPC("RPC_CheckIfGameShouldEnd", RpcTarget.MasterClient);
             m_MyView.RPC("RPC_PlayerDeath", RpcTarget.All);
             m_BleedoutTimer = m_BleedoutDuration;
+        }
+    }
+
+    [PunRPC]
+    public void RPC_CheckIfGameShouldEnd()
+    {
+        m_PlayersDeadInGame++;
+
+        if (m_PlayersDeadInGame >= PhotonNetwork.PlayerList.Length)
+        {
+            m_GameManager.ChangeNetworkScene("Afterlife_Corp");
         }
     }
 
@@ -554,13 +582,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             m_Colour.colorFilter.value = Color.white;
         }
 
-        if (m_PlayerHealth <= 0 && PhotonNetwork.PlayerList.Length == 1)
-        {
-            m_SpectateSystem.SetSpectateMode(true, true);
-            m_PlayersCamera.gameObject.SetActive(false);
-            m_MyView.RPC("RPC_PlayerDeath", RpcTarget.All);
-        }
-        else if (m_PlayerHealth <= 0 && PhotonNetwork.PlayerList.Length > 1)
+        if (m_PlayerHealth <= 0)
             m_MyView.RPC("RPC_EnterDownedStance", RpcTarget.All);
     }
 

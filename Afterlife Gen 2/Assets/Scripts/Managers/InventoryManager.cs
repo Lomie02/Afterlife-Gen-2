@@ -48,7 +48,8 @@ public class InventoryManager : MonoBehaviour
         }
 
         m_MaxSlotsCurrent = m_Items.Length;
-        m_ItemSlowName.text = "";
+
+        if(m_ItemSlowName) m_ItemSlowName.text = "";
 
         int _convertedSlotNumber = m_CurrentSlotSelected;
         _convertedSlotNumber++;
@@ -161,6 +162,8 @@ public class InventoryManager : MonoBehaviour
                 m_Items[i].SetBodysState(true);
                 m_Items[i].RPC_SetObjectState(true);
 
+                m_ItemSlowName.text = "";
+
                 m_Items[i].transform.position = transform.position;
 
                 for (int j = 0; j < m_FirstPersonObjects.Length; j++)
@@ -208,7 +211,7 @@ public class InventoryManager : MonoBehaviour
 
         m_Items[m_CurrentSlotSelected].transform.position = m_DropLocation.position;
 
-
+        m_ItemSlowName.text = "";
         for (int j = 0; j < m_FirstPersonObjects.Length; j++)
         {
             if (m_Items[m_CurrentSlotSelected].GetItemID() == m_FirstPersonObjects[j].GetItemID())
@@ -274,8 +277,9 @@ public class InventoryManager : MonoBehaviour
         int _convertedSlotNumber = m_CurrentSlotSelected;
         _convertedSlotNumber++;
 
-        m_ItemCurrentlyOnSlot.text = "Slot " + _convertedSlotNumber.ToString() + "/" + m_MaxSlotsCurrent.ToString();
+        if(m_ItemCurrentlyOnSlot) m_ItemCurrentlyOnSlot.text = "Slot " + _convertedSlotNumber.ToString() + "/" + m_MaxSlotsCurrent.ToString();
     }
+
     [PunRPC]
     public void RPC_LerpItem(float _index)
     {
@@ -318,7 +322,7 @@ public class InventoryManager : MonoBehaviour
         if (m_Items[m_CurrentSlotSelected].GetItemID() == ItemID.Perma_Item) return;
 
         PhotonNetwork.Destroy(m_Items[m_CurrentSlotSelected].gameObject);
-
+        m_ItemSlowName.text = "";
         m_Items[m_CurrentSlotSelected] = null;
 
         for (int i = 0; i < m_FirstPersonObjects.Length; i++)

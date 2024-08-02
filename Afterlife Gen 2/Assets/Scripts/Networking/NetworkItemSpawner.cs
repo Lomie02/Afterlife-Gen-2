@@ -45,11 +45,17 @@ public class NetworkItemSpawner : MonoBehaviour
     [SerializeField] Transform[] m_SpawnLocations;
     [SerializeField] Transform[] m_TrapSpawnLocations;
 
+    PhotonView m_MyView;
+    [SerializeField] CursedObject[] m_CursedObjects;
+
     int m_PreviousItemSpawned = 0;
     void Start()
     {
         recognizer = new KeywordRecognizer(m_GhostBoxQuestions, m_Confidence);
         recognizer.Start();
+
+        gameObject.AddComponent<PhotonView>(); // Add the view automatically
+        m_MyView = GetComponent<PhotonView>();
 
         if (!PhotonNetwork.IsMasterClient)
             return;
@@ -77,8 +83,21 @@ public class NetworkItemSpawner : MonoBehaviour
         int RandomSpawn = Random.Range(0, m_TrapSpawnLocations.Length);
         PhotonNetwork.InstantiateRoomObject(m_GhostTrap.name, m_TrapSpawnLocations[RandomSpawn].position, m_TrapSpawnLocations[RandomSpawn].rotation);
 
+        if (PhotonNetwork.IsMasterClient)
+        {
+            int RandomNum = Random.Range(0, m_CursedObjects.Length);
+            m_MyView.RPC("RPC_ChooseCursedObject", RpcTarget.AllBuffered, RandomNum);
+        }
+
         AssignPoolObjects();
     }
+
+    [PunRPC]
+    public void RPC_ChooseCursedObject(int _index)
+    {
+        m_CursedObjects[_index].BecomeCursedObject();
+    }
+
     public KeywordRecognizer GetReconizer()
     {
         return recognizer;

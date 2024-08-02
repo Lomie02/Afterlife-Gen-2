@@ -39,6 +39,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     ExitGames.Client.Photon.Hashtable m_PlayerProps = new ExitGames.Client.Photon.Hashtable();
     int m_Level = 0;
     int m_IsDeveloper = 0;
+
+    // Create co-op Game Stats
+    [SerializeField] Toggle m_IsPrivateMatch;
+    [SerializeField] InputField m_LobbyName;
+    [SerializeField] InputField m_LobbyPassword;
     private void Start()
     {
         if (m_NetworkScreenObject && !m_NetworkScreenObject.activeSelf)
@@ -104,17 +109,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.ConnectUsingSettings();
 
         PhotonNetwork.LocalPlayer.NickName = SteamFriends.GetPersonaName();
-        
-
-        if (PlayerPrefs.HasKey("players_level"))
-        {
-            m_Level = PlayerPrefs.GetInt("player_levels");
-        }
-        else
-        {
-            m_Level = 1;
-            PlayerPrefs.SetInt("player_levels", m_Level);
-        }
 
         if (PlayerPrefs.HasKey("developerState"))
         {
@@ -130,10 +124,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             PlayerPrefs.SetInt("developerState", m_IsDeveloper);
         }
 
-        
 
         SetUpPlayerProfile();
-        m_Username.text = PhotonNetwork.LocalPlayer.NickName + " lvl: " + m_Level;
     }
 
     void SetUpPlayerProfile()
@@ -170,15 +162,41 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby() // Join Main menu 
     {
         m_NetworkScreenObject.SetActive(false);
+
+        if (!SteamUserStats.GetStat("player_level_overall", out m_Level))
+        {
+            m_Level = 1;
+            SteamUserStats.SetStat("player_level_overall", m_Level);
+        }
+        
+        m_Username.text = SteamFriends.GetPersonaName() + " Lvl: " + m_Level.ToString();
         m_OnConnected.Invoke();
     }
 
-    public void CreateLobby()
+    public void CreateSoloGame() // Create a solo match
     {
         m_NetworkScreenObject.SetActive(true);
-        int code = Random.Range(10000, 99999);
-        Photon.Realtime.RoomOptions roomOptions = new Photon.Realtime.RoomOptions() { IsVisible = true, MaxPlayers = 4 };
-        PhotonNetwork.CreateRoom(PhotonNetwork.CloudRegion + "-" + code.ToString(), roomOptions);
+        int code = Random.Range(100000, 999999); // picks a random number to act as the solo pass
+
+        Photon.Realtime.RoomOptions roomOptions = new Photon.Realtime.RoomOptions() { IsVisible = false, MaxPlayers = 1 };
+        PhotonNetwork.CreateRoom("Solo-" + code.ToString(), roomOptions);
+    }
+
+    public void CreateCoopMatch() // Create a multiplayer match
+    {
+        m_NetworkScreenObject.SetActive(true);
+
+        Photon.Realtime.RoomOptions roomOptions = new Photon.Realtime.RoomOptions() { IsVisible = !m_IsPrivateMatch.isOn, MaxPlayers = 4 };
+
+        if (m_IsPrivateMatch.isOn) // if game is private
+            PhotonNetwork.CreateRoom(m_LobbyPassword.text, roomOptions);
+        else
+            PhotonNetwork.CreateRoom(m_LobbyName.text, roomOptions);
+    }
+
+    public void QuickPlayMatchMaking()
+    {
+        PhotonNetwork.JoinRandomRoom();
     }
 
     public override void OnCreatedRoom()

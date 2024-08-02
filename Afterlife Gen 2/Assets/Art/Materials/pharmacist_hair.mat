@@ -43,10 +43,8 @@ Material:
     MotionVector: User
     RenderType: Transparent
   disabledShaderPasses:
-  - TransparentDepthPrepass
-  - TransparentDepthPostpass
-  - TransparentBackface
   - RayTracingPrepass
+  - TransparentDepthPostpass
   - MOTIONVECTORS
   m_LockedProperties: 
   m_SavedProperties:
@@ -177,7 +175,7 @@ Material:
     - _CoatMask: 0
     - _ConservativeDepthOffsetEnable: 0
     - _CullMode: 0
-    - _CullModeForward: 0
+    - _CullModeForward: 2
     - _Cutoff: 0.5
     - _DepthOffsetEnable: 0
     - _DetailAlbedoScale: 1
@@ -189,7 +187,7 @@ Material:
     - _DisplacementLockTilingScale: 1
     - _DisplacementMode: 0
     - _DoubleSidedEnable: 1
-    - _DoubleSidedGIMode: 0
+    - _DoubleSidedGIMode: 1
     - _DoubleSidedNormalMode: 1
     - _DstBlend: 10
     - _DstBlend2: 10
@@ -270,10 +268,10 @@ Material:
     - _TransmissionEnable: 1
     - _TransmissionMask: 1
     - _TransmissionRim: 0.2
-    - _TransparentBackfaceEnable: 0
+    - _TransparentBackfaceEnable: 1
     - _TransparentCullMode: 2
     - _TransparentDepthPostpassEnable: 0
-    - _TransparentDepthPrepassEnable: 0
+    - _TransparentDepthPrepassEnable: 1
     - _TransparentSortPriority: 0
     - _TransparentWritingMotionVec: 0
     - _TransparentZWrite: 0
@@ -281,7 +279,7 @@ Material:
     - _UVDetail: 0
     - _UVEmissive: 0
     - _UseEmissiveIntensity: 0
-    - _UseShadowThreshold: 0
+    - _UseShadowThreshold: 1
     - _ZTestDepthEqualForOpaque: 4
     - _ZTestGBuffer: 4
     - _ZTestTransparent: 4

@@ -220,16 +220,6 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     {
         if (m_MyView.IsMine)
         {
-            // Change specialist
-            if (Input.GetKeyDown(KeyCode.H) && !m_IsPaused)
-            {
-                m_SpecialistMenu.SetActive(true);
-
-                m_MyCamera.MouseLockState(false);
-                m_MyController.SetMovement(false);
-            }
-
-
             if (Input.GetKey(KeyCode.E) && IsLookingAtReviveTarget()) // revive player
             {
                 m_ReviveTimer -= Time.deltaTime;

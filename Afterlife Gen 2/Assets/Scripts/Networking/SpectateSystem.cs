@@ -17,8 +17,12 @@ public class SpectateSystem : MonoBehaviourPunCallbacks
         if (_IsSolo)
         {
             m_CurrentPlayerSpectating = 0;
+            m_CameraList[0].gameObject.SetActive(true);
         }
-        UpdateSpectate();
+        else
+        {
+            UpdateSpectate();
+        }
     }
 
     public void CyclePlayer() // Cycle through the specating Screens

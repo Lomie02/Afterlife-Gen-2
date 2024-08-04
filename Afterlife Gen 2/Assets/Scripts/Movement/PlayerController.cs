@@ -593,6 +593,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_DownedFlareObject.SetActive(false);
         gameObject.GetComponent<PlayerCamera>().enabled = false;
         m_IsDowned = false;
+        m_isDead = true;
         gameObject.GetComponent<InventoryManager>().DropItemsOnPerson();
         this.enabled = false;
     }
@@ -638,6 +639,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_BodyAnimations[0].SetBool("IsDowned", m_IsDowned);
     }
 
+    public bool IsPlayerDead()
+    {
+        return m_isDead;
+    }
     public void SetMovement(bool _state)
     {
         m_CanMove = _state;

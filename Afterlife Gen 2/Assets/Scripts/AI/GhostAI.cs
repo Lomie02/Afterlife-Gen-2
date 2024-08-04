@@ -12,15 +12,27 @@ enum GhostBehaviour
     Trap,
 }
 
+[System.Serializable]
+struct GhostModelKit
+{
+    public string m_GhostName;
+    public GameObject m_GhostObject;
+
+    public Material m_GhostsMaterial;
+}
+
 public class GhostAI : MonoBehaviour
 {
+    [SerializeField] GhostModelKit[] m_GhostKits;
+    [Space]
+
     [SerializeField] GhostProfile m_Profile;
     PowerManager m_PowerManager;
+
     [SerializeField] PhotonView m_View;
     GhostBehaviour m_GhostsBehaviour = GhostBehaviour.Seeking;
 
     NavMeshAgent m_MyAgent;
-
     [SerializeField] GhostManager m_GhostManager;
     [SerializeField] float m_RoamingDistance = 50;
 
@@ -28,16 +40,45 @@ public class GhostAI : MonoBehaviour
     float m_TimerCooldownLights;
     float m_TimerCooldownLightsDuration = 4;
 
+    bool m_IsGhostRevealingTrueForm = false;
+    int m_CurrentGhostKitActive = 0;
+
     private void Start()
     {
         m_MyAgent = GetComponent<NavMeshAgent>();
         m_PowerManager = FindFirstObjectByType<PowerManager>();
         if (PhotonNetwork.IsMasterClient)
         {
+            m_View.RPC("RPC_AssignGhostKit", RpcTarget.All, 0);
             m_TimerCooldownLights = m_TimerCooldownLightsDuration;
             m_MyAgent.SetDestination(RandomNavSphere(transform.position, m_RoamingDistance, -1));
         }
     }
+
+    [PunRPC]
+    public void RPC_AssignGhostKit(int _index)
+    {
+        m_GhostKits[_index].m_GhostObject.SetActive(true);
+        m_CurrentGhostKitActive = _index;
+
+        if (!m_IsGhostRevealingTrueForm)
+            m_GhostKits[_index].m_GhostsMaterial.SetFloat("_AfterlifeForm", 0f); // false
+        else
+            m_GhostKits[_index].m_GhostsMaterial.SetFloat("_AfterlifeForm", 1f); // True
+    }
+
+    public void EnteredAfterlifeRealm()
+    {
+        m_View.RPC("RPC_ShowGhostTrueForm", RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void RPC_ShowGhostTrueForm()
+    {
+        m_IsGhostRevealingTrueForm = true;
+        m_GhostKits[m_CurrentGhostKitActive].m_GhostsMaterial.SetFloat("_AfterlifeForm", 1f); // True
+    }
+
     void Update() // Entire AI Is going to only be controlled on the Hosts side. 
     {
         if (!PhotonNetwork.IsMasterClient)

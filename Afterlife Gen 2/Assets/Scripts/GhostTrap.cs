@@ -24,6 +24,7 @@ public class GhostTrap : MonoBehaviour
     bool m_HasTankCan = false;
 
     PhotonView m_MyView;
+    GhostAI m_GhostObject;
 
     [Header("Colliders")]
     [SerializeField] GameObject m_OxygenTankCollider;
@@ -60,6 +61,7 @@ public class GhostTrap : MonoBehaviour
         m_CooldownTimer = m_CooldownDuration;
 
         m_ZapParticle.SetActive(false);
+        m_GhostObject = FindAnyObjectByType<GhostAI>();
     }
 
     public bool CollectedPart(ItemID _itemId)
@@ -130,8 +132,25 @@ public class GhostTrap : MonoBehaviour
             string TempName = other.GetComponent<NetworkObject>().GetItemsName();
             TempName += " (Cleansed)";
 
+            m_MyView.RPC("RPC_CursedObjectHasBeenDestroyed", RpcTarget.MasterClient);
+
             other.GetComponent<NetworkObject>().RenameObject(TempName);
             other.GetComponent<CursedObject>().DestroyCursedObject();
+        }
+    }
+
+    [PunRPC]
+    public void RPC_CursedObjectHasBeenDestroyed()
+    {
+        if(!m_GhostObject) m_GhostObject = FindAnyObjectByType<GhostAI>();
+
+        m_GhostObject.EnteredAfterlifeRealm();
+
+        GameObject[] m_Players = GameObject.FindGameObjectsWithTag("Player");
+
+        for (int i = 0; i < m_Players.Length; i++)
+        {
+            m_Players[i].GetComponent<PlayerController>().EnterTheAfterlife();
         }
     }
 

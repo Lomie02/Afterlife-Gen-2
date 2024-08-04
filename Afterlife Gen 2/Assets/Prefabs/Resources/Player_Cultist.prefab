@@ -387,6 +387,10 @@ MonoBehaviour:
   m_StaminaBar: {fileID: 5936468206862691332}
   m_SkinWalkerModelToUse: 1
   m_DownedFlareObject: {fileID: 8423596344536432835}
+  m_AfterlifeFadeIn: {fileID: 1280025799565740761}
+  m_AfterlifeRealmMask:
+    serializedVersion: 2
+    m_Bits: 383
 --- !u!54 &1667172815035673275
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -11743,7 +11747,17 @@ PrefabInstance:
     - target: {fileID: 277814769422740567, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
         type: 3}
       propertyPath: m_Size
-      value: 0.083573796
+      value: 0.08357327
+      objectReference: {fileID: 0}
+    - target: {fileID: 277814769422740567, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
+        type: 3}
+      propertyPath: m_Value
+      value: 1.0000002
+      objectReference: {fileID: 0}
+    - target: {fileID: 1763742558281002892, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.00055778516
       objectReference: {fileID: 0}
     - target: {fileID: 4804207531283574814, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
         type: 3}
@@ -11946,6 +11960,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1280025799565740761 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6168540625930433321, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
+    type: 3}
+  m_PrefabInstance: {fileID: 4924861747595426288}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &2032857089692000932 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6372232189734312788, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,

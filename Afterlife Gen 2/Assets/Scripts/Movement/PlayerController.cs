@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.Rendering;
 
 enum MovementType
 {
@@ -112,6 +111,18 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     GameManager m_GameManager;
     int m_PlayersDeadInGame = 0;
+
+    [Header("Afterlife Realm")]
+    [SerializeField] GameObject m_AfterlifeFadeIn;
+    [SerializeField] LayerMask m_AfterlifeRealmMask;
+    public void EnterTheAfterlife()
+    {
+        if (!m_MyView.IsMine) return;
+        m_AfterlifeFadeIn.SetActive(true);
+
+        m_PlayersCamera.cullingMask = m_AfterlifeRealmMask;
+
+    }
     void Start()
     {
         m_MyView = GetComponent<PhotonView>();

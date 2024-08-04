@@ -1,10 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
-public class GameManager : MonoBehaviour
+using Photon.Realtime;
+
+public class GameManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] bool m_ExitOnEscape = false;
     [SerializeField] UnityEvent m_OnConfigure;
@@ -29,6 +29,12 @@ public class GameManager : MonoBehaviour
         {
             Application.Quit();
         }
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        base.OnDisconnected(cause);
+        ChangeScene("Main_Menu");
     }
 
     public void ChangeNetworkScene(string _name)

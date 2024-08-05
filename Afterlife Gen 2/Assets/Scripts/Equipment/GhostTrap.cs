@@ -214,7 +214,7 @@ public class GhostTrap : MonoBehaviour
                 m_PowerStatus.color = Color.green;
                 break;
 
-            case TrapMode.Cooldown:
+            case TrapMode.Trapping:
                 m_PowerStatus.text = "CHARGING TRAP";
                 m_PowerStatus.color = Color.yellow;
                 break;
@@ -228,7 +228,7 @@ public class GhostTrap : MonoBehaviour
 
     public void StartTrapSequence()
     {
-        if (m_TrapsMode != TrapMode.Cooldown || m_TrapsMode != TrapMode.Needs_Power)
+        if (m_TrapsMode != TrapMode.Trapping || m_TrapsMode != TrapMode.Needs_Power)
             m_MyView.RPC("RPC_StartTrapSeq", RpcTarget.All);
     }
 

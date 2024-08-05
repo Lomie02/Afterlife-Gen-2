@@ -84,24 +84,21 @@ public class PlayerController : MonoBehaviourPunCallbacks
     float m_BleedoutTimer;
     float m_BleedoutDuration = 20;
 
-    [SerializeField] GameObject m_BleedoutObject;
-    [SerializeField] GameObject m_MainHudObject;
-    [SerializeField] Text m_BleedoutText;
 
     [SerializeField] Rigidbody[] m_RagdollBodys;
     [SerializeField] Collider[] m_RagdollColliders;
     bool m_isDead = false;
 
     [SerializeField] Camera m_PlayersCamera;
-    SpectateSystem m_SpectateSystem;
     [SerializeField] Camera m_SpectateCamera;
+    SpectateSystem m_SpectateSystem;
 
     // Stamina
     [SerializeField] float m_StaminaAmount = 100;
     [SerializeField] float m_StaminaUsageRate = 10;
     [SerializeField] Slider m_StaminaBar;
-    bool m_isRecoveryingStamina = false;
     [SerializeField] int m_SkinWalkerModelToUse = 0;
+    bool m_isRecoveryingStamina = false;
 
     Skinwalker m_SkinWalkerDemon;
     SpecialstAbility m_SpecialistAbility;
@@ -111,6 +108,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     GameManager m_GameManager;
     int m_PlayersDeadInGame = 0;
+
+    [Header("Interface Related")]
+    [SerializeField] GameObject m_MainHudObject;
+    [SerializeField] GameObject m_SpectateObject;
+    [Space]
+    [SerializeField] GameObject m_BleedoutObject;
+    [SerializeField] Text m_BleedoutText;
 
     [Header("Afterlife Realm")]
     [SerializeField] GameObject m_AfterlifeFadeIn;
@@ -128,7 +132,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_MyView = GetComponent<PhotonView>();
         m_SpectateSystem = FindAnyObjectByType<SpectateSystem>();
         m_SpecialistAbility = GetComponent<SpecialstAbility>();
-
 
         m_GameManager = FindAnyObjectByType<GameManager>();
         m_DownedFlareObject.SetActive(false);
@@ -449,6 +452,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
                 m_SpectateSystem.SetSpectateMode(true, false);
 
             m_PlayersCamera.gameObject.SetActive(false);
+            m_MainHudObject.SetActive(false);
+            m_SpectateObject.SetActive(true);
 
             m_MyView.RPC("RPC_CheckIfGameShouldEnd", RpcTarget.MasterClient);
             m_MyView.RPC("RPC_PlayerDeath", RpcTarget.All);

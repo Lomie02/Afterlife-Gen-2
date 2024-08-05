@@ -6,7 +6,6 @@ using Photon.Pun;
 
 public class ReadyZone : MonoBehaviour
 {
-    PhotonView m_View;
     [SerializeField] bool m_HostIsReady = false;
     [SerializeField] PositonLerp m_ReadyUpDoor;
 
@@ -15,29 +14,29 @@ public class ReadyZone : MonoBehaviour
 
     [Space]
     [SerializeField] Text m_ReadyText;
-    public int m_PlayersInReadyZone = 0;
+    int m_PlayersInReadyZone = 0;
 
     [SerializeField] GameManager m_GameManager;
-
     [SerializeField] GameObject m_LoadingScreen;
+
+    PhotonView m_View;
     bool m_StopAcceptingPlayers = false;
+
     private void Start()
     {
         if (!PhotonNetwork.IsMasterClient)
-        {
             m_MonitorFlare.SetActive(false);
-        }
 
         m_View = GetComponent<PhotonView>();
-        m_GameManager = FindObjectOfType<GameManager>();
+        m_GameManager = FindAnyObjectByType<GameManager>();
     }
 
-    public void SubmitLoadingScreen(GameObject _object)
+    public void SubmitLoadingScreen(GameObject _object) // Clients will need to submit their loading screens to the Ready Zone to avoid order of init problems
     {
         m_LoadingScreen = _object;
     }
 
-    public void ReadyUpHost()
+    public void ReadyUpHost() // When the host is ready to start the match.
     {
         if (!PhotonNetwork.IsMasterClient)
             return;
@@ -55,8 +54,7 @@ public class ReadyZone : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
+        if (!PhotonNetwork.IsMasterClient) return;
 
         m_PlayersInReadyZone++;
         CheckPlayerZoneCount();
@@ -64,14 +62,13 @@ public class ReadyZone : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
+        if (!PhotonNetwork.IsMasterClient) return;
 
         m_PlayersInReadyZone--;
     }
 
     [PunRPC]
-    public void RPC_ReadyUP()
+    public void RPC_ReadyUP()// 
     {
         m_StopAcceptingPlayers = true;
     }
@@ -80,13 +77,9 @@ public class ReadyZone : MonoBehaviour
     {
         if (m_PlayersInReadyZone >= PhotonNetwork.PlayerList.Length && !m_StopAcceptingPlayers)
         {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                m_View.RPC("RPC_ReadyUP", RpcTarget.All);
-            }
+            m_View.RPC("RPC_ReadyUP", RpcTarget.All);
 
             m_View.RPC("RPC_DisplayLoadingScreen", RpcTarget.All);
-
             m_GameManager.ChangeNetworkScene("mansion_mp");
         }
     }

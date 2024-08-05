@@ -320,9 +320,6 @@ MonoBehaviour:
   m_CrouchLerpSpeed: 10
   m_SlideDuration: 1
   m_SlidePower: 10
-  m_BleedoutObject: {fileID: 7186470472940210667}
-  m_MainHudObject: {fileID: 6668392924991558692}
-  m_BleedoutText: {fileID: 7694340400845259837}
   m_RagdollBodys:
   - {fileID: 685558461193493010}
   - {fileID: 2701721816221195290}
@@ -354,6 +351,10 @@ MonoBehaviour:
   m_StaminaBar: {fileID: 7507716156710830530}
   m_SkinWalkerModelToUse: 0
   m_DownedFlareObject: {fileID: 5040534158246736243}
+  m_MainHudObject: {fileID: 6668392924991558692}
+  m_SpectateObject: {fileID: 7572905185360781623}
+  m_BleedoutObject: {fileID: 7186470472940210667}
+  m_BleedoutText: {fileID: 7694340400845259837}
   m_AfterlifeFadeIn: {fileID: 3139509073367869215}
   m_AfterlifeRealmMask:
     serializedVersion: 2
@@ -9682,12 +9683,12 @@ PrefabInstance:
     - target: {fileID: 277814769422740567, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
         type: 3}
       propertyPath: m_Value
-      value: 1.0000005
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1763742558281002892, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.0011469984
+      value: -0.00013077269
       objectReference: {fileID: 0}
     - target: {fileID: 4804207531283574814, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
         type: 3}
@@ -9974,6 +9975,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &7572905185360781623 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1662555034236728577, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
+    type: 3}
+  m_PrefabInstance: {fileID: 9082293537089983542}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &7694340400845259837 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1498854311604686859, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,

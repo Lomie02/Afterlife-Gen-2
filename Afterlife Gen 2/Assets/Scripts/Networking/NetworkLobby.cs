@@ -67,11 +67,7 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
         }
     }
 
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        base.OnPlayerEnteredRoom(newPlayer);
-        Debug.Log(newPlayer.NickName + " Joined.");
-    }
+    
     public bool SpawnPlayerByID(int _index)
     {
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)

@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
+using Photon.Voice.Unity;
 using Photon.Realtime;
 using UnityEngine.Animations.Rigging;
+using Photon.Voice.PUN;
+
 public class PlayerInput : MonoBehaviourPunCallbacks
 {
     [SerializeField] LayerMask m_ItemLayer;
@@ -68,7 +71,9 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
     // Text Chat
     TextChatManager m_TextChatManager;
+    Recorder m_VoiceRecorder;
 
+    [SerializeField] GameObject m_LoadingScreenMaps;
     void Start()
     {
         //SearchForElements();
@@ -100,6 +105,9 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_ResumeButton.onClick.AddListener(ResumeGame);
         m_LeaveButton.onClick.AddListener(DisconnectFromLobbyDirect);
 
+        m_VoiceRecorder = GetComponent<Recorder>();
+
+
         m_PauseMenu.SetActive(false);
         m_TextChatManager = GetComponentInChildren<TextChatManager>();
         m_TextChatManager.SetChatDisplay(false);
@@ -113,7 +121,10 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             m_ReadyHost.onClick.AddListener(delegate { m_MyCamera.MouseLockState(true); });
         }
 
+        if (m_MyView.IsMine && m_LoadingScreenMaps)
+            m_ReadyUp.SubmitLoadingScreen(m_LoadingScreenMaps);
 
+        m_VoiceRecorder.TransmitEnabled = false;
     }
 
     public void DisconnectFromLobbyDirect()
@@ -244,6 +255,13 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 m_ReviveProgressBar.gameObject.SetActive(false);
             }
 
+            // Voice Chat
+            if (Input.GetKey(KeyCode.V) && !m_MyController.IsPlayerDead())
+                m_VoiceRecorder.TransmitEnabled = true;
+            else
+                m_VoiceRecorder.TransmitEnabled = false;
+
+            // Text Chat
             if (Input.GetKeyDown(KeyCode.T) && m_PlayersFlashLight.gameObject.activeSelf && !m_TextChatManager.IsTextChatShowing())
             {
                 if (m_isLighterOpen)

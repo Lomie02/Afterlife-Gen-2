@@ -39,6 +39,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     ExitGames.Client.Photon.Hashtable m_PlayerProps = new ExitGames.Client.Photon.Hashtable();
     int m_Level = 0;
     int m_IsDeveloper = 0;
+    bool m_JoiningTutorial = false;
 
     // Create co-op Game Stats
     [SerializeField] Toggle m_IsPrivateMatch;
@@ -168,7 +169,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             m_Level = 1;
             SteamUserStats.SetStat("player_level_overall", m_Level);
         }
-        
+
         m_Username.text = SteamFriends.GetPersonaName() + " Lvl: " + m_Level.ToString();
         m_OnConnected.Invoke();
     }
@@ -180,6 +181,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
         Photon.Realtime.RoomOptions roomOptions = new Photon.Realtime.RoomOptions() { IsVisible = false, MaxPlayers = 1 };
         PhotonNetwork.CreateRoom("Solo-" + code.ToString(), roomOptions);
+    }
+
+    public void TutorialMatch() // Create a solo match
+    {
+        m_NetworkScreenObject.SetActive(true);
+        int code = Random.Range(100000, 999999); // picks a random number to act as the solo pass
+        m_JoiningTutorial = true;
+
+        Photon.Realtime.RoomOptions roomOptions = new Photon.Realtime.RoomOptions() { IsVisible = false, MaxPlayers = 1 };
+        PhotonNetwork.CreateRoom("tutorial-" + code.ToString(), roomOptions);
     }
 
     public void CreateCoopMatch() // Create a multiplayer match
@@ -201,7 +212,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnCreatedRoom()
     {
-        m_GameManager.ChangeScene("Afterlife_Corp");
+        if (!m_JoiningTutorial)
+            m_GameManager.ChangeScene("Afterlife_Corp");
+        else
+            m_GameManager.ChangeScene("Tutorial");
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)

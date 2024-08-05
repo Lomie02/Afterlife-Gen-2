@@ -72,6 +72,8 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     // Text Chat
     TextChatManager m_TextChatManager;
     Recorder m_VoiceRecorder;
+
+    [SerializeField] GameObject m_LoadingScreenMaps;
     void Start()
     {
         //SearchForElements();
@@ -118,6 +120,9 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             m_ReadyHost.onClick.AddListener(delegate { m_MyController.SetMovement(true); });
             m_ReadyHost.onClick.AddListener(delegate { m_MyCamera.MouseLockState(true); });
         }
+
+        if (m_MyView.IsMine && m_LoadingScreenMaps)
+            m_ReadyUp.SubmitLoadingScreen(m_LoadingScreenMaps);
 
         m_VoiceRecorder.TransmitEnabled = false;
     }

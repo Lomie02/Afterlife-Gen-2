@@ -19,6 +19,7 @@ public class ReadyZone : MonoBehaviour
 
     [SerializeField] GameManager m_GameManager;
 
+    [SerializeField] GameObject m_LoadingScreen;
     bool m_StopAcceptingPlayers = false;
     private void Start()
     {
@@ -30,6 +31,12 @@ public class ReadyZone : MonoBehaviour
         m_View = GetComponent<PhotonView>();
         m_GameManager = FindObjectOfType<GameManager>();
     }
+
+    public void SubmitLoadingScreen(GameObject _object)
+    {
+        m_LoadingScreen = _object;
+    }
+
     public void ReadyUpHost()
     {
         if (!PhotonNetwork.IsMasterClient)
@@ -78,8 +85,15 @@ public class ReadyZone : MonoBehaviour
                 m_View.RPC("RPC_ReadyUP", RpcTarget.All);
             }
 
-            m_GameManager.ChangeNetworkScene("mansion_mp");
+            m_View.RPC("RPC_DisplayLoadingScreen", RpcTarget.All);
 
+            m_GameManager.ChangeNetworkScene("mansion_mp");
         }
+    }
+
+    [PunRPC]
+    public void RPC_DisplayLoadingScreen()
+    {
+        m_LoadingScreen.SetActive(true);
     }
 }

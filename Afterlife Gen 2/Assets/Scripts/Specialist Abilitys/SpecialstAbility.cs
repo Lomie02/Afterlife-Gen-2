@@ -16,8 +16,14 @@ public class SpecialstAbility : MonoBehaviour
     [SerializeField] SpecialistSelected m_SpecialistMode = SpecialistSelected.Exterminator;
     [Space]
 
-    [SerializeField] UnityEvent m_OnSpecialistActivated;
-    [SerializeField] UnityEvent m_OnSpecialistEnded;
+    // Local Events
+    [Header("Local Events")]
+    [SerializeField] UnityEvent m_OnSpecialistActivatedLocal;
+    [SerializeField] UnityEvent m_OnSpecialistEndedLocal;
+
+    [Header("Network Events")]
+    [SerializeField] UnityEvent m_OnSpecialistActivatedNet;
+    [SerializeField] UnityEvent m_OnSpecialistEndedNet;
 
     [SerializeField] Image m_SpecialistIcon;
 
@@ -29,7 +35,9 @@ public class SpecialstAbility : MonoBehaviour
     PhotonView m_View;
     Text m_PressToActivate;
     SpecialistIconSwapper m_SpecialistSwapper;
+    bool m_AbilityInUse;
 
+    // Pharmacist Ability 
     PlayerController[] m_PlayersInGame;
     float m_AuraTimer = 0;
     float m_AuraDuration = 10;
@@ -44,7 +52,6 @@ public class SpecialstAbility : MonoBehaviour
     [SerializeField] VolumeProfile m_NightVisionProfile;
     [SerializeField] VolumeProfile m_DefaultProfile;
 
-    bool m_AbilityInUse;
 
     private void Start()
     {
@@ -95,10 +102,24 @@ public class SpecialstAbility : MonoBehaviour
     {
         if (m_SpecialistIsReady)
         {
-            m_OnSpecialistActivated.Invoke();
+            m_OnSpecialistActivatedLocal.Invoke();
+            m_View.RPC("RPC_ActivatedAbilityEvent", RpcTarget.All);
+
             SpecialistAbilityToUse();
             ResetAbility();
         }
+    }
+
+    [PunRPC]
+    public void RPC_ActivatedAbilityEvent()
+    {
+        m_OnSpecialistActivatedNet.Invoke();
+    }
+
+    [PunRPC]
+    public void RPC_EndedAbilityEvent()
+    {
+        m_OnSpecialistEndedNet.Invoke();
     }
 
     void SpecialistAbilityToUse()
@@ -168,7 +189,8 @@ public class SpecialstAbility : MonoBehaviour
                     m_AbilityInUse = false;
                     m_PlayersVolume.profile = m_DefaultProfile;
 
-                    m_OnSpecialistEnded.Invoke();
+                    m_View.RPC("RPC_EndedAbilityEvent", RpcTarget.All);
+                    m_OnSpecialistEndedLocal.Invoke();
                 }
                 break;
 

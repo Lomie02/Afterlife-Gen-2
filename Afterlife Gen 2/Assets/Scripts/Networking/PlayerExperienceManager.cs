@@ -18,7 +18,10 @@ public class PlayerExperienceManager : MonoBehaviour
 
     [SerializeField] Text m_ExtractionStatus;
     [SerializeField] Text m_SurvivedStatus;
+    [SerializeField] Text m_SpecialistExperience;
+
     [SerializeField] Text m_BonusEarnedStatus;
+    [SerializeField] Text m_TotalExperieceEarned;
 
     PlayerController m_MyController;
     PlayerCamera m_MyPlayersCamera;
@@ -63,31 +66,46 @@ public class PlayerExperienceManager : MonoBehaviour
         if (PlayerPrefs.GetInt("xp_mission_failed") == 1) // If equal to 1 then the previous match failed & all players had died.
         {
             m_MissionSuccessfulStatus.text = "Extraction Failed: All Players Died.";
-            m_ExtractionStatus.text = "Failed Ghost Extraction: " + " No Xp Earned.";
+            m_ExtractionStatus.text = "Failed Ghost Extraction: No Xp Earned.";
 
-            m_SurvivedStatus.text = "Did Not Survive: " + "No Xp Earned.";
-            m_BonusEarnedStatus.text = "Bonus From The Boss: " + "No Bonus Earned.";
+            m_SurvivedStatus.text = "Did Not Survive: No Xp Earned.";
+            m_BonusEarnedStatus.text = "Bonus From The Boss: No Bonus Earned.";
 
+            m_SpecialistExperience.text = "Current Specialist: No Xp Earned.";
+
+            m_TotalExperieceEarned.text = "Total XP Earned: 0 Xp";
             PlayerPrefs.SetInt("xp_mission_failed", 0);
             return; // No XP is earned when mission failed.
         }
 
         m_XpCircleBar.fillAmount += 0.10f; // XP for successful extract (At least 1 player has to complete the extract)
-        m_ExtractionStatus.text = "Successful Ghost Extraction: " + "10 Xp";
+        m_ExtractionStatus.text = "Successful Ghost Extraction: 10 Xp";
+        m_ExperiencePointsEarnedFromMatch += 10;
 
-        if (PlayerPrefs.GetInt("xp_player_survived") == 1) // Extracted Alive & Earns a bonus
+
+        if (PlayerPrefs.GetInt("xp_player_survived") == 0) // Extracted Alive & Earns a bonus
         {
             m_XpCircleBar.fillAmount += 0.12f; // XP for Surviving.
             m_XpCircleBar.fillAmount += 0.5f; // XP for Bonus
-            m_SurvivedStatus.text = "Survived Extraction: " + "12 Xp";
-            m_BonusEarnedStatus.text = "Bonus From The Boss: " + "5 Xp";
+            m_XpCircleBar.fillAmount += 0.10f; // XP for Bonus
+
+            m_ExperiencePointsEarnedFromMatch += 12;
+            m_ExperiencePointsEarnedFromMatch += 10;
+            m_ExperiencePointsEarnedFromMatch += 5;
+
+            m_SpecialistExperience.text = "Current Specialist: 10 Xp.";
+
+            m_SurvivedStatus.text = "Survived Extraction: 12 Xp";
+            m_BonusEarnedStatus.text = "Bonus From The Boss: 5 Xp";
         }
         else
         {
-            m_SurvivedStatus.text = "Did Not Survive: " + "No Xp Earned.";
-            m_BonusEarnedStatus.text = "Bonus From The Boss: " + "No Bonus Earned.";
+            m_SpecialistExperience.text = "Current Specialist: No Xp Earned.";
+            m_SurvivedStatus.text = "Did Not Survive: No Xp Earned.";
+            m_BonusEarnedStatus.text = "Bonus From The Boss: No Bonus Earned.";
         }
 
+        m_TotalExperieceEarned.text = "Total Xp Earned: " + m_ExperiencePointsEarnedFromMatch.ToString() + " Xp";
 
         m_MissionSuccessfulStatus.text = "Extraction Successful: Ghost Was Captured";
 
@@ -145,9 +163,9 @@ public class PlayerExperienceManager : MonoBehaviour
     }
 
     [PunRPC]
-    public void RPC_PlayerSurvived() // Did the player survive the extaction
+    public void RPC_PlayerDiedSurvived() // Did the player survive the extaction
     {
-        PlayerPrefs.SetInt("xp_player_survived", 1); // if equal to 1 then player had survived the extraction.
+        PlayerPrefs.SetInt("xp_player_survived", 1); // if equal to 1 then player had died
     }
 
 }

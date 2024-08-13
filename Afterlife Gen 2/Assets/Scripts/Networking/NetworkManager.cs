@@ -64,11 +64,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
         m_LoadingTextStatus.text = "Connecting To Regions...";
 
-        if (PlayerPrefs.HasKey("players_pref_region"))
-            SetRegion(PlayerPrefs.GetString("players_pref_region"));
-        else
-            TestClientsPing();
-
         m_RegionList.onValueChanged.AddListener(OnRegionListUpdated);
 
         m_LoadingTextStatus.text = "Connecting To Steam.";
@@ -233,7 +228,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.AutomaticallySyncScene = true;
     }
-
 
     public void ChangeUsername()
     {

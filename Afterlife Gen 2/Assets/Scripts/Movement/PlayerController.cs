@@ -31,7 +31,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
     ColorAdjustments m_Colour;
     public Rigidbody m_Body;
 
-    Transform m_NewPos;
     [SerializeField] float m_PlayerHealth = 100;
     [SerializeField] float m_PossesionMeter = 0;
 

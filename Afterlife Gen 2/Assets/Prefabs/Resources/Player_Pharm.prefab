@@ -493,10 +493,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SpecialistMode: 1
-  m_OnSpecialistActivated:
+  m_OnSpecialistActivatedLocal:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnSpecialistEndedLocal:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnSpecialistActivatedNet:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnSpecialistEndedNet:
     m_PersistentCalls:
       m_Calls: []
   m_SpecialistIcon: {fileID: 0}
+  m_SpecialistChargeRate: 0.02
+  m_NightVisionDuration: 10
+  m_PlayersVolume: {fileID: 0}
+  m_NightVisionProfile: {fileID: 0}
+  m_DefaultProfile: {fileID: 0}
 --- !u!114 &715021452052687023
 MonoBehaviour:
   m_ObjectHideFlags: 0

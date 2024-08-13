@@ -468,10 +468,25 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         if (m_PlayersDeadInGame >= PhotonNetwork.PlayerList.Length)
         {
+            GetComponent<PlayerExperienceManager>().DisplayXpScreenOnNextLoadUp();
+            GetComponent<PlayerExperienceManager>().MissionCompleted();
+
             m_GameManager.ChangeNetworkScene("Afterlife_Corp");
         }
     }
 
+    [PunRPC]
+    public void RPC_CheckIfAllPlayersHaveExtracted()
+    {
+
+        if (m_PlayersDeadInGame >= PhotonNetwork.PlayerList.Length)
+        {
+            GetComponent<PlayerExperienceManager>().DisplayXpScreenOnNextLoadUp();
+            GetComponent<PlayerExperienceManager>().MissionFailed();
+
+            m_GameManager.ChangeNetworkScene("Afterlife_Corp");
+        }
+    }
     void UpdateHealingAura()
     {
     }
@@ -547,7 +562,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     }
 
-    bool m_IsTacSprinting()
+    public bool m_IsTacSprinting()
     {
         return m_IsTacticalSprinting;
     }

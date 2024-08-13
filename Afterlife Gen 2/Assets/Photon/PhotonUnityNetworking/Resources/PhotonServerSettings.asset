@@ -27,12 +27,12 @@ MonoBehaviour:
     EnableProtocolFallback: 1
     AuthMode: 0
     EnableLobbyStatistics: 0
-    NetworkLogging: 1
+    NetworkLogging: 5
   DevRegion: au
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
-  StartInOfflineMode: 1
+  StartInOfflineMode: 0
   RpcList:
   - CantHearYou
   - ChangeColour
@@ -84,6 +84,11 @@ MonoBehaviour:
   - RPC_DisplayLoadingScreen
   - RPC_ActivatedAbilityEvent
   - RPC_EndedAbilityEvent
+  - RPC_DisplayExperienceOnLoadUp
+  - RPC_MissionUnsuccessful
+  - RPC_MissionWasCompleted
+  - RPC_CheckIfAllPlayersHaveExtracted
+  - RPC_PlayerSurvived
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

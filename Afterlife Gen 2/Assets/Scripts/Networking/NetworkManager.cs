@@ -149,11 +149,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         m_NetworkScreenObject.SetActive(false);
 
-        if (!SteamUserStats.GetStat("player_level_overall", out m_Level))
+        if (PlayerPrefs.HasKey("xp_overall_level"))
         {
-            m_Level = 1;
-            SteamUserStats.SetStat("player_level_overall", m_Level);
+            m_Level = PlayerPrefs.GetInt("xp_overall_level");
+            SteamUserStats.SetStat("xp_overall_level", m_Level);
         }
+        else
+            m_Level = 1;
 
         m_Username.text = SteamFriends.GetPersonaName() + " Lvl: " + m_Level.ToString();
         m_OnConnected.Invoke();

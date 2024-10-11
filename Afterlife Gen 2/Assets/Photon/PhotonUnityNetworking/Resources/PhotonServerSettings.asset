@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PhotonServerSettings
   m_EditorClassIdentifier: 
   AppSettings:
-    AppIdRealtime: 96a045a7-c916-4c42-abcd-f286af285508
+    AppIdRealtime: bdf59343-08a0-4cca-9ade-dd0994709e22
     AppIdFusion: 
     AppIdChat: 
     AppIdVoice: 633ed3e3-d109-43c1-a283-53121c046dcf
@@ -82,6 +82,14 @@ MonoBehaviour:
   - RPC_ShowGhostTrueForm
   - RPC_CursedObjectHasBeenDestroyed
   - RPC_DisplayLoadingScreen
+  - RPC_ActivatedAbilityEvent
+  - RPC_EndedAbilityEvent
+  - RPC_DisplayExperienceOnLoadUp
+  - RPC_MissionUnsuccessful
+  - RPC_MissionWasCompleted
+  - RPC_CheckIfAllPlayersHaveExtracted
+  - RPC_PlayerSurvived
+  - RPC_PlayerDiedSurvived
   DisableAutoOpenWizard: 1
-  ShowSettings: 0
+  ShowSettings: 1
   DevRegionSetOnce: 1

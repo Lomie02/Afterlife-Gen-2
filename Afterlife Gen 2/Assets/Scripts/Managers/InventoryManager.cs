@@ -300,7 +300,7 @@ public class InventoryManager : MonoBehaviour
         if (m_Items[m_CurrentSlotSelected])
         {
             if (m_PlayerController.IsSprinting())
-                m_MyView.RPC("RPC_LerpItem", RpcTarget.All, 0.5f);
+                m_MyView.RPC("RPC_LerpItem", RpcTarget.All, 0f);
             else
                 m_MyView.RPC("RPC_LerpItem", RpcTarget.All, 1f);
         }

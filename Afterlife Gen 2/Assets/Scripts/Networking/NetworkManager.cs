@@ -18,12 +18,15 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     [SerializeField] InputField m_CodeInput;
     [SerializeField] InputField m_UsernameInput;
+    [SerializeField] Text m_Username;
 
     [Space]
-    [SerializeField] Text m_Username;
+    [Header("Error Handling")]
+
     [SerializeField] Text m_FailMessage;
     [SerializeField] Text m_FailType;
     [SerializeField] GameObject m_ErrorScreen;
+    [SerializeField] GameObject m_NetworkError;
 
     [Header("Developer")]
     [SerializeField] GameObject m_DevScreen;
@@ -48,9 +51,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         if (m_NetworkScreenObject && !m_NetworkScreenObject.activeSelf)
-        {
             m_NetworkScreenObject.SetActive(true);
-        }
+
+        if (PhotonNetwork.OfflineMode)
+            m_NetworkScreenObject.SetActive(false);
+
         m_GameManager = FindFirstObjectByType<GameManager>();
         m_ErrorScreen.SetActive(false);
 
@@ -59,19 +64,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
         m_LoadingTextStatus.text = "Connecting To Regions...";
 
-        if (PlayerPrefs.HasKey("players_pref_region"))
-            SetRegion(PlayerPrefs.GetString("players_pref_region"));
-        else
-            TestClientsPing();
-
         m_RegionList.onValueChanged.AddListener(OnRegionListUpdated);
-
 
         m_LoadingTextStatus.text = "Connecting To Steam.";
         if (SteamManager.Initialized)
-        {
             m_Username.text = SteamFriends.GetPersonaName();
-        }
         else // if failed to connect to steam then the entire game wont load. Needs to Restart
         {
             m_ErrorScreen.SetActive(true);
@@ -108,27 +105,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         m_LoadingTextStatus.text = "Connecting To Afterlife Game Servers.";
 
         PhotonNetwork.ConnectUsingSettings();
-
         PhotonNetwork.LocalPlayer.NickName = SteamFriends.GetPersonaName();
-
-        if (PlayerPrefs.HasKey("developerState"))
-        {
-            m_IsDeveloper = PlayerPrefs.GetInt("developerState");
-
-            if (m_IsDeveloper == 1)
-            {
-                m_Username.color = Color.green;
-            }
-        }
-        else
-        {
-            PlayerPrefs.SetInt("developerState", m_IsDeveloper);
-        }
-
 
         SetUpPlayerProfile();
     }
-
     void SetUpPlayerProfile()
     {
         if (m_PlayerProps.ContainsKey("PlayerLevel"))
@@ -164,11 +144,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         m_NetworkScreenObject.SetActive(false);
 
-        if (!SteamUserStats.GetStat("player_level_overall", out m_Level))
+        if (PlayerPrefs.HasKey("xp_overall_level"))
         {
-            m_Level = 1;
-            SteamUserStats.SetStat("player_level_overall", m_Level);
+            m_Level = PlayerPrefs.GetInt("xp_overall_level");
+            SteamUserStats.SetStat("xp_overall_level", m_Level);
         }
+        else
+            m_Level = 1;
 
         m_Username.text = SteamFriends.GetPersonaName() + " Lvl: " + m_Level.ToString();
         m_OnConnected.Invoke();
@@ -179,6 +161,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         m_NetworkScreenObject.SetActive(true);
         int code = Random.Range(100000, 999999); // picks a random number to act as the solo pass
 
+        PhotonNetwork.OfflineMode = true;
         Photon.Realtime.RoomOptions roomOptions = new Photon.Realtime.RoomOptions() { IsVisible = false, MaxPlayers = 1 };
         PhotonNetwork.CreateRoom("Solo-" + code.ToString(), roomOptions);
     }
@@ -245,7 +228,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.AutomaticallySyncScene = true;
     }
-
 
     public void ChangeUsername()
     {

@@ -58,7 +58,7 @@ public class PlayerCamera : MonoBehaviour
             m_Yview -= yPos;
             m_Body.Rotate(Vector3.up, xPos);
 
-            m_Yview = Mathf.Clamp(m_Yview, -30, 90);
+            m_Yview = Mathf.Clamp(m_Yview, -30, 62);
 
             m_PlayersCamera.transform.localEulerAngles = new Vector3(m_Yview, 0, 0);
         }

@@ -4,8 +4,16 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 
+enum ReadyZoneMode
+{
+    Lobby = 0,
+    InGame,
+}
+
 public class ReadyZone : MonoBehaviour
 {
+    [SerializeField] ReadyZoneMode m_ReadyZoneMode = ReadyZoneMode.Lobby;
+
     [SerializeField] bool m_HostIsReady = false;
     [SerializeField] PositonLerp m_ReadyUpDoor;
 
@@ -24,8 +32,11 @@ public class ReadyZone : MonoBehaviour
 
     private void Start()
     {
-        if (!PhotonNetwork.IsMasterClient)
-            m_MonitorFlare.SetActive(false);
+        if (m_ReadyZoneMode == ReadyZoneMode.Lobby)
+        {
+            if (!PhotonNetwork.IsMasterClient)
+                m_MonitorFlare.SetActive(false);
+        }
 
         m_View = GetComponent<PhotonView>();
         m_GameManager = FindAnyObjectByType<GameManager>();
@@ -75,13 +86,28 @@ public class ReadyZone : MonoBehaviour
 
     private void CheckPlayerZoneCount()
     {
-        if (m_PlayersInReadyZone >= PhotonNetwork.PlayerList.Length && !m_StopAcceptingPlayers)
-        {
-            m_View.RPC("RPC_ReadyUP", RpcTarget.All);
 
-            m_View.RPC("RPC_DisplayLoadingScreen", RpcTarget.All);
-            m_GameManager.ChangeNetworkScene("mansion_mp");
+        switch (m_ReadyZoneMode)
+        {
+            case ReadyZoneMode.Lobby:
+                if (m_PlayersInReadyZone >= PhotonNetwork.PlayerList.Length && !m_StopAcceptingPlayers)
+                {
+                    m_View.RPC("RPC_ReadyUP", RpcTarget.All);
+
+                    m_View.RPC("RPC_DisplayLoadingScreen", RpcTarget.All);
+                    m_GameManager.ChangeNetworkScene("mansion_mp");
+                }
+                break;
+
+            case ReadyZoneMode.InGame:
+
+                if (m_PlayersInReadyZone >= PhotonNetwork.PlayerList.Length)
+                {
+                    m_GameManager.ChangeNetworkScene("Afterlife_Corp");
+                }
+                break;
         }
+        
     }
 
     [PunRPC]

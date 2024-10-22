@@ -31,11 +31,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
     ColorAdjustments m_Colour;
     public Rigidbody m_Body;
 
-    [SerializeField] float m_PlayerHealth = 100;
+    [SerializeField] float m_PlayerHealth = 1;
     [SerializeField] float m_PossesionMeter = 0;
 
-    [SerializeField] Slider m_HealthBar;
-    [SerializeField] Slider m_PossessionBar;
+    [SerializeField] Image m_HealthBar;
+    [SerializeField] Image m_PossessionBar;
 
     PlayerStance m_Stance = PlayerStance.Stand;
     [SerializeField] PhotonView m_MyView;
@@ -164,8 +164,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_PlayerCollider = GetComponent<CapsuleCollider>();
         m_PlayersOverallSpeed = m_PlayerWalkSpeed;
 
-        m_HealthBar.value = m_PlayerHealth;
-        m_PossessionBar.value = m_PossesionMeter;
+        m_HealthBar.fillAmount = m_PlayerHealth;
+        m_PossessionBar.fillAmount = m_PossesionMeter;
 
         m_BleedoutObject.SetActive(false);
 
@@ -428,12 +428,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public void RestorePossesion() // Pharmacist Specialist
     {
-        m_PossesionMeter -= 0.7f;
-        m_PossessionBar.value = m_PossesionMeter;
+        m_PossesionMeter -= 0.6f;
+        m_PossessionBar.fillAmount = m_PossesionMeter;
 
         m_PossesionMeter = Mathf.Clamp(m_PossesionMeter, 0, 1);
-        m_PlayerHealth += 50;
-        m_HealthBar.value = m_PlayerHealth;
+        m_PlayerHealth += 0.1f;
+        m_HealthBar.fillAmount = m_PlayerHealth;
 
         CheckHealth();
     }
@@ -501,7 +501,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
                 Vignette m_Venette;
                 m_PostProcessing.profile.TryGet(out m_Venette);
-                m_Venette.intensity.value = Mathf.Lerp(m_PossessionBar.value, m_PossesionMeter, Time.deltaTime);
+                m_Venette.intensity.value = Mathf.Lerp(m_PossessionBar.fillAmount, m_PossesionMeter, Time.deltaTime);
             }
         }
         else
@@ -515,7 +515,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         }
 
         m_PossesionMeter = Mathf.Clamp(m_PossesionMeter, 0, 1);
-        m_PossessionBar.value = Mathf.Lerp(m_PossessionBar.value, m_PossesionMeter, Time.deltaTime);
+        m_PossessionBar.fillAmount = Mathf.Lerp(m_PossessionBar.fillAmount, m_PossesionMeter, Time.deltaTime);
     }
 
     void UpdateEmotes() // Add emotes here.
@@ -566,20 +566,22 @@ public class PlayerController : MonoBehaviourPunCallbacks
         return m_IsTacticalSprinting;
     }
 
-    public void TakeDamage(float _damageAmount)
+    [PunRPC]
+    public void RPC_TakeDamage(float _damageAmount)
     {
         m_PlayerHealth -= _damageAmount;
-        m_PlayerHealth = Mathf.Clamp(m_PlayerHealth, 0, 100);
+        m_PlayerHealth = Mathf.Clamp(m_PlayerHealth, 0, 1);
 
-        m_HealthBar.value = m_PlayerHealth;
+        m_HealthBar.fillAmount = m_PlayerHealth;
         CheckHealth();
     }
+
 
     [PunRPC]
     public void RPC_RestoreHealth(float _amountRetored)
     {
         m_PlayerHealth += _amountRetored;
-        m_HealthBar.value = m_PlayerHealth;
+        m_HealthBar.fillAmount = m_PlayerHealth;
         CheckHealth();
     }
 
@@ -587,21 +589,21 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public void RPC_RestoreSanity(float _amountRetored)
     {
         m_PossesionMeter -= _amountRetored;
-        m_PossessionBar.value = m_PossesionMeter;
+        m_PossessionBar.fillAmount = m_PossesionMeter;
         CheckHealth();
     }
 
     public void ResetHealth()
     {
-        m_PlayerHealth = 100;
-        m_HealthBar.value = m_PlayerHealth;
+        m_PlayerHealth = 1;
+        m_HealthBar.fillAmount = m_PlayerHealth;
     }
 
     void CheckHealth()
     {
         if (!m_MyView.IsMine) return;
 
-        if (m_PlayerHealth <= 50)
+        if (m_PlayerHealth <= 0.5f)
         {
             m_PostProcessing.profile.TryGet(out m_Colour);
             m_Colour.colorFilter.value = Color.red;

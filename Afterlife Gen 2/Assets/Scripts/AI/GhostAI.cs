@@ -43,12 +43,36 @@ public class GhostAI : MonoBehaviour
     bool m_IsGhostRevealingTrueForm = false;
     int m_CurrentGhostKitActive = 0;
 
+    // idling Vars
+    float m_IdleDuration = 5;
+    float m_IdleTimer = 0;
+
+    Transform m_PlayerTarget; // Player to chase if ghost finds them
+    List<GameObject> m_PlayersGhostCanSee;
+    [SerializeField] Transform m_RayView;
+
+    float m_ChaseDuration = 5;
+    float m_ChaseTimer = 0;
+
+    // cooldown for attacks
+    float m_AttackCooldown = 3f;
+    float m_AttackTimer;
+    bool m_AttackIsOnCooldown = false;
+
     private void Start()
     {
         m_MyAgent = GetComponent<NavMeshAgent>();
         m_PowerManager = FindFirstObjectByType<PowerManager>();
+
+        m_IdleDuration = Random.Range(5f, 9f);
+        m_IdleTimer = m_IdleDuration;
+
+        m_ChaseTimer = m_ChaseDuration;
+        m_AttackTimer = m_AttackCooldown;
+
         if (PhotonNetwork.IsMasterClient)
         {
+            m_PlayersGhostCanSee = new List<GameObject>();
             m_View.RPC("RPC_AssignGhostKit", RpcTarget.All, 0);
             m_TimerCooldownLights = m_TimerCooldownLightsDuration;
             m_MyAgent.SetDestination(RandomNavSphere(transform.position, m_RoamingDistance, -1));
@@ -107,6 +131,16 @@ public class GhostAI : MonoBehaviour
 
         CheckInteractions();
 
+        if (m_AttackIsOnCooldown)
+        {
+            m_AttackTimer -= Time.deltaTime;
+            if (m_AttackTimer <= 0)
+            {
+                m_AttackTimer = m_AttackCooldown;
+                m_AttackIsOnCooldown = false;
+            }
+        }
+
         if (m_LightInteractionOnCooldown)
         {
             m_TimerCooldownLights -= Time.deltaTime;
@@ -120,34 +154,58 @@ public class GhostAI : MonoBehaviour
 
     void UpdateIdle()
     {
+        m_IdleTimer -= Time.deltaTime;
 
+        if (m_IdleTimer <= 0)
+        {
+            m_IdleDuration = Random.Range(5f, 9f);
+            m_IdleTimer = m_IdleDuration;
+            m_GhostsBehaviour = GhostBehaviour.Seeking;
+        }
     }
-
     void UpdateSeekingBehaviour()
     {
         if (m_MyAgent.remainingDistance < 2)
         {
-            m_MyAgent.SetDestination(RandomNavSphere(transform.position, m_RoamingDistance, -1));
+            int RandomBehaviour = Random.Range(0, 3);
+
+            if (RandomBehaviour == 1)
+            {
+                m_GhostsBehaviour = GhostBehaviour.Idle; return;
+            }
+            else
+                m_MyAgent.SetDestination(RandomNavSphere(transform.position, m_RoamingDistance, -1));
         }
+    }
 
-        RaycastHit m_CastInfo;
+    void CheckIfCanAttackTarget()
+    {
 
-        if (Physics.Raycast(transform.position, transform.forward, out m_CastInfo, 4))
+        RaycastHit HitDetectionInfo;
+
+        for (int i = 0; i < m_PlayersGhostCanSee.Count; i++)
         {
+            Vector3 DirectionOfTarget = m_PlayerTarget.position - m_RayView.position;
+            DirectionOfTarget = DirectionOfTarget.normalized;
 
-            Debug.Log(m_CastInfo.collider.name);
-
-            if (m_CastInfo.collider.GetComponent<Destructable_Object>())
-                m_CastInfo.collider.GetComponent<Destructable_Object>().DestroyObject();
+            if (Physics.Raycast(m_RayView.position, DirectionOfTarget, out HitDetectionInfo, 15f))
+            {
+                if (HitDetectionInfo.collider.GetComponentInParent<PlayerController>())
+                {
+                    HitDetectionInfo.collider.GetComponentInParent<PhotonView>().RPC("RPC_TakeDamage", HitDetectionInfo.collider.GetComponentInParent<PhotonView>().Owner, 0.5f);
+                    m_AttackIsOnCooldown = true;
+                }
+            }
         }
     }
 
     void CheckInteractions()
     {
-        float Distance = Vector3.Distance(transform.position, m_PowerManager.gameObject.transform.position);
-        if (Distance < 12 && m_PowerManager.GetPowerState() && !m_LightInteractionOnCooldown)
+        // Interaction with power
+        float DistanceToPowerBox = Vector3.Distance(transform.position, m_PowerManager.gameObject.transform.position);
+        if (DistanceToPowerBox < 7 && m_PowerManager.GetPowerState() && !m_LightInteractionOnCooldown)
         {
-            int RandomNum = Random.Range(0, 5);
+            int RandomNum = Random.Range(0, 10);
 
             if (RandomNum == 2)
                 m_PowerManager.CyclePower();
@@ -155,7 +213,15 @@ public class GhostAI : MonoBehaviour
             m_LightInteractionOnCooldown = true;
         }
 
+        // Player detection
+        if (m_PlayersGhostCanSee.Count > 0 && m_PlayerTarget == null)
+            UpdatePlayerDetection();
 
+        // If AI can attack the player
+        if (!m_AttackIsOnCooldown)
+            CheckIfCanAttackTarget();
+
+        // Equipment
         switch (m_Profile.m_Evidence1)
         {
             case EvidenceTypes.SpiritBox:
@@ -218,7 +284,7 @@ public class GhostAI : MonoBehaviour
         if (!PhotonNetwork.IsMasterClient)
             return;
 
-        m_GhostManager = FindObjectOfType<GhostManager>();
+        m_GhostManager = FindAnyObjectByType<GhostManager>();
         m_View.RPC("RPC_GrabGhostProfile", RpcTarget.All, _index);
     }
 
@@ -228,9 +294,56 @@ public class GhostAI : MonoBehaviour
         m_Profile = m_GhostManager.GrabGhostProfile(_index);
     }
 
+    public void PlayerHasEnteredView(GameObject _playerObject)
+    {
+        m_PlayersGhostCanSee.Add(_playerObject);
+        m_MyAgent.SetDestination(RandomNavSphere(_playerObject.transform.position, 10, -1));
+    }
+
+    public void PlayerHasExitView(GameObject _playerObject)
+    {
+        m_PlayersGhostCanSee.Remove(_playerObject);
+    }
+
+    bool UpdatePlayerDetection()
+    {
+        RaycastHit HitDetectionInfo;
+
+        for (int i = 0; i < m_PlayersGhostCanSee.Count; i++)
+        {
+            Vector3 DirectionOfTarget = m_PlayersGhostCanSee[i].transform.position - m_RayView.position;
+            DirectionOfTarget = DirectionOfTarget.normalized;
+
+            if (Physics.Raycast(m_RayView.position, DirectionOfTarget, out HitDetectionInfo, 15f))
+            {
+                if (HitDetectionInfo.collider.GetComponentInParent<PlayerController>())
+                {
+                    m_PlayerTarget = m_PlayersGhostCanSee[i].transform;
+                    m_GhostsBehaviour = GhostBehaviour.Hunt;
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     void HuntPlayer()
     {
+        if (UpdatePlayerDetection())
+        {
+            m_ChaseTimer = m_ChaseDuration;
+        }
 
+        m_MyAgent.SetDestination(m_PlayerTarget.position);
+
+        m_ChaseTimer -= Time.deltaTime;
+        if (m_ChaseTimer <= 0)
+        {
+            m_ChaseTimer = m_ChaseDuration;
+            m_PlayerTarget = null;
+            m_GhostsBehaviour = GhostBehaviour.Idle; return;
+        }
     }
 
     void CheckSpiritBox()

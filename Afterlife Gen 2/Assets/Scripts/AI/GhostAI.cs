@@ -180,21 +180,30 @@ public class GhostAI : MonoBehaviour
 
     void CheckIfCanAttackTarget()
     {
-
         RaycastHit HitDetectionInfo;
 
-        for (int i = 0; i < m_PlayersGhostCanSee.Count; i++)
-        {
-            Vector3 DirectionOfTarget = m_PlayerTarget.position - m_RayView.position;
-            DirectionOfTarget = DirectionOfTarget.normalized;
+        Vector3 DirectionOfTarget = m_PlayerTarget.position - m_RayView.position;
+        DirectionOfTarget = DirectionOfTarget.normalized;
 
-            if (Physics.Raycast(m_RayView.position, DirectionOfTarget, out HitDetectionInfo, 15f))
+        if (Physics.Raycast(m_RayView.position, DirectionOfTarget, out HitDetectionInfo, 1.5f))
+        {
+            if (HitDetectionInfo.collider.GetComponentInParent<PlayerController>())
             {
-                if (HitDetectionInfo.collider.GetComponentInParent<PlayerController>())
-                {
-                    HitDetectionInfo.collider.GetComponentInParent<PhotonView>().RPC("RPC_TakeDamage", HitDetectionInfo.collider.GetComponentInParent<PhotonView>().Owner, 0.5f);
-                    m_AttackIsOnCooldown = true;
-                }
+                HitDetectionInfo.collider.GetComponentInParent<PhotonView>().RPC("RPC_TakeDamage", HitDetectionInfo.collider.GetComponentInParent<PhotonView>().Owner, Random.Range(0.1f, 0.3f));
+                m_AttackIsOnCooldown = true;
+            }
+        }
+    }
+
+    public void CheckDoorInteractions()
+    {
+        RaycastHit HitDetectionInfo;
+
+        if (Physics.Raycast(m_RayView.position, m_RayView.forward, out HitDetectionInfo, 1.5f))
+        {
+            if (HitDetectionInfo.collider.GetComponent<DoorModule>())
+            {
+                HitDetectionInfo.collider.GetComponent<DoorModule>().CycleDoorState();
             }
         }
     }

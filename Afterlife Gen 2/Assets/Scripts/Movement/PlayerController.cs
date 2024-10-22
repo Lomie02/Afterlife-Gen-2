@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.Rendering;
+using Photon.Pun.UtilityScripts;
 
 enum MovementType
 {
@@ -468,7 +469,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (m_PlayersDeadInGame >= PhotonNetwork.PlayerList.Length)
         {
             GetComponent<PlayerExperienceManager>().DisplayXpScreenOnNextLoadUp();
-            GetComponent<PlayerExperienceManager>().MissionCompleted();
+            GetComponent<PlayerExperienceManager>().MissionFailed();
 
             m_GameManager.ChangeNetworkScene("Afterlife_Corp");
         }
@@ -511,11 +512,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         if (m_PossesionMeter >= 0.4f)
         {
+            if(m_SkinWalkerDemon)
             m_SkinWalkerDemon.SummonSkinwalker();
         }
 
         m_PossesionMeter = Mathf.Clamp(m_PossesionMeter, 0, 1);
-        m_PossessionBar.fillAmount = Mathf.Lerp(m_PossessionBar.fillAmount, m_PossesionMeter, Time.deltaTime);
+        m_PossessionBar.fillAmount = m_PossesionMeter;
     }
 
     void UpdateEmotes() // Add emotes here.
@@ -586,6 +588,16 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
+    public void RPC_PharmacistsAbility()
+    {
+        m_PossesionMeter -= 0;
+        m_PlayerHealth = 1;
+
+        m_PossessionBar.fillAmount = m_PossesionMeter;
+        m_HealthBar.fillAmount = m_PlayerHealth;
+    }
+
+    [PunRPC]
     public void RPC_RestoreSanity(float _amountRetored)
     {
         m_PossesionMeter -= _amountRetored;
@@ -603,6 +615,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         if (!m_MyView.IsMine) return;
 
+        if (m_PossesionMeter >= 0.8f)
+        {
+            m_PlayerHealth = 0f;
+        }
+
         if (m_PlayerHealth <= 0.5f)
         {
             m_PostProcessing.profile.TryGet(out m_Colour);
@@ -614,7 +631,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             m_Colour.colorFilter.value = Color.white;
         }
 
-        if (m_PlayerHealth <= 0)
+        if (m_PlayerHealth <= 0 )
             m_MyView.RPC("RPC_EnterDownedStance", RpcTarget.All);
     }
 

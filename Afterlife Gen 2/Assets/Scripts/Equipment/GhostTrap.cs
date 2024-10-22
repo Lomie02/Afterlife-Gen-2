@@ -44,6 +44,7 @@ public class GhostTrap : MonoBehaviour
 
     // Trap zaping
 
+    bool m_EnteredTheAfterlife = false;
     float m_ZapTimer;
     float m_ZapTimerDuration = 5;
 
@@ -137,17 +138,29 @@ public class GhostTrap : MonoBehaviour
             other.GetComponent<NetworkObject>().RenameObject(TempName);
             other.GetComponent<CursedObject>().DestroyCursedObject();
         }
+        else if (m_EnteredTheAfterlife && other.gameObject.GetComponent<GhostAI>())
+        {
+            m_MyView.RPC("RPC_GhostCaptured", RpcTarget.MasterClient);
+            PhotonNetwork.Destroy(other.gameObject);
+        }
+    }
+
+    [PunRPC]
+    public void RPC_GhostCaptured()
+    {
+        // Spawn the escape portal.
     }
 
     [PunRPC]
     public void RPC_CursedObjectHasBeenDestroyed()
     {
-        if(!m_GhostObject) m_GhostObject = FindAnyObjectByType<GhostAI>();
+        if (!m_GhostObject) m_GhostObject = FindAnyObjectByType<GhostAI>();
 
         m_GhostObject.EnteredAfterlifeRealm();
 
         GameObject[] m_Players = GameObject.FindGameObjectsWithTag("Player");
 
+        m_EnteredTheAfterlife = true;
         for (int i = 0; i < m_Players.Length; i++)
         {
             m_Players[i].GetComponent<PlayerController>().EnterTheAfterlife();

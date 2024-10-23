@@ -185,7 +185,7 @@ public class GhostAI : MonoBehaviour
         Vector3 DirectionOfTarget = m_PlayerTarget.position - m_RayView.position;
         DirectionOfTarget = DirectionOfTarget.normalized;
 
-        if (Physics.Raycast(m_RayView.position, DirectionOfTarget, out HitDetectionInfo, 1.5f))
+        if (Physics.Raycast(m_RayView.position, DirectionOfTarget, out HitDetectionInfo, 2.5f))
         {
             if (HitDetectionInfo.collider.GetComponentInParent<PlayerController>())
             {

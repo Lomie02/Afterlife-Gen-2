@@ -1100,6 +1100,7 @@ GameObject:
   - component: {fileID: 3565321248921223210}
   - component: {fileID: 4624682707237346878}
   - component: {fileID: 6190285705542918598}
+  - component: {fileID: 7116670466426871220}
   m_Layer: 0
   m_Name: Player_GasMan
   m_TagString: Player
@@ -1116,7 +1117,7 @@ Transform:
   m_GameObject: {fileID: 5894786181902345269}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.26, y: 0, z: 11.73}
+  m_LocalPosition: {x: 7.2543077, y: 0.0071994066, z: 11.696415}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1752,6 +1753,24 @@ MonoBehaviour:
   m_SpecialistExperience: {fileID: 8047305620791792711}
   m_BonusEarnedStatus: {fileID: 932428572406661843}
   m_TotalExperieceEarned: {fileID: 2328906738956079328}
+--- !u!114 &7116670466426871220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5894786181902345269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0050ecd2d32680645848edd91f37442d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
+  regionSize: {x: 0.6220083, y: 0.5798664}
+  texture: {fileID: 0}
+  surfaceFoamDimmer: 1
+  deepFoamDimmer: 1
+  scaleMode: 0
 --- !u!1 &6393888878338626386
 GameObject:
   m_ObjectHideFlags: 0
@@ -10657,12 +10676,12 @@ PrefabInstance:
     - target: {fileID: 277814769422740567, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
         type: 3}
       propertyPath: m_Value
-      value: 0.960166
+      value: 1.0000001
       objectReference: {fileID: 0}
     - target: {fileID: 1763742558281002892, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 84.25414
+      value: -0.00020593453
       objectReference: {fileID: 0}
     - target: {fileID: 4804207531283574814, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
         type: 3}

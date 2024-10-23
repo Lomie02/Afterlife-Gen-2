@@ -590,7 +590,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [PunRPC]
     public void RPC_PharmacistsAbility()
     {
-        m_PossesionMeter -= 0;
+        m_PossesionMeter = 0;
         m_PlayerHealth = 1;
 
         m_PossessionBar.fillAmount = m_PossesionMeter;

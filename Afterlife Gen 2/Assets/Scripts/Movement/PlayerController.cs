@@ -119,6 +119,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [Header("Afterlife Realm")]
     [SerializeField] GameObject m_AfterlifeFadeIn;
     [SerializeField] LayerMask m_AfterlifeRealmMask;
+
+    bool m_ReplensishHealth = false;
     public void EnterTheAfterlife()
     {
         if (!m_MyView.IsMine) return;
@@ -249,16 +251,26 @@ public class PlayerController : MonoBehaviourPunCallbacks
             return;
 
         if (m_CanMove && !m_IsDowned && !m_isDead)
-        {
             UpdateMovement();
-        }
 
-        UpdatePossession();
+        if (!m_ReplensishHealth)
+            UpdatePossession();
+
+        if (m_ReplensishHealth)
+        {
+            m_PlayerHealth += 0.1f * Time.deltaTime;
+            m_HealthBar.fillAmount = m_PlayerHealth;
+
+            m_PossesionMeter -= 0.1f;
+
+            if (m_PossesionMeter <= 0.2f && m_PlayerHealth >= 0.5f)
+            {
+                m_ReplensishHealth = false;
+            }
+        }
 
         if (m_IsDowned)
-        {
             UpdateDownedState();
-        }
     }
 
     void UpdateMovement() // Players overall movement systems.
@@ -512,8 +524,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         if (m_PossesionMeter >= 0.4f)
         {
-            if(m_SkinWalkerDemon)
-            m_SkinWalkerDemon.SummonSkinwalker();
+            if (m_SkinWalkerDemon)
+                m_SkinWalkerDemon.SummonSkinwalker();
         }
 
         m_PossesionMeter = Mathf.Clamp(m_PossesionMeter, 0, 1);
@@ -590,11 +602,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [PunRPC]
     public void RPC_PharmacistsAbility()
     {
-        m_PossesionMeter = 0;
-        m_PlayerHealth = 1;
-
-        m_PossessionBar.fillAmount = m_PossesionMeter;
-        m_HealthBar.fillAmount = m_PlayerHealth;
+        m_ReplensishHealth = true;
     }
 
     [PunRPC]
@@ -631,7 +639,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             m_Colour.colorFilter.value = Color.white;
         }
 
-        if (m_PlayerHealth <= 0 )
+        if (m_PlayerHealth <= 0)
             m_MyView.RPC("RPC_EnterDownedStance", RpcTarget.All);
     }
 

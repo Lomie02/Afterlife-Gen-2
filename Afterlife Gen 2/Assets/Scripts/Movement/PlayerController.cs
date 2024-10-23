@@ -149,9 +149,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             m_SpectateCamera.gameObject.SetActive(false);
         }
         else
-        {
             m_SpectateCamera.gameObject.SetActive(false);
-        }
 
         if (m_MyView.IsMine)
         {
@@ -176,13 +174,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_BleedoutTimer = m_BleedoutDuration;
 
         for (int i = 0; i < m_RagdollColliders.Length; i++)
-        {
             Physics.IgnoreCollision(m_RagdollColliders[i], m_PlayerCollider, true);
-        }
 
         DisablePlayerCollision();
         SetRagdoll(false);
-        //m_SpectateSystem.CollectCameraData();
     }
 
     public PhotonView GetPlayersPhotonView()
@@ -199,9 +194,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         GameObject[] PlayerColliders = GameObject.FindGameObjectsWithTag("Player");
 
         for (int i = 0; i < PlayerColliders.Length; i++)
-        {
             Physics.IgnoreCollision(m_PlayerCollider, PlayerColliders[i].GetComponent<Collider>());
-        }
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer) // Get Rid of player collision
@@ -257,20 +250,21 @@ public class PlayerController : MonoBehaviourPunCallbacks
             UpdatePossession();
 
         if (m_ReplensishHealth)
-        {
-            m_PlayerHealth += 0.1f * Time.deltaTime;
-            m_HealthBar.fillAmount = m_PlayerHealth;
-
-            m_PossesionMeter -= 0.1f;
-
-            if (m_PossesionMeter <= 0.2f && m_PlayerHealth >= 0.5f)
-            {
-                m_ReplensishHealth = false;
-            }
-        }
+            UpdateReplen();
 
         if (m_IsDowned)
             UpdateDownedState();
+    }
+
+    void UpdateReplen()
+    {
+        m_PlayerHealth += 0.1f * Time.deltaTime;
+        m_HealthBar.fillAmount = m_PlayerHealth;
+
+        m_PossesionMeter -= 0.1f;
+
+        if (m_PossesionMeter <= 0.2f && m_PlayerHealth >= 0.5f)
+            m_ReplensishHealth = false;
     }
 
     void UpdateMovement() // Players overall movement systems.
@@ -624,9 +618,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (!m_MyView.IsMine) return;
 
         if (m_PossesionMeter >= 0.8f)
-        {
             m_PlayerHealth = 0f;
-        }
 
         if (m_PlayerHealth <= 0.5f)
         {

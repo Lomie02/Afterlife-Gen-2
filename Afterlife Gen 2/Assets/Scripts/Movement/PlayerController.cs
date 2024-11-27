@@ -41,6 +41,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     PlayerStance m_Stance = PlayerStance.Stand;
     [SerializeField] PhotonView m_MyView;
     [SerializeField] Animator[] m_BodyAnimations;
+    [SerializeField] Animator m_FirstPersonAnimator;
 
     float m_PlayersOverallSpeed = 0;
     [SerializeField] float m_PlayerWalkSpeed = 2;
@@ -105,9 +106,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     // Downed Flare
     [SerializeField] GameObject m_DownedFlareObject;
-
     GameManager m_GameManager;
     int m_PlayersDeadInGame = 0;
+
+    [Header("View Models")]
+    [SerializeField] Renderer m_BodyMaterial;
+    [SerializeField] GameObject m_FirstPersonViewModel;
+    [SerializeField] GameObject m_FirstPersonMaskedItems;
 
     [Header("Interface Related")]
     [SerializeField] GameObject m_MainHudObject;
@@ -121,14 +126,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] LayerMask m_AfterlifeRealmMask;
 
     bool m_ReplensishHealth = false;
-    public void EnterTheAfterlife()
-    {
-        if (!m_MyView.IsMine) return;
-        m_AfterlifeFadeIn.SetActive(true);
 
-        m_PlayersCamera.cullingMask = m_AfterlifeRealmMask;
-
-    }
     void Start()
     {
         m_MyView = GetComponent<PhotonView>();
@@ -153,10 +151,15 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         if (m_MyView.IsMine)
         {
+            SetFirstPerson(true);
+
             m_SkinWalkerDemon = FindAnyObjectByType<Skinwalker>();
+
             if (m_SkinWalkerDemon)
                 m_SkinWalkerDemon.AssignTarget(transform, m_PlayersCamera, m_SkinWalkerModelToUse);
         }
+        else
+            SetFirstPerson(false);
 
         //========================================= 
 
@@ -178,6 +181,57 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         DisablePlayerCollision();
         SetRagdoll(false);
+    }
+
+    public void EnterTheAfterlife()
+    {
+        if (!m_MyView.IsMine) return;
+        m_AfterlifeFadeIn.SetActive(true);
+
+        m_PlayersCamera.cullingMask = m_AfterlifeRealmMask;
+
+    }
+    public void SetFirstPerson(bool _state)
+    {
+        if (_state)
+        {
+            if (m_BodyMaterial)
+                m_BodyMaterial.material.SetInt("_UseBodyMask", 1);
+
+            if (m_FirstPersonViewModel)
+                m_FirstPersonViewModel.SetActive(true);
+
+            foreach (Renderer FirstPersonChildObjects in m_FirstPersonMaskedItems.transform.GetComponentsInChildren<Renderer>(true)) // Set all objects to render only as shadow.
+            {
+                FirstPersonChildObjects.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+            }
+
+            foreach (ParticleSystem FirstPersonChildObjects in m_FirstPersonMaskedItems.transform.GetComponentsInChildren<ParticleSystem>(true)) // Set all Particles to be on the default layer
+            {
+                FirstPersonChildObjects.gameObject.layer = 7; // Default Layer
+            }
+
+        }
+        else
+        {
+            if (m_BodyMaterial)
+                m_BodyMaterial.material.SetInt("_UseBodyMask", 0);
+
+            if (m_FirstPersonViewModel)
+                m_FirstPersonViewModel.SetActive(false);
+
+            foreach (Renderer FirstPersonChildObjects in m_FirstPersonMaskedItems.transform.GetComponentsInChildren<Renderer>(true)) // Set all objects to render normally.
+            {
+                FirstPersonChildObjects.shadowCastingMode = ShadowCastingMode.On;
+            }
+
+
+
+            foreach (ParticleSystem FirstPersonChildObjects in m_FirstPersonMaskedItems.transform.GetComponentsInChildren<ParticleSystem>(true)) // Set all Particles to be on the default layer
+            {
+                FirstPersonChildObjects.gameObject.layer = 0; // Default Layer
+            }
+        }
     }
 
     public PhotonView GetPlayersPhotonView()
@@ -416,6 +470,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
             m_BodyAnimations[i].SetBool("Sprinting", m_IsSprinting);
         }
 
+        m_FirstPersonAnimator.SetBool("IsSprinting", m_IsSprinting);
+
         switch (m_SpecialistAbility.GetSpecialistType())
         {
             case SpecialistSelected.Exterminator:
@@ -653,6 +709,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (!m_MyView.IsMine)
             return;
 
+        SetFirstPerson(false);
+
         m_DownedFlareObject.SetActive(true);
 
         m_BleedoutObject.SetActive(true);
@@ -683,6 +741,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public void RPC_RevivePlayer() // Revived by another player
     {
         m_BleedoutObject.SetActive(false);
+
+        if (m_MyView.IsMine)
+        {
+            SetFirstPerson(true);
+        }
+
         m_IsDowned = false;
         m_PlayerHealth = 100;
         m_BodyAnimations[0].SetBool("IsDowned", m_IsDowned);

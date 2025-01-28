@@ -21,6 +21,7 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] NetworkObject[] m_FirstPersonVIewItems;
 
     [SerializeField] Animator m_PlayersAnimation;
+    [SerializeField] Animator m_FirstPersonAnimations;
     [SerializeField] Transform m_DropLocation;
 
     float m_ItemLerp;
@@ -275,11 +276,15 @@ public class InventoryManager : MonoBehaviour
                         m_CurrentWeightHandle = 0;
                     }
 
+
+
                     if (m_PreviousDeviceWeight != m_WeightLayerForCurrentDevice)
                     {
                         m_ItemLerp = 0;
                         m_MyView.RPC("RPC_LerpItem", RpcTarget.All, 0f);
+
                         m_PlayersAnimation.SetLayerWeight(m_PreviousDeviceWeight, 0);
+                        m_FirstPersonAnimations.SetLayerWeight(m_PreviousDeviceWeight, 0);
                     }
 
                     m_ThirdPersonViewItems[j].RPC_SetObjectState(true);
@@ -306,6 +311,19 @@ public class InventoryManager : MonoBehaviour
         if (m_MyView.IsMine)
         {
             UpdateItemLerp();
+            UpdateFirstPersonLerp();
+        }
+    }
+
+    void UpdateFirstPersonLerp()
+    {
+        if (m_Items[m_CurrentSlotSelected])
+        {
+            m_FirstPersonAnimations.SetLayerWeight(m_Items[m_CurrentSlotSelected].GetLayerWeight(), 1f);
+        }
+        else
+        {
+            m_FirstPersonAnimations.SetLayerWeight(m_Items[m_CurrentSlotSelected].GetLayerWeight(), 0f);
         }
     }
 

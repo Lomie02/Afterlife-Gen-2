@@ -112,7 +112,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [Header("View Models")]
     [SerializeField] Renderer m_BodyMaterial;
     [SerializeField] GameObject m_FirstPersonViewModel;
+    [Space]
     [SerializeField] GameObject m_FirstPersonMaskedItems;
+    [SerializeField] RawImage m_FIrstPersonRenderTexture;
 
     [Header("Interface Related")]
     [SerializeField] GameObject m_MainHudObject;
@@ -133,6 +135,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_SpectateSystem = FindAnyObjectByType<SpectateSystem>();
         m_SpecialistAbility = GetComponent<SpecialstAbility>();
 
+        m_DefaultCollider = m_PlayerCollider.center;
+        m_DefaultHeight = m_PlayerCollider.height;
+
         m_GameManager = FindAnyObjectByType<GameManager>();
         m_DownedFlareObject.SetActive(false);
 
@@ -140,6 +145,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         {
             m_SpectateSystem.SubmitCamera(m_SpectateCamera);
             m_SpectateCamera.gameObject.SetActive(false);
+            m_PlayersCamera.gameObject.SetActive(false);
         }
         else if (m_MyView.IsMine && PhotonNetwork.PlayerListOthers.Length == 0) // Playing Solo
         {
@@ -211,6 +217,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
                 FirstPersonChildObjects.gameObject.layer = 7; // Default Layer
             }
 
+            m_FIrstPersonRenderTexture.gameObject.SetActive(true);
+
         }
         else
         {
@@ -231,6 +239,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             {
                 FirstPersonChildObjects.gameObject.layer = 0; // Default Layer
             }
+            m_FIrstPersonRenderTexture.gameObject.SetActive(false);
         }
     }
 

@@ -136,7 +136,7 @@ public class SpecialstAbility : MonoBehaviour
             case SpecialistSelected.Pharmacist:
 
                 m_AbilityInUse = true;
-                BeginHealingAura();
+                GetComponent<PhotonView>().RPC("RPC_PharmacistsAbility", RpcTarget.All);
                 break;
             case SpecialistSelected.Trapper:
 

@@ -242,7 +242,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                     RaycastHit m_Cast;
                     if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_Cast, 2f))
                     {
-                        if (m_Cast.collider.GetComponent<PlayerController>())
+                        if (m_Cast.collider.GetComponent<PlayerController>() && !m_Cast.collider.GetComponent<PhotonView>().IsMine)
                             m_Cast.collider.GetComponent<PlayerController>().GetPlayersPhotonView().RPC("RPC_RevivePlayer", RpcTarget.All);
 
                     }
@@ -292,11 +292,6 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 {
                     m_PlayersFlashLight.RPC_SetObjectState(true);
                 }
-            }
-
-            if (Input.GetKeyDown(KeyCode.L))
-            {
-                m_MyController.TakeDamage(20);
             }
 
             if (Input.GetKeyDown(KeyCode.R) && !m_TextChatManager.IsTextChatShowing())
@@ -436,7 +431,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 m_UseText.text = "Press [E] To Activate Trap.";
                 return;
             }
-            else if (m_ItemCast.collider.GetComponent<PlayerController>() != null)
+            else if (m_ItemCast.collider.GetComponent<PlayerController>() != null && !m_ItemCast.collider.GetComponent<PhotonView>().IsMine)
             {
                 if (m_ItemCast.collider.GetComponent<PlayerController>().IsPlayerDowned())
                 {

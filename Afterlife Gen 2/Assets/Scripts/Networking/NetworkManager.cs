@@ -213,7 +213,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void JoinLobby()
     {
         m_NetworkScreenObject.SetActive(true);
-        PhotonNetwork.JoinRoom("au-" + m_CodeInput.text);
+        PhotonNetwork.JoinRoom(m_CodeInput.text);
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.Rendering;
+using Photon.Pun.UtilityScripts;
 
 enum MovementType
 {
@@ -31,15 +32,16 @@ public class PlayerController : MonoBehaviourPunCallbacks
     ColorAdjustments m_Colour;
     public Rigidbody m_Body;
 
-    [SerializeField] float m_PlayerHealth = 100;
+    [SerializeField] float m_PlayerHealth = 1;
     [SerializeField] float m_PossesionMeter = 0;
 
-    [SerializeField] Slider m_HealthBar;
-    [SerializeField] Slider m_PossessionBar;
+    [SerializeField] Image m_HealthBar;
+    [SerializeField] Image m_PossessionBar;
 
     PlayerStance m_Stance = PlayerStance.Stand;
     [SerializeField] PhotonView m_MyView;
     [SerializeField] Animator[] m_BodyAnimations;
+    [SerializeField] Animator m_FirstPersonAnimator;
 
     float m_PlayersOverallSpeed = 0;
     [SerializeField] float m_PlayerWalkSpeed = 2;
@@ -104,9 +106,15 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     // Downed Flare
     [SerializeField] GameObject m_DownedFlareObject;
-
     GameManager m_GameManager;
     int m_PlayersDeadInGame = 0;
+
+    [Header("View Models")]
+    [SerializeField] Renderer m_BodyMaterial;
+    [SerializeField] GameObject m_FirstPersonViewModel;
+    [Space]
+    [SerializeField] GameObject m_FirstPersonMaskedItems;
+    [SerializeField] RawImage m_FIrstPersonRenderTexture;
 
     [Header("Interface Related")]
     [SerializeField] GameObject m_MainHudObject;
@@ -118,19 +126,17 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [Header("Afterlife Realm")]
     [SerializeField] GameObject m_AfterlifeFadeIn;
     [SerializeField] LayerMask m_AfterlifeRealmMask;
-    public void EnterTheAfterlife()
-    {
-        if (!m_MyView.IsMine) return;
-        m_AfterlifeFadeIn.SetActive(true);
 
-        m_PlayersCamera.cullingMask = m_AfterlifeRealmMask;
+    bool m_ReplensishHealth = false;
 
-    }
     void Start()
     {
         m_MyView = GetComponent<PhotonView>();
         m_SpectateSystem = FindAnyObjectByType<SpectateSystem>();
         m_SpecialistAbility = GetComponent<SpecialstAbility>();
+
+        m_DefaultCollider = m_PlayerCollider.center;
+        m_DefaultHeight = m_PlayerCollider.height;
 
         m_GameManager = FindAnyObjectByType<GameManager>();
         m_DownedFlareObject.SetActive(false);
@@ -139,6 +145,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         {
             m_SpectateSystem.SubmitCamera(m_SpectateCamera);
             m_SpectateCamera.gameObject.SetActive(false);
+            m_PlayersCamera.gameObject.SetActive(false);
         }
         else if (m_MyView.IsMine && PhotonNetwork.PlayerListOthers.Length == 0) // Playing Solo
         {
@@ -146,16 +153,19 @@ public class PlayerController : MonoBehaviourPunCallbacks
             m_SpectateCamera.gameObject.SetActive(false);
         }
         else
-        {
             m_SpectateCamera.gameObject.SetActive(false);
-        }
 
         if (m_MyView.IsMine)
         {
+            SetFirstPerson(true);
+
             m_SkinWalkerDemon = FindAnyObjectByType<Skinwalker>();
+
             if (m_SkinWalkerDemon)
                 m_SkinWalkerDemon.AssignTarget(transform, m_PlayersCamera, m_SkinWalkerModelToUse);
         }
+        else
+            SetFirstPerson(false);
 
         //========================================= 
 
@@ -164,8 +174,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_PlayerCollider = GetComponent<CapsuleCollider>();
         m_PlayersOverallSpeed = m_PlayerWalkSpeed;
 
-        m_HealthBar.value = m_PlayerHealth;
-        m_PossessionBar.value = m_PossesionMeter;
+        m_HealthBar.fillAmount = m_PlayerHealth;
+        m_PossessionBar.fillAmount = m_PossesionMeter;
 
         m_BleedoutObject.SetActive(false);
 
@@ -173,13 +183,64 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_BleedoutTimer = m_BleedoutDuration;
 
         for (int i = 0; i < m_RagdollColliders.Length; i++)
-        {
             Physics.IgnoreCollision(m_RagdollColliders[i], m_PlayerCollider, true);
-        }
 
         DisablePlayerCollision();
         SetRagdoll(false);
-        //m_SpectateSystem.CollectCameraData();
+    }
+
+    public void EnterTheAfterlife()
+    {
+        if (!m_MyView.IsMine) return;
+        m_AfterlifeFadeIn.SetActive(true);
+
+        m_PlayersCamera.cullingMask = m_AfterlifeRealmMask;
+
+    }
+    public void SetFirstPerson(bool _state)
+    {
+        if (_state)
+        {
+            if (m_BodyMaterial)
+                m_BodyMaterial.material.SetInt("_UseBodyMask", 1);
+
+            if (m_FirstPersonViewModel)
+                m_FirstPersonViewModel.SetActive(true);
+
+            foreach (Renderer FirstPersonChildObjects in m_FirstPersonMaskedItems.transform.GetComponentsInChildren<Renderer>(true)) // Set all objects to render only as shadow.
+            {
+                FirstPersonChildObjects.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+            }
+
+            foreach (ParticleSystem FirstPersonChildObjects in m_FirstPersonMaskedItems.transform.GetComponentsInChildren<ParticleSystem>(true)) // Set all Particles to be on the default layer
+            {
+                FirstPersonChildObjects.gameObject.layer = 7; // Default Layer
+            }
+
+            m_FIrstPersonRenderTexture.gameObject.SetActive(true);
+
+        }
+        else
+        {
+            if (m_BodyMaterial)
+                m_BodyMaterial.material.SetInt("_UseBodyMask", 0);
+
+            if (m_FirstPersonViewModel)
+                m_FirstPersonViewModel.SetActive(false);
+
+            foreach (Renderer FirstPersonChildObjects in m_FirstPersonMaskedItems.transform.GetComponentsInChildren<Renderer>(true)) // Set all objects to render normally.
+            {
+                FirstPersonChildObjects.shadowCastingMode = ShadowCastingMode.On;
+            }
+
+
+
+            foreach (ParticleSystem FirstPersonChildObjects in m_FirstPersonMaskedItems.transform.GetComponentsInChildren<ParticleSystem>(true)) // Set all Particles to be on the default layer
+            {
+                FirstPersonChildObjects.gameObject.layer = 0; // Default Layer
+            }
+            m_FIrstPersonRenderTexture.gameObject.SetActive(false);
+        }
     }
 
     public PhotonView GetPlayersPhotonView()
@@ -196,9 +257,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         GameObject[] PlayerColliders = GameObject.FindGameObjectsWithTag("Player");
 
         for (int i = 0; i < PlayerColliders.Length; i++)
-        {
             Physics.IgnoreCollision(m_PlayerCollider, PlayerColliders[i].GetComponent<Collider>());
-        }
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer) // Get Rid of player collision
@@ -248,16 +307,27 @@ public class PlayerController : MonoBehaviourPunCallbacks
             return;
 
         if (m_CanMove && !m_IsDowned && !m_isDead)
-        {
             UpdateMovement();
-        }
 
-        UpdatePossession();
+        if (!m_ReplensishHealth)
+            UpdatePossession();
+
+        if (m_ReplensishHealth)
+            UpdateReplen();
 
         if (m_IsDowned)
-        {
             UpdateDownedState();
-        }
+    }
+
+    void UpdateReplen()
+    {
+        m_PlayerHealth += 0.1f * Time.deltaTime;
+        m_HealthBar.fillAmount = m_PlayerHealth;
+
+        m_PossesionMeter -= 0.1f;
+
+        if (m_PossesionMeter <= 0.2f && m_PlayerHealth >= 0.5f)
+            m_ReplensishHealth = false;
     }
 
     void UpdateMovement() // Players overall movement systems.
@@ -409,6 +479,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
             m_BodyAnimations[i].SetBool("Sprinting", m_IsSprinting);
         }
 
+        m_FirstPersonAnimator.SetBool("IsSprinting", m_IsSprinting);
+
         switch (m_SpecialistAbility.GetSpecialistType())
         {
             case SpecialistSelected.Exterminator:
@@ -428,12 +500,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public void RestorePossesion() // Pharmacist Specialist
     {
-        m_PossesionMeter -= 0.7f;
-        m_PossessionBar.value = m_PossesionMeter;
+        m_PossesionMeter -= 0.6f;
+        m_PossessionBar.fillAmount = m_PossesionMeter;
 
         m_PossesionMeter = Mathf.Clamp(m_PossesionMeter, 0, 1);
-        m_PlayerHealth += 50;
-        m_HealthBar.value = m_PlayerHealth;
+        m_PlayerHealth += 0.1f;
+        m_HealthBar.fillAmount = m_PlayerHealth;
 
         CheckHealth();
     }
@@ -468,7 +540,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (m_PlayersDeadInGame >= PhotonNetwork.PlayerList.Length)
         {
             GetComponent<PlayerExperienceManager>().DisplayXpScreenOnNextLoadUp();
-            GetComponent<PlayerExperienceManager>().MissionCompleted();
+            GetComponent<PlayerExperienceManager>().MissionFailed();
 
             m_GameManager.ChangeNetworkScene("Afterlife_Corp");
         }
@@ -501,7 +573,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
                 Vignette m_Venette;
                 m_PostProcessing.profile.TryGet(out m_Venette);
-                m_Venette.intensity.value = Mathf.Lerp(m_PossessionBar.value, m_PossesionMeter, Time.deltaTime);
+                m_Venette.intensity.value = Mathf.Lerp(m_PossessionBar.fillAmount, m_PossesionMeter, Time.deltaTime);
             }
         }
         else
@@ -511,11 +583,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         if (m_PossesionMeter >= 0.4f)
         {
-            m_SkinWalkerDemon.SummonSkinwalker();
+            if (m_SkinWalkerDemon)
+                m_SkinWalkerDemon.SummonSkinwalker();
         }
 
         m_PossesionMeter = Mathf.Clamp(m_PossesionMeter, 0, 1);
-        m_PossessionBar.value = Mathf.Lerp(m_PossessionBar.value, m_PossesionMeter, Time.deltaTime);
+        m_PossessionBar.fillAmount = m_PossesionMeter;
     }
 
     void UpdateEmotes() // Add emotes here.
@@ -566,42 +639,53 @@ public class PlayerController : MonoBehaviourPunCallbacks
         return m_IsTacticalSprinting;
     }
 
-    public void TakeDamage(float _damageAmount)
+    [PunRPC]
+    public void RPC_TakeDamage(float _damageAmount)
     {
         m_PlayerHealth -= _damageAmount;
-        m_PlayerHealth = Mathf.Clamp(m_PlayerHealth, 0, 100);
+        m_PlayerHealth = Mathf.Clamp(m_PlayerHealth, 0, 1);
 
-        m_HealthBar.value = m_PlayerHealth;
+        m_HealthBar.fillAmount = m_PlayerHealth;
         CheckHealth();
     }
+
 
     [PunRPC]
     public void RPC_RestoreHealth(float _amountRetored)
     {
         m_PlayerHealth += _amountRetored;
-        m_HealthBar.value = m_PlayerHealth;
+        m_HealthBar.fillAmount = m_PlayerHealth;
         CheckHealth();
+    }
+
+    [PunRPC]
+    public void RPC_PharmacistsAbility()
+    {
+        m_ReplensishHealth = true;
     }
 
     [PunRPC]
     public void RPC_RestoreSanity(float _amountRetored)
     {
         m_PossesionMeter -= _amountRetored;
-        m_PossessionBar.value = m_PossesionMeter;
+        m_PossessionBar.fillAmount = m_PossesionMeter;
         CheckHealth();
     }
 
     public void ResetHealth()
     {
-        m_PlayerHealth = 100;
-        m_HealthBar.value = m_PlayerHealth;
+        m_PlayerHealth = 1;
+        m_HealthBar.fillAmount = m_PlayerHealth;
     }
 
     void CheckHealth()
     {
         if (!m_MyView.IsMine) return;
 
-        if (m_PlayerHealth <= 50)
+        if (m_PossesionMeter >= 0.8f)
+            m_PlayerHealth = 0f;
+
+        if (m_PlayerHealth <= 0.5f)
         {
             m_PostProcessing.profile.TryGet(out m_Colour);
             m_Colour.colorFilter.value = Color.red;
@@ -634,6 +718,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (!m_MyView.IsMine)
             return;
 
+        SetFirstPerson(false);
+
         m_DownedFlareObject.SetActive(true);
 
         m_BleedoutObject.SetActive(true);
@@ -664,6 +750,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public void RPC_RevivePlayer() // Revived by another player
     {
         m_BleedoutObject.SetActive(false);
+
+        if (m_MyView.IsMine)
+        {
+            SetFirstPerson(true);
+        }
+
         m_IsDowned = false;
         m_PlayerHealth = 100;
         m_BodyAnimations[0].SetBool("IsDowned", m_IsDowned);

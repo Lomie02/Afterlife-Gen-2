@@ -333,6 +333,7 @@ GameObject:
   - component: {fileID: 4509217123403223652}
   - component: {fileID: 7852681443042195861}
   - component: {fileID: 184979459326950262}
+  - component: {fileID: 6752899575540824592}
   m_Layer: 2
   m_Name: Player_Pharm
   m_TagString: Player
@@ -885,6 +886,18 @@ MonoBehaviour:
   surfaceFoamDimmer: 1
   deepFoamDimmer: 1
   scaleMode: 0
+--- !u!114 &6752899575540824592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5894786181902345269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c56c66af9fb10b645aa1fcd3b3514bbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5908693892251174278
 GameObject:
   m_ObjectHideFlags: 0
@@ -12925,7 +12938,7 @@ PrefabInstance:
     - target: {fileID: 277814769422740567, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
         type: 3}
       propertyPath: m_Value
-      value: 1
+      value: 1.0000002
       objectReference: {fileID: 0}
     - target: {fileID: 332315575938410468, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
         type: 3}
@@ -13020,7 +13033,7 @@ PrefabInstance:
     - target: {fileID: 1763742558281002892, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0000073266615
+      value: -0.0006347707
       objectReference: {fileID: 0}
     - target: {fileID: 1775363595547808990, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
         type: 3}

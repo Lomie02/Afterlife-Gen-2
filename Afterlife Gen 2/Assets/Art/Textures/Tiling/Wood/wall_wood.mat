@@ -13,11 +13,15 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _DISABLE_SSR_TRANSPARENT
+  - _DISPLACEMENT_LOCK_TILING_SCALE
   - _DOUBLESIDED_ON
+  - _HEIGHTMAP
   - _MAPPING_TRIPLANAR
   - _MASKMAP
   - _NORMALMAP
   - _NORMALMAP_TANGENT_SPACE
+  - _PIXEL_DISPLACEMENT
+  - _PIXEL_DISPLACEMENT_LOCK_OBJECT_SCALE
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -39,7 +43,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseColorMap:
-        m_Texture: {fileID: 2800000, guid: 68b2a9f3b1f0ba6409dc12151d721bcf, type: 3}
+        m_Texture: {fileID: 2800000, guid: bd53b1a407d0f4f44a9ee3b5cdc411ee, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BentNormalMap:
@@ -63,7 +67,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _HeightMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 9b06122ecdf35d44386a979ff8b663b5, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _IridescenceMaskMap:
@@ -75,7 +79,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 68b2a9f3b1f0ba6409dc12151d721bcf, type: 3}
+        m_Texture: {fileID: 2800000, guid: bd53b1a407d0f4f44a9ee3b5cdc411ee, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskMap:
@@ -83,7 +87,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
-        m_Texture: {fileID: 2800000, guid: ed596ef63539cfe4eb3decce1c2006fd, type: 3}
+        m_Texture: {fileID: 2800000, guid: c7b2ba956d642e44fbfebeb410669075, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMapOS:
@@ -160,7 +164,7 @@ Material:
     - _DiffusionProfileHash: 0
     - _DisplacementLockObjectScale: 1
     - _DisplacementLockTilingScale: 1
-    - _DisplacementMode: 0
+    - _DisplacementMode: 2
     - _DoubleSidedEnable: 1
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 1
@@ -175,7 +179,7 @@ Material:
     - _EnableGeometricSpecularAA: 0
     - _EnergyConservingSpecularColor: 1
     - _HeightAmplitude: 0.02
-    - _HeightCenter: 0.5
+    - _HeightCenter: 1
     - _HeightMapParametrization: 0
     - _HeightMax: 1
     - _HeightMin: -1
@@ -198,10 +202,10 @@ Material:
     - _ObjectSpaceUVMappingEmissive: 0
     - _OpaqueCullMode: 2
     - _PPDLodThreshold: 5
-    - _PPDMaxSamples: 15
-    - _PPDMinSamples: 5
-    - _PPDPrimitiveLength: 1
-    - _PPDPrimitiveWidth: 1
+    - _PPDMaxSamples: 18
+    - _PPDMinSamples: 6
+    - _PPDPrimitiveLength: 2
+    - _PPDPrimitiveWidth: 2
     - _PerPixelSorting: 0
     - _RayTracing: 0
     - _ReceivesSSR: 1
@@ -255,7 +259,7 @@ Material:
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissiveColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissiveColorLDR: {r: 0, g: 0, b: 0, a: 1}
-    - _InvPrimScale: {r: 1, g: 1, b: 0, a: 0}
+    - _InvPrimScale: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _IridescenceThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _ThicknessRemap: {r: 0, g: 1, b: 0, a: 0}

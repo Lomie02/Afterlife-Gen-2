@@ -14,13 +14,16 @@ Material:
   m_ValidKeywords:
   - _DISABLE_SSR_TRANSPARENT
   - _DOUBLESIDED_ON
+  - _HEIGHTMAP
   - _MAPPING_TRIPLANAR
   - _MASKMAP
   - _NORMALMAP
   - _NORMALMAP_TANGENT_SPACE
+  - _PIXEL_DISPLACEMENT
+  - _PIXEL_DISPLACEMENT_LOCK_OBJECT_SCALE
   m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_LightmapFlags: 1
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 1
   m_CustomRenderQueue: 2225
   stringTagMap: {}
@@ -39,7 +42,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseColorMap:
-        m_Texture: {fileID: 2800000, guid: d83e995edab236f41ad60fbd2ec23fb4, type: 3}
+        m_Texture: {fileID: 2800000, guid: 9fc94cc47ed3d2643a680351eb551c21, type: 3}
         m_Scale: {x: 0.5, y: 0.5}
         m_Offset: {x: 0, y: 0}
     - _BentNormalMap:
@@ -63,7 +66,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _HeightMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 77d3830c03ab0ec43b234e880e106a60, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _IridescenceMaskMap:
@@ -75,15 +78,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: d83e995edab236f41ad60fbd2ec23fb4, type: 3}
+        m_Texture: {fileID: 2800000, guid: 9fc94cc47ed3d2643a680351eb551c21, type: 3}
         m_Scale: {x: 0.5, y: 0.5}
         m_Offset: {x: 0, y: 0}
     - _MaskMap:
-        m_Texture: {fileID: 2800000, guid: beb1692111e5b6a4d83d20062f34a603, type: 3}
+        m_Texture: {fileID: 2800000, guid: e8258a118c6d2e34a8c9c1620af0c1ad, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
-        m_Texture: {fileID: 2800000, guid: 21ad488e68ba6c245a31d56abbf39808, type: 3}
+        m_Texture: {fileID: 2800000, guid: 06b008e11a166b040b4c6c72f75090d5, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMapOS:
@@ -132,7 +135,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AORemapMax: 1
+    - _AORemapMax: 0.39244264
     - _AORemapMin: 0
     - _ATDistance: 1
     - _AddPrecomputedVelocity: 0
@@ -159,8 +162,8 @@ Material:
     - _DiffusionProfile: 0
     - _DiffusionProfileHash: 0
     - _DisplacementLockObjectScale: 1
-    - _DisplacementLockTilingScale: 1
-    - _DisplacementMode: 0
+    - _DisplacementLockTilingScale: 0
+    - _DisplacementMode: 2
     - _DoubleSidedEnable: 1
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 1
@@ -174,13 +177,13 @@ Material:
     - _EnableFogOnTransparent: 1
     - _EnableGeometricSpecularAA: 0
     - _EnergyConservingSpecularColor: 1
-    - _HeightAmplitude: 0.02
-    - _HeightCenter: 0.5
+    - _HeightAmplitude: 0.01
+    - _HeightCenter: 1
     - _HeightMapParametrization: 0
     - _HeightMax: 1
     - _HeightMin: -1
     - _HeightOffset: 0
-    - _HeightPoMAmplitude: 2
+    - _HeightPoMAmplitude: 1
     - _HeightTessAmplitude: 2
     - _HeightTessCenter: 0.5
     - _InvTilingScale: 2
@@ -190,26 +193,26 @@ Material:
     - _LinkDetailsWithBase: 1
     - _MaterialID: 1
     - _Metallic: 0
-    - _MetallicRemapMax: 1
+    - _MetallicRemapMax: 0
     - _MetallicRemapMin: 0
     - _NormalMapSpace: 0
     - _NormalScale: 1
     - _ObjectSpaceUVMapping: 0
     - _ObjectSpaceUVMappingEmissive: 0
     - _OpaqueCullMode: 2
-    - _PPDLodThreshold: 5
-    - _PPDMaxSamples: 15
-    - _PPDMinSamples: 5
-    - _PPDPrimitiveLength: 1
-    - _PPDPrimitiveWidth: 1
+    - _PPDLodThreshold: 6.8
+    - _PPDMaxSamples: 22
+    - _PPDMinSamples: 9
+    - _PPDPrimitiveLength: 2
+    - _PPDPrimitiveWidth: 2
     - _PerPixelSorting: 0
     - _RayTracing: 0
     - _ReceivesSSR: 1
     - _ReceivesSSRTransparent: 0
     - _RefractionModel: 0
     - _Smoothness: 0.5
-    - _SmoothnessRemapMax: 1
-    - _SmoothnessRemapMin: 0
+    - _SmoothnessRemapMax: 0.6591752
+    - _SmoothnessRemapMin: 0.39021978
     - _SpecularAAScreenSpaceVariance: 0.1
     - _SpecularAAThreshold: 0.2
     - _SpecularOcclusionMode: 1
@@ -255,7 +258,7 @@ Material:
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissiveColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissiveColorLDR: {r: 0, g: 0, b: 0, a: 1}
-    - _InvPrimScale: {r: 1, g: 1, b: 0, a: 0}
+    - _InvPrimScale: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _IridescenceThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _ThicknessRemap: {r: 0, g: 1, b: 0, a: 0}

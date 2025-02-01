@@ -1101,6 +1101,7 @@ GameObject:
   - component: {fileID: 4624682707237346878}
   - component: {fileID: 6190285705542918598}
   - component: {fileID: 7116670466426871220}
+  - component: {fileID: 3174051322122604579}
   m_Layer: 0
   m_Name: Player_GasMan
   m_TagString: Player
@@ -1152,8 +1153,8 @@ MonoBehaviour:
   - {fileID: 7468405081426478455}
   - {fileID: 7499205047027572069}
   m_FirstPersonAnimator: {fileID: 0}
-  m_PlayerWalkSpeed: 1.5
-  m_PlayerSprintSpeed: 4
+  m_PlayerWalkSpeed: 2
+  m_PlayerSprintSpeed: 5
   m_PlayerTacticalSprintSpeed: 8
   m_PlayerCollider: {fileID: 5000556251193296026}
   m_CrouchLerpSpeed: 10
@@ -1493,9 +1494,7 @@ MonoBehaviour:
   m_Items: []
   m_ItemSlots: 3
   m_ThirdPersonViewItems: []
-  m_FirstPersonVIewItems: []
   m_PlayersAnimation: {fileID: 7468405081426478455}
-  m_FirstPersonAnimations: {fileID: 0}
   m_DropLocation: {fileID: 5466491195655657397}
   m_RightArmConstraint:
   - {fileID: 2346491869542853102}
@@ -1771,6 +1770,18 @@ MonoBehaviour:
   surfaceFoamDimmer: 1
   deepFoamDimmer: 1
   scaleMode: 0
+--- !u!114 &3174051322122604579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5894786181902345269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c56c66af9fb10b645aa1fcd3b3514bbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6393888878338626386
 GameObject:
   m_ObjectHideFlags: 0
@@ -10575,17 +10586,17 @@ PrefabInstance:
     - target: {fileID: 277814769422740567, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
         type: 3}
       propertyPath: m_Size
-      value: 0.083573796
+      value: 0.08357253
       objectReference: {fileID: 0}
     - target: {fileID: 277814769422740567, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
         type: 3}
       propertyPath: m_Value
-      value: 1.0000001
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1763742558281002892, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.00020593453
+      value: -0.0001198961
       objectReference: {fileID: 0}
     - target: {fileID: 4804207531283574814, guid: b5e3b894e05c7d74dbde0d65c8bf3b32,
         type: 3}

@@ -157,15 +157,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         if (m_MyView.IsMine)
         {
-            SetFirstPerson(true);
 
             m_SkinWalkerDemon = FindAnyObjectByType<Skinwalker>();
 
             if (m_SkinWalkerDemon)
                 m_SkinWalkerDemon.AssignTarget(transform, m_PlayersCamera, m_SkinWalkerModelToUse);
         }
-        else
-            SetFirstPerson(false);
 
         //========================================= 
 
@@ -479,7 +476,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
             m_BodyAnimations[i].SetBool("Sprinting", m_IsSprinting);
         }
 
-        m_FirstPersonAnimator.SetBool("IsSprinting", m_IsSprinting);
+        if (m_FirstPersonAnimator)
+            m_FirstPersonAnimator.SetBool("IsSprinting", m_IsSprinting);
 
         switch (m_SpecialistAbility.GetSpecialistType())
         {
@@ -718,8 +716,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (!m_MyView.IsMine)
             return;
 
-        SetFirstPerson(false);
-
         m_DownedFlareObject.SetActive(true);
 
         m_BleedoutObject.SetActive(true);
@@ -750,11 +746,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public void RPC_RevivePlayer() // Revived by another player
     {
         m_BleedoutObject.SetActive(false);
-
-        if (m_MyView.IsMine)
-        {
-            SetFirstPerson(true);
-        }
 
         m_IsDowned = false;
         m_PlayerHealth = 100;

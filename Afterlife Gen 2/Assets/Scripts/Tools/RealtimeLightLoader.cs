@@ -29,7 +29,6 @@ public class RealtimeLightLoader : MonoBehaviour
     void GrabLights()
     {
         m_RealtimeLights = FindObjectsByType<Light>(FindObjectsSortMode.None);
-
     }
 
     private IEnumerator UpdateShadows()
@@ -38,7 +37,7 @@ public class RealtimeLightLoader : MonoBehaviour
         {
             foreach (Light light in m_RealtimeLights)
             {
-                if (!light) continue;
+                if (!light || light.type == LightType.Directional) continue;
 
                 float distanceFromCamera = Vector3.Distance(transform.position, light.transform.position);
                 if (distanceFromCamera <= m_MaxDistanceFromCamera)
@@ -48,10 +47,8 @@ public class RealtimeLightLoader : MonoBehaviour
                     float smoothFactor = Mathf.Clamp01((m_MaxDistanceFromCamera - distanceFromCamera) / m_MaxDistanceFromCamera);
                     light.shadowStrength = Mathf.Lerp(0, 1, smoothFactor);
                 }
-                else
-                {
-                    light.gameObject.SetActive(distanceFromCamera <= m_MaxDistanceFromCamera + 5 ? true : false);
-                }
+
+                light.shadows = LightShadows.None;
                 yield return new WaitForSeconds(0.5f);
             }
 

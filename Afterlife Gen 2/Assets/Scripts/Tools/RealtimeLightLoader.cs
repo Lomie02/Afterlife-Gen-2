@@ -15,6 +15,9 @@ public class RealtimeLightLoader : MonoBehaviour
     float m_FramesCheckLimit = 5;
     float m_FramesPassed;
 
+    public int m_RealtimeShadowsLimit = 5;
+    public int m_CurrentRealtimeShadowsActive = 0;
+
     [System.Obsolete]
     void Start()
     {
@@ -32,6 +35,11 @@ public class RealtimeLightLoader : MonoBehaviour
     {
         m_RealtimeLights = FindObjectsOfType<Light>();
 
+        foreach (Light light in m_RealtimeLights)
+        {
+            light.shadows = LightShadows.None;
+            light.GetComponent<HDAdditionalLightData>().affectsVolumetric = false;
+        }
     }
 
     private IEnumerator UpdateShadows()
@@ -45,7 +53,13 @@ public class RealtimeLightLoader : MonoBehaviour
                 float distanceFromCamera = Vector3.Distance(transform.position, light.transform.position);
                 if (distanceFromCamera <= m_MaxDistanceFromCamera)
                 {
-                    light.shadows = LightShadows.Soft;
+                    if (light.shadows == LightShadows.None && m_CurrentRealtimeShadowsActive < m_RealtimeShadowsLimit)
+                    {
+                        light.shadows = LightShadows.Soft;
+                        m_CurrentRealtimeShadowsActive++;
+                    }
+
+
                     light.GetComponent<HDAdditionalLightData>().affectsVolumetric = true;
 
                     float smoothFactor = Mathf.Clamp01((m_MaxDistanceFromCamera - distanceFromCamera) / m_MaxDistanceFromCamera);
@@ -56,7 +70,12 @@ public class RealtimeLightLoader : MonoBehaviour
                 else
                 {
                     light.GetComponent<HDAdditionalLightData>().affectsVolumetric = false;
-                    light.shadows = LightShadows.None;
+
+                    if (light.shadows == LightShadows.Soft)
+                    {
+                        light.shadows = LightShadows.None;
+                        m_CurrentRealtimeShadowsActive--;
+                    }
                 }
 
                 yield return new WaitForSeconds(0.5f);

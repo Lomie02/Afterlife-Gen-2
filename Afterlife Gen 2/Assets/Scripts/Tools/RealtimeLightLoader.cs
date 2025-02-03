@@ -9,7 +9,7 @@ using UnityEngine.Rendering.HighDefinition;
 public class RealtimeLightLoader : MonoBehaviour
 {
     Light[] m_RealtimeLights;
-
+    MeshRenderer[] m_MeshRenderersInScene;
     float m_MaxDistanceFromCamera = 5f;
 
     float m_FramesCheckLimit = 5;
@@ -34,11 +34,14 @@ public class RealtimeLightLoader : MonoBehaviour
     void GrabLights()
     {
         m_RealtimeLights = FindObjectsOfType<Light>();
+        m_MeshRenderersInScene = FindObjectsOfType<MeshRenderer>();
 
         foreach (Light light in m_RealtimeLights)
         {
+
             light.shadows = LightShadows.None;
             light.GetComponent<HDAdditionalLightData>().affectsVolumetric = false;
+            light.GetComponent<HDAdditionalLightData>().volumetricFadeDistance = 10f;
         }
     }
 
@@ -77,9 +80,25 @@ public class RealtimeLightLoader : MonoBehaviour
                         m_CurrentRealtimeShadowsActive--;
                     }
                 }
-
-                yield return new WaitForSeconds(0.5f);
             }
+
+            foreach (MeshRenderer mesh in m_MeshRenderersInScene)
+            {
+
+                float distanceFromCamera = Vector3.Distance(transform.position, mesh.transform.position);
+
+                if (distanceFromCamera <= m_MaxDistanceFromCamera)
+                {
+                    mesh.shadowCastingMode = ShadowCastingMode.On;
+                }
+                else
+                {
+                    mesh.shadowCastingMode = ShadowCastingMode.Off;
+                }
+
+            }
+
+            yield return new WaitForSeconds(0.5f);
 
         }
 

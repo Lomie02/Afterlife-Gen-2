@@ -74,6 +74,10 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     Recorder m_VoiceRecorder;
 
     [SerializeField] GameObject m_LoadingScreenMaps;
+
+    float m_FramesPassedForHover;
+    float m_MxFramesForHover = 10;
+
     void Start()
     {
         //SearchForElements();
@@ -372,7 +376,14 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 CheckForItem();
             }
 
-            CheckHoverItem();
+            m_FramesPassedForHover++;
+
+            if (m_FramesPassedForHover >= m_MxFramesForHover)
+            {
+                m_FramesPassedForHover = 0;
+                CheckHoverItem();
+            }
+
         }
     }
 

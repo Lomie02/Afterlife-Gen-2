@@ -18,10 +18,8 @@ public class InventoryManager : MonoBehaviour
     PlayerController m_PlayerController;
     [Header("First Person")]
     [SerializeField] NetworkObject[] m_ThirdPersonViewItems;
-    [SerializeField] NetworkObject[] m_FirstPersonVIewItems;
 
     [SerializeField] Animator m_PlayersAnimation;
-    [SerializeField] Animator m_FirstPersonAnimations;
     [SerializeField] Transform m_DropLocation;
 
     float m_ItemLerp;
@@ -45,10 +43,10 @@ public class InventoryManager : MonoBehaviour
         m_MyView = GetComponent<PhotonView>();
         m_Items = new NetworkObject[m_ItemSlots];
         m_PlayerController = GetComponent<PlayerController>();
+
         for (int i = 0; i < m_ThirdPersonViewItems.Length; i++)
         {
             m_ThirdPersonViewItems[i].RPC_SetObjectState(false);
-            m_FirstPersonVIewItems[i].RPC_SetObjectState(false);
         }
 
         m_MaxSlotsCurrent = m_Items.Length;
@@ -147,9 +145,6 @@ public class InventoryManager : MonoBehaviour
                     m_ThirdPersonViewItems[j].RPC_SetObjectState(true);
                     m_ThirdPersonViewItems[j].SetPowerState(m_Items[m_CurrentSlotSelected].GetPowerState());
 
-                    m_FirstPersonVIewItems[j].RPC_SetObjectState(true);
-                    m_FirstPersonVIewItems[j].SetPowerState(m_Items[m_CurrentSlotSelected].GetPowerState());
-
                 }
             }
         }
@@ -179,7 +174,6 @@ public class InventoryManager : MonoBehaviour
                     if (m_Items[i].GetItemID() == m_ThirdPersonViewItems[j].GetItemID())
                     {
                         m_Items[i].SetPowerState(m_ThirdPersonViewItems[j].GetPowerState());
-                        m_Items[i].SetPowerState(m_FirstPersonVIewItems[j].GetPowerState());
                     }
                 }
 
@@ -190,7 +184,6 @@ public class InventoryManager : MonoBehaviour
         for (int i = 0; i < m_ThirdPersonViewItems.Length; i++)
         {
             m_ThirdPersonViewItems[i].RPC_SetObjectState(false);
-            m_FirstPersonVIewItems[i].RPC_SetObjectState(false);
         }
     }
 
@@ -206,7 +199,6 @@ public class InventoryManager : MonoBehaviour
                 if (m_Items[m_CurrentSlotSelected].GetItemID() == m_ThirdPersonViewItems[i].GetItemID())
                 {
                     m_ThirdPersonViewItems[i].CyclePowerStage();
-                    m_FirstPersonVIewItems[i].CyclePowerStage();
                 }
             }
         }
@@ -228,7 +220,6 @@ public class InventoryManager : MonoBehaviour
             if (m_Items[m_CurrentSlotSelected].GetItemID() == m_ThirdPersonViewItems[j].GetItemID())
             {
                 m_Items[m_CurrentSlotSelected].SetPowerState(m_ThirdPersonViewItems[j].GetPowerState());
-                m_Items[m_CurrentSlotSelected].SetPowerState(m_FirstPersonVIewItems[j].GetPowerState());
             }
         }
 
@@ -237,7 +228,6 @@ public class InventoryManager : MonoBehaviour
         for (int i = 0; i < m_ThirdPersonViewItems.Length; i++)
         {
             m_ThirdPersonViewItems[i].RPC_SetObjectState(false);
-            m_FirstPersonVIewItems[i].RPC_SetObjectState(false);
         }
     }
 
@@ -250,7 +240,6 @@ public class InventoryManager : MonoBehaviour
                 if (m_Items[m_PreviousSelected].GetItemID() == m_ThirdPersonViewItems[j].GetItemID())
                 {
                     m_ThirdPersonViewItems[j].RPC_SetObjectState(false);
-                    m_FirstPersonVIewItems[j].RPC_SetObjectState(false);
                 }
             }
 
@@ -284,11 +273,9 @@ public class InventoryManager : MonoBehaviour
                         m_MyView.RPC("RPC_LerpItem", RpcTarget.All, 0f);
 
                         m_PlayersAnimation.SetLayerWeight(m_PreviousDeviceWeight, 0);
-                        m_FirstPersonAnimations.SetLayerWeight(m_PreviousDeviceWeight, 0);
                     }
 
                     m_ThirdPersonViewItems[j].RPC_SetObjectState(true);
-                    m_FirstPersonVIewItems[j].RPC_SetObjectState(true);
                     break;
                 }
             }
@@ -311,19 +298,6 @@ public class InventoryManager : MonoBehaviour
         if (m_MyView.IsMine)
         {
             UpdateItemLerp();
-            UpdateFirstPersonLerp();
-        }
-    }
-
-    void UpdateFirstPersonLerp()
-    {
-        if (m_Items[m_CurrentSlotSelected])
-        {
-            m_FirstPersonAnimations.SetLayerWeight(m_Items[m_CurrentSlotSelected].GetLayerWeight(), 1f);
-        }
-        else
-        {
-            m_FirstPersonAnimations.SetLayerWeight(m_Items[m_CurrentSlotSelected].GetLayerWeight(), 0f);
         }
     }
 
@@ -360,7 +334,6 @@ public class InventoryManager : MonoBehaviour
         for (int i = 0; i < m_ThirdPersonViewItems.Length; i++)
         {
             m_ThirdPersonViewItems[i].RPC_SetObjectState(false);
-            m_FirstPersonVIewItems[i].RPC_SetObjectState(false);
         }
     }
 }

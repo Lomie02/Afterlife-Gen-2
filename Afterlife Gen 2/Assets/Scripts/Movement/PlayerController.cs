@@ -123,11 +123,19 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] GameObject m_BleedoutObject;
     [SerializeField] Text m_BleedoutText;
 
+    [Space]
+
+    [SerializeField] GameObject m_ObjectiveItem;
+    [SerializeField] Text m_ObjectiveTitle;
+    [SerializeField] Text m_ObjectiveText;
+
     [Header("Afterlife Realm")]
     [SerializeField] GameObject m_AfterlifeFadeIn;
     [SerializeField] LayerMask m_AfterlifeRealmMask;
 
     bool m_ReplensishHealth = false;
+
+    ObjectiveManager m_ObjectiveManager;
 
     void Start()
     {
@@ -149,6 +157,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         }
         else if (m_MyView.IsMine && PhotonNetwork.PlayerListOthers.Length == 0) // Playing Solo
         {
+
             m_SpectateSystem.SubmitCamera(m_SpectateCamera);
             m_SpectateCamera.gameObject.SetActive(false);
         }
@@ -157,15 +166,20 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         if (m_MyView.IsMine)
         {
-            SetFirstPerson(true);
+            m_ObjectiveManager = FindAnyObjectByType<ObjectiveManager>();
+
+            if (m_ObjectiveManager != null)
+            {
+                m_ObjectiveManager.SubmitObjectiveInterface(m_ObjectiveItem, m_ObjectiveTitle, m_ObjectiveText);
+            }
+            else
+                m_ObjectiveItem.SetActive(false);
 
             m_SkinWalkerDemon = FindAnyObjectByType<Skinwalker>();
 
             if (m_SkinWalkerDemon)
                 m_SkinWalkerDemon.AssignTarget(transform, m_PlayersCamera, m_SkinWalkerModelToUse);
         }
-        else
-            SetFirstPerson(false);
 
         //========================================= 
 
@@ -337,7 +351,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         Vector3 MoveV = transform.right * xPos + transform.forward * yPos;
 
-        m_Body.MovePosition(transform.position + MoveV.normalized * m_PlayersOverallSpeed * Time.deltaTime);
+        m_Body.MovePosition(transform.position + MoveV.normalized * m_PlayersOverallSpeed * Time.fixedDeltaTime);
 
         ConvertMovementForAnimation(xPos, yPos);
 
@@ -479,7 +493,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
             m_BodyAnimations[i].SetBool("Sprinting", m_IsSprinting);
         }
 
-        m_FirstPersonAnimator.SetBool("IsSprinting", m_IsSprinting);
+        if (m_FirstPersonAnimator)
+            m_FirstPersonAnimator.SetBool("IsSprinting", m_IsSprinting);
 
         switch (m_SpecialistAbility.GetSpecialistType())
         {
@@ -545,6 +560,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             m_GameManager.ChangeNetworkScene("Afterlife_Corp");
         }
     }
+
 
     [PunRPC]
     public void RPC_CheckIfAllPlayersHaveExtracted()
@@ -718,8 +734,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (!m_MyView.IsMine)
             return;
 
-        SetFirstPerson(false);
-
         m_DownedFlareObject.SetActive(true);
 
         m_BleedoutObject.SetActive(true);
@@ -750,11 +764,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public void RPC_RevivePlayer() // Revived by another player
     {
         m_BleedoutObject.SetActive(false);
-
-        if (m_MyView.IsMine)
-        {
-            SetFirstPerson(true);
-        }
 
         m_IsDowned = false;
         m_PlayerHealth = 100;

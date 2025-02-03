@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] UnityEvent m_OnConfigure;
     void Start()
     {
-        Application.targetFrameRate = 60;
         m_OnConfigure.Invoke();
     }
 

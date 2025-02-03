@@ -15,6 +15,7 @@ public class RealtimeLightLoader : MonoBehaviour
     float m_FramesCheckLimit = 5;
     float m_FramesPassed;
 
+    [System.Obsolete]
     void Start()
     {
         // Collect all Realtime Light data
@@ -26,9 +27,11 @@ public class RealtimeLightLoader : MonoBehaviour
         StartCoroutine(UpdateShadows());
     }
 
+    [System.Obsolete]
     void GrabLights()
     {
-        m_RealtimeLights = FindObjectsByType<Light>(FindObjectsSortMode.None);
+        m_RealtimeLights = FindObjectsOfType<Light>();
+
     }
 
     private IEnumerator UpdateShadows()
@@ -43,12 +46,19 @@ public class RealtimeLightLoader : MonoBehaviour
                 if (distanceFromCamera <= m_MaxDistanceFromCamera)
                 {
                     light.shadows = LightShadows.Soft;
+                    light.GetComponent<HDAdditionalLightData>().affectsVolumetric = true;
 
                     float smoothFactor = Mathf.Clamp01((m_MaxDistanceFromCamera - distanceFromCamera) / m_MaxDistanceFromCamera);
                     light.shadowStrength = Mathf.Lerp(0, 1, smoothFactor);
+
+                    light.GetComponent<HDAdditionalLightData>().volumetricDimmer = Mathf.Lerp(0, 1, smoothFactor);
+                }
+                else
+                {
+                    light.GetComponent<HDAdditionalLightData>().affectsVolumetric = false;
+                    light.shadows = LightShadows.None;
                 }
 
-                light.shadows = LightShadows.None;
                 yield return new WaitForSeconds(0.5f);
             }
 

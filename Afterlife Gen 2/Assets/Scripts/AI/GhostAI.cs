@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using Photon.Pun;
+using UnityEngine.Events;
 enum GhostBehaviour
 {
     Idle = 0,
@@ -59,6 +60,9 @@ public class GhostAI : MonoBehaviour
     float m_AttackTimer;
     bool m_AttackIsOnCooldown = false;
 
+    UnityEvent m_OnGhostDeath;
+    GameObject m_ExfillArea;
+
     private void Start()
     {
         m_MyAgent = GetComponent<NavMeshAgent>();
@@ -77,6 +81,12 @@ public class GhostAI : MonoBehaviour
             m_TimerCooldownLights = m_TimerCooldownLightsDuration;
             m_MyAgent.SetDestination(RandomNavSphere(transform.position, m_RoamingDistance, -1));
         }
+
+
+        // Exfill data for when ghost is killed.
+        m_ExfillArea = FindAnyObjectByType<ReadyZone>().gameObject.transform.parent.gameObject;
+        m_ExfillArea.SetActive(false);
+        m_OnGhostDeath.AddListener(delegate { m_ExfillArea.SetActive(true); });
     }
 
     [PunRPC]
@@ -180,6 +190,8 @@ public class GhostAI : MonoBehaviour
 
     void CheckIfCanAttackTarget()
     {
+        if (!m_PlayerTarget) return;
+
         RaycastHit HitDetectionInfo;
 
         Vector3 DirectionOfTarget = m_PlayerTarget.position - m_RayView.position;
@@ -206,6 +218,12 @@ public class GhostAI : MonoBehaviour
                 HitDetectionInfo.collider.GetComponent<DoorModule>().CycleDoorState();
             }
         }
+    }
+
+    [PunRPC]
+    public void RPC_GhostDeath()
+    {
+
     }
 
     void CheckInteractions()

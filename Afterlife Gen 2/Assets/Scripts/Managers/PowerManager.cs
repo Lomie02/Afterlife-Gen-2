@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System;
 public class PowerManager : MonoBehaviour
 {
     [SerializeField] GameObject m_LightParent;
@@ -13,12 +14,17 @@ public class PowerManager : MonoBehaviour
 
     GhostTrap m_GhostTrap;
     PhotonView m_MyView;
+
+    ObjectiveManager m_ObjectiveManager;
+
     void Start()
     {
         m_MyView = GetComponent<PhotonView>();
         m_LightsToPower = m_LightParent.GetComponentsInChildren<Light>();
 
-        m_GhostTrap = FindFirstObjectByType<GhostTrap>();
+        m_GhostTrap = FindAnyObjectByType<GhostTrap>();
+        m_ObjectiveManager = FindAnyObjectByType<ObjectiveManager>();
+
         if (m_IsPowerOn)
             m_MyView.RPC("RPC_SetPowerState", RpcTarget.AllBuffered, true);
         else
@@ -31,7 +37,9 @@ public class PowerManager : MonoBehaviour
         m_IsPowerOn = _state;
 
         if (m_IsPowerOn)
+        {
             m_PowerLight.color = Color.green;
+        }
         else
             m_PowerLight.color = Color.red;
 
@@ -49,7 +57,10 @@ public class PowerManager : MonoBehaviour
     public void CyclePower()
     {
         if (m_IsPowerOn)
+        {
+            m_ObjectiveManager.ObjectiveCompleted(0);
             m_MyView.RPC("RPC_SetPowerState", RpcTarget.AllBuffered, false);
+        }
         else
             m_MyView.RPC("RPC_SetPowerState", RpcTarget.AllBuffered, true);
     }

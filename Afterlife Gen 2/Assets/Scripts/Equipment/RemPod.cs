@@ -24,39 +24,47 @@ public class RemPod : MonoBehaviour
             m_IsEvidence = true;
         }
 
+        StartCoroutine(UpdateRemPods());
+
     }
 
-    void Update()
+    IEnumerator UpdateRemPods()
     {
-        if (m_NetworkObject.GetPowerState())
+        while (true)
         {
-            if (!m_Ghost)
+
+            if (m_NetworkObject.GetPowerState())
             {
-                m_Ghost = FindObjectOfType<GhostAI>();
+                if (!m_Ghost)
+                {
+                    m_Ghost = FindObjectOfType<GhostAI>();
+                }
+
+                float DistanceToGhost = Vector3.Distance(transform.position, m_Ghost.gameObject.transform.position);
+
+                if (DistanceToGhost < 5 && m_IsEvidence)
+                {
+                    ShowLights(5);
+                }
+                else if (DistanceToGhost > 10 && DistanceToGhost < 15)
+                {
+                    ShowLights(4);
+                }
+                else if (DistanceToGhost > 15 && DistanceToGhost < 20)
+                {
+                    ShowLights(3);
+                }
+                else if (DistanceToGhost > 20 && DistanceToGhost < 25)
+                {
+                    ShowLights(2);
+                }
+                else if (DistanceToGhost > 25 && DistanceToGhost < 30)
+                {
+                    ShowLights(1);
+                }
             }
 
-            float DistanceToGhost = Vector3.Distance(transform.position, m_Ghost.gameObject.transform.position);
-
-            if (DistanceToGhost < 5 && m_IsEvidence)
-            {
-                ShowLights(5);
-            }
-            else if (DistanceToGhost > 10 && DistanceToGhost < 15)
-            {
-                ShowLights(4);
-            }
-            else if (DistanceToGhost > 15 && DistanceToGhost < 20)
-            {
-                ShowLights(3);
-            }
-            else if (DistanceToGhost > 20 && DistanceToGhost < 25)
-            {
-                ShowLights(2);
-            }
-            else if (DistanceToGhost > 25 && DistanceToGhost < 30)
-            {
-                ShowLights(1);
-            }
+            yield return new WaitForSeconds(5f);
         }
     }
 

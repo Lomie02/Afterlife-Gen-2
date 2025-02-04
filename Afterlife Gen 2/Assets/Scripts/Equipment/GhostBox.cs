@@ -43,6 +43,7 @@ public class GhostBox : MonoBehaviour
             AssignGhost();
         }
 
+        StartCoroutine(UpdateGhostBox());
     }
 
     void LookForCursedOject()
@@ -85,21 +86,27 @@ public class GhostBox : MonoBehaviour
             Debug.Log(args.text);
         }
     }
-    void Update()
+    private IEnumerator UpdateGhostBox()
     {
-        if (m_MyNetworkData.GetPowerState())
+        while (true)
         {
-            int _convertedInt2nd = Random.Range(0, 9);
-            int _convertedInt3rd = Random.Range(0, 9);
 
-            m_2nd.text = _convertedInt2nd.ToString();
-            m_3rd.text = _convertedInt3rd.ToString();
-
-            if (!m_CursedObject)
+            if (m_MyNetworkData.GetPowerState())
             {
-                m_CursedObject = FindObjectOfType<CursedObject>();
-                AssignGhost();
+                int _convertedInt2nd = Random.Range(0, 9);
+                int _convertedInt3rd = Random.Range(0, 9);
+
+                m_2nd.text = _convertedInt2nd.ToString();
+                m_3rd.text = _convertedInt3rd.ToString();
+
+                if (!m_CursedObject)
+                {
+                    m_CursedObject = FindObjectOfType<CursedObject>();
+                    AssignGhost();
+                }
             }
+
+            yield return new WaitForSeconds(5f);
         }
     }
 

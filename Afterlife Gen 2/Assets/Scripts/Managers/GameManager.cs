@@ -37,6 +37,11 @@ public class GameManager : MonoBehaviourPunCallbacks
         ChangeScene("Main_Menu");
     }
 
+    public void RestartCurrentScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
     public void ChangeNetworkScene(string _name)
     {
         PhotonNetwork.LoadLevel(_name);

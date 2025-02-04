@@ -587,9 +587,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
             {
                 m_PossesionMeter += 0.01f * Time.deltaTime;
 
+
                 Vignette m_Venette;
-                m_PostProcessing.profile.TryGet(out m_Venette);
-                m_Venette.intensity.value = Mathf.Lerp(m_PossessionBar.fillAmount, m_PossesionMeter, Time.deltaTime);
+                if (m_PostProcessing.profile.TryGet(out m_Venette))
+                    m_Venette.intensity.value = Mathf.Lerp(m_PossessionBar.fillAmount, m_PossesionMeter, Time.deltaTime);
             }
         }
         else

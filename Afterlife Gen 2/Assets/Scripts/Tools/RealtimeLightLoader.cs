@@ -10,7 +10,7 @@ public class RealtimeLightLoader : MonoBehaviour
 {
     Light[] m_RealtimeLights;
     MeshRenderer[] m_MeshRenderersInScene;
-    float m_MaxDistanceFromCamera = 5f;
+    float m_MaxDistanceFromCamera = 10;
 
     float m_FramesCheckLimit = 5;
     float m_FramesPassed;
@@ -38,10 +38,12 @@ public class RealtimeLightLoader : MonoBehaviour
 
         foreach (Light light in m_RealtimeLights)
         {
-
-            light.shadows = LightShadows.None;
-            light.GetComponent<HDAdditionalLightData>().affectsVolumetric = false;
-            light.GetComponent<HDAdditionalLightData>().volumetricFadeDistance = 10f;
+            if (light.type != LightType.Directional)
+            {
+                light.shadows = LightShadows.None;
+                light.GetComponent<HDAdditionalLightData>().affectsVolumetric = false;
+                light.GetComponent<HDAdditionalLightData>().volumetricFadeDistance = 10f;
+            }
         }
     }
 
@@ -58,7 +60,7 @@ public class RealtimeLightLoader : MonoBehaviour
                 {
                     if (light.shadows == LightShadows.None && m_CurrentRealtimeShadowsActive < m_RealtimeShadowsLimit)
                     {
-                        light.shadows = LightShadows.Soft;
+                        light.shadows = LightShadows.Hard;
                         m_CurrentRealtimeShadowsActive++;
                     }
 
@@ -72,9 +74,10 @@ public class RealtimeLightLoader : MonoBehaviour
                 }
                 else
                 {
+
                     light.GetComponent<HDAdditionalLightData>().affectsVolumetric = false;
 
-                    if (light.shadows == LightShadows.Soft)
+                    if (light.shadows == LightShadows.Hard && light.type != LightType.Directional)
                     {
                         light.shadows = LightShadows.None;
                         m_CurrentRealtimeShadowsActive--;

@@ -9,11 +9,14 @@ using UnityEngine.Rendering.HighDefinition;
 public class RealtimeLightLoader : MonoBehaviour
 {
     Light[] m_RealtimeLights;
-
-    float m_MaxDistanceFromCamera = 5f;
+    MeshRenderer[] m_MeshRenderersInScene;
+    float m_MaxDistanceFromCamera = 10;
 
     float m_FramesCheckLimit = 5;
     float m_FramesPassed;
+
+    public int m_RealtimeShadowsLimit = 5;
+    public int m_CurrentRealtimeShadowsActive = 0;
 
     [System.Obsolete]
     void Start()
@@ -31,7 +34,17 @@ public class RealtimeLightLoader : MonoBehaviour
     void GrabLights()
     {
         m_RealtimeLights = FindObjectsOfType<Light>();
+        m_MeshRenderersInScene = FindObjectsOfType<MeshRenderer>();
 
+        foreach (Light light in m_RealtimeLights)
+        {
+            if (light.type != LightType.Directional)
+            {
+                light.shadows = LightShadows.None;
+                light.GetComponent<HDAdditionalLightData>().affectsVolumetric = false;
+                light.GetComponent<HDAdditionalLightData>().volumetricFadeDistance = 10f;
+            }
+        }
     }
 
     private IEnumerator UpdateShadows()
@@ -45,7 +58,13 @@ public class RealtimeLightLoader : MonoBehaviour
                 float distanceFromCamera = Vector3.Distance(transform.position, light.transform.position);
                 if (distanceFromCamera <= m_MaxDistanceFromCamera)
                 {
-                    light.shadows = LightShadows.Soft;
+                    if (light.shadows == LightShadows.None && m_CurrentRealtimeShadowsActive < m_RealtimeShadowsLimit)
+                    {
+                        light.shadows = LightShadows.Hard;
+                        m_CurrentRealtimeShadowsActive++;
+                    }
+
+
                     light.GetComponent<HDAdditionalLightData>().affectsVolumetric = true;
 
                     float smoothFactor = Mathf.Clamp01((m_MaxDistanceFromCamera - distanceFromCamera) / m_MaxDistanceFromCamera);
@@ -55,12 +74,34 @@ public class RealtimeLightLoader : MonoBehaviour
                 }
                 else
                 {
+
                     light.GetComponent<HDAdditionalLightData>().affectsVolumetric = false;
-                    light.shadows = LightShadows.None;
+
+                    if (light.shadows == LightShadows.Hard && light.type != LightType.Directional)
+                    {
+                        light.shadows = LightShadows.None;
+                        m_CurrentRealtimeShadowsActive--;
+                    }
+                }
+            }
+
+            foreach (MeshRenderer mesh in m_MeshRenderersInScene)
+            {
+
+                float distanceFromCamera = Vector3.Distance(transform.position, mesh.transform.position);
+
+                if (distanceFromCamera <= m_MaxDistanceFromCamera)
+                {
+                    mesh.shadowCastingMode = ShadowCastingMode.On;
+                }
+                else
+                {
+                    mesh.shadowCastingMode = ShadowCastingMode.Off;
                 }
 
-                yield return new WaitForSeconds(0.5f);
             }
+
+            yield return new WaitForSeconds(0.5f);
 
         }
 

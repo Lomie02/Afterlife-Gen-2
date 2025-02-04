@@ -63,6 +63,8 @@ public class GhostTrap : MonoBehaviour
 
         m_ZapParticle.SetActive(false);
         m_GhostObject = FindAnyObjectByType<GhostAI>();
+
+        StartCoroutine(UpdateGhostTrap());
     }
 
     public bool CollectedPart(ItemID _itemId)
@@ -89,37 +91,42 @@ public class GhostTrap : MonoBehaviour
         CheckTrapPartsList();
     }
 
-    private void Update()
+    private IEnumerator UpdateGhostTrap()
     {
-        switch (m_TrapsMode)
+        while (true)
         {
-            case TrapMode.Cooldown:
-                m_CooldownTimer -= Time.deltaTime;
+            switch (m_TrapsMode)
+            {
+                case TrapMode.Cooldown:
+                    m_CooldownTimer -= Time.deltaTime;
 
-                if (m_CooldownTimer <= 0)
-                {
-                    m_CooldownTimer = m_CooldownDuration;
+                    if (m_CooldownTimer <= 0)
+                    {
+                        m_CooldownTimer = m_CooldownDuration;
 
-                    if (m_PowerManager.GetPowerState())
-                        m_MyView.RPC("RPC_SetTrapsState", RpcTarget.All, TrapMode.ReadyForUse);
-                    else
-                        m_MyView.RPC("RPC_SetTrapsState", RpcTarget.All, TrapMode.Needs_Power);
-                }
-                break;
+                        if (m_PowerManager.GetPowerState())
+                            m_MyView.RPC("RPC_SetTrapsState", RpcTarget.All, TrapMode.ReadyForUse);
+                        else
+                            m_MyView.RPC("RPC_SetTrapsState", RpcTarget.All, TrapMode.Needs_Power);
+                    }
+                    break;
 
-            case TrapMode.Trapping:
+                case TrapMode.Trapping:
 
-                m_ZapTimer -= Time.deltaTime;
+                    m_ZapTimer -= Time.deltaTime;
 
-                if (m_ZapTimer <= 0)
-                {
-                    m_ZapTimer = m_ZapTimerDuration;
-                    m_TrapsMode = TrapMode.Cooldown;
-                    m_ZapParticle.SetActive(false);
-                }
+                    if (m_ZapTimer <= 0)
+                    {
+                        m_ZapTimer = m_ZapTimerDuration;
+                        m_TrapsMode = TrapMode.Cooldown;
+                        m_ZapParticle.SetActive(false);
+                    }
 
-                break;
+                    break;
 
+            }
+
+            yield return new WaitForSeconds(0.5f);
         }
     }
 

@@ -36,6 +36,7 @@ public class TextBuilder : MonoBehaviour
                 m_Displaytext = false;
 
             m_TimerForDisplayDuration = 0.05f;
+
             m_TextObject.text += m_OriginalTextContent[m_CurrentLetter];
             m_CurrentLetter++;
         }

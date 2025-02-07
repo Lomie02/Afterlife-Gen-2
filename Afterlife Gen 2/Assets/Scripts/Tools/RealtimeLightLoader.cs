@@ -6,8 +6,18 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 
+enum RealtimeLightMode
+{
+    UltraOptimized = 0,
+    HighOptimized,
+    MediumOptimized,
+    LowOptimize,
+}
+
 public class RealtimeLightLoader : MonoBehaviour
 {
+    RealtimeLightMode m_OptimizationMode = RealtimeLightMode.HighOptimized;
+
     Light[] m_RealtimeLights;
     MeshRenderer[] m_MeshRenderersInScene;
     float m_MaxDistanceFromCamera = 10;
@@ -43,6 +53,9 @@ public class RealtimeLightLoader : MonoBehaviour
                 light.shadows = LightShadows.None;
                 light.GetComponent<HDAdditionalLightData>().affectsVolumetric = false;
                 light.GetComponent<HDAdditionalLightData>().volumetricFadeDistance = 10f;
+
+                if (m_OptimizationMode == RealtimeLightMode.UltraOptimized)
+                    light.GetComponent<HDAdditionalLightData>().shadowUpdateMode = ShadowUpdateMode.OnDemand;
             }
         }
     }
@@ -71,6 +84,9 @@ public class RealtimeLightLoader : MonoBehaviour
                     light.shadowStrength = Mathf.Lerp(0, 1, smoothFactor);
 
                     light.GetComponent<HDAdditionalLightData>().volumetricDimmer = Mathf.Lerp(0, 1, smoothFactor);
+
+                    if (m_OptimizationMode == RealtimeLightMode.UltraOptimized)
+                        light.GetComponent<HDAdditionalLightData>().RequestShadowMapRendering();
                 }
                 else
                 {
@@ -85,23 +101,25 @@ public class RealtimeLightLoader : MonoBehaviour
                 }
             }
 
-            foreach (MeshRenderer mesh in m_MeshRenderersInScene)
+            if (m_OptimizationMode == RealtimeLightMode.UltraOptimized || m_OptimizationMode == RealtimeLightMode.HighOptimized)
             {
-
-                float distanceFromCamera = Vector3.Distance(transform.position, mesh.transform.position);
-
-                if (distanceFromCamera <= m_MaxDistanceFromCamera)
+                foreach (MeshRenderer mesh in m_MeshRenderersInScene)
                 {
-                    mesh.shadowCastingMode = ShadowCastingMode.On;
-                }
-                else
-                {
-                    mesh.shadowCastingMode = ShadowCastingMode.Off;
-                }
 
+                    float distanceFromCamera = Vector3.Distance(transform.position, mesh.transform.position);
+
+                    if (distanceFromCamera <= m_MaxDistanceFromCamera)
+                    {
+                        mesh.shadowCastingMode = ShadowCastingMode.On;
+                    }
+                    else
+                    {
+                        mesh.shadowCastingMode = ShadowCastingMode.Off;
+                    }
+                }
             }
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(2f);
 
         }
 

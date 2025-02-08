@@ -12,6 +12,8 @@ public class WorldCameraSetter : MonoBehaviour
         m_WorldCanvas = GetComponent<Canvas>();
         m_CamerasFound = GameObject.FindGameObjectsWithTag("PlayerCamera");
 
+        if (!m_WorldCanvas) return;
+
         for (int i = 0; i < m_CamerasFound.Length; i++)
         {
             if (m_CamerasFound[i].GetComponent<PhotonView>().IsMine)

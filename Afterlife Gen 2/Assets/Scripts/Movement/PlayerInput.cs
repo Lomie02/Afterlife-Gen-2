@@ -58,7 +58,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     [Header("Use Items")]
     [SerializeField] Image m_UseImage;
     [SerializeField] Text m_UseText;
-    ChainIKConstraint m_LightAImConstrait;
+    TwoBoneIKConstraint m_LightAImConstrait;
 
     bool m_isLighterOpen = false;
     [SerializeField] Animator m_LighterAnimator;
@@ -100,7 +100,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_PlayersFlashLight.gameObject.SetActive(false);
         m_HostGameSettings.SetActive(false);
 
-        m_LightAImConstrait = GetComponentInChildren<ChainIKConstraint>();
+        m_LightAImConstrait = GetComponentInChildren<TwoBoneIKConstraint>();
         if (m_LightAImConstrait) m_LightAImConstrait.weight = 0;
 
         m_ResumeButton = GameObject.Find("Resume").GetComponent<Button>();
@@ -129,6 +129,8 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             m_ReadyUp.SubmitLoadingScreen(m_LoadingScreenMaps);
 
         m_VoiceRecorder.TransmitEnabled = false;
+
+        StartCoroutine(CheckHoverItem());
     }
 
     public void DisconnectFromLobbyDirect()
@@ -376,14 +378,6 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 CheckForItem();
             }
 
-            m_FramesPassedForHover++;
-
-            if (m_FramesPassedForHover >= m_MxFramesForHover)
-            {
-                m_FramesPassedForHover = 0;
-                CheckHoverItem();
-            }
-
         }
     }
 
@@ -394,7 +388,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         {
             if (m_MyController.IsSprinting())
             {
-                LerpFlashLight(0.5f);
+                LerpFlashLight(0.8f);
             }
             else
             {
@@ -408,53 +402,57 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         }
     }
 
-    void CheckHoverItem()
+    IEnumerator CheckHoverItem()
     {
-        if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_ItemCast, 2f))
+        while (true)
         {
-            if (m_ItemCast.collider.GetComponent<NetworkObject>() != null)
+            if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_ItemCast, 2f))
             {
-                m_UseImage.gameObject.SetActive(true);
-                m_UseText.text = "Press [E] To Pick Up " + m_ItemCast.collider.GetComponent<NetworkObject>().GetItemsName();
-                return;
-            }
-            else if (m_ItemCast.collider.tag == "ReadyMonitor" || m_ItemCast.collider.tag == "Door")
-            {
-                m_UseImage.gameObject.SetActive(true);
-                m_UseText.text = "Press [E] To Interact.";
-                return;
-            }
-            else if (m_ItemCast.collider.name == "PartPlace" || m_ItemCast.collider.name == "PartPlace_Bat")
-            {
-                m_UseImage.gameObject.SetActive(true);
-                m_UseText.text = "Press [E] To Place Part.";
-                return;
-            }
-            else if (m_ItemCast.collider.name == "Switch_Board")
-            {
-                m_UseImage.gameObject.SetActive(true);
-                m_UseText.text = "Press [E] To Toggle Power.";
-                return;
-            }
-            else if (m_ItemCast.collider.name == "Monitor")
-            {
-                m_UseImage.gameObject.SetActive(true);
-                m_UseText.text = "Press [E] To Activate Trap.";
-                return;
-            }
-            else if (m_ItemCast.collider.GetComponent<PlayerController>() != null && !m_ItemCast.collider.GetComponent<PhotonView>().IsMine)
-            {
-                if (m_ItemCast.collider.GetComponent<PlayerController>().IsPlayerDowned())
+                if (m_ItemCast.collider.GetComponent<NetworkObject>() != null)
                 {
                     m_UseImage.gameObject.SetActive(true);
-                    m_UseText.text = "Hold [E] To Revive.";
-                    return;
+                    m_UseText.text = "Press [E] To Pick Up " + m_ItemCast.collider.GetComponent<NetworkObject>().GetItemsName();
+                    yield return new WaitForSeconds(0.5f);
+                }
+                else if (m_ItemCast.collider.tag == "ReadyMonitor" || m_ItemCast.collider.tag == "Door")
+                {
+                    m_UseImage.gameObject.SetActive(true);
+                    m_UseText.text = "Press [E] To Interact.";
+                    yield return new WaitForSeconds(0.5f);
+                }
+                else if (m_ItemCast.collider.name == "PartPlace" || m_ItemCast.collider.name == "PartPlace_Bat")
+                {
+                    m_UseImage.gameObject.SetActive(true);
+                    m_UseText.text = "Press [E] To Place Part.";
+                    yield return new WaitForSeconds(0.5f);
+                }
+                else if (m_ItemCast.collider.name == "Switch_Board")
+                {
+                    m_UseImage.gameObject.SetActive(true);
+                    m_UseText.text = "Press [E] To Toggle Power.";
+                    yield return new WaitForSeconds(0.5f);
+                }
+                else if (m_ItemCast.collider.name == "Monitor")
+                {
+                    m_UseImage.gameObject.SetActive(true);
+                    m_UseText.text = "Press [E] To Activate Trap.";
+                    yield return new WaitForSeconds(0.5f);
+                }
+                else if (m_ItemCast.collider.GetComponent<PlayerController>() != null && !m_ItemCast.collider.GetComponent<PhotonView>().IsMine)
+                {
+                    if (m_ItemCast.collider.GetComponent<PlayerController>().IsPlayerDowned())
+                    {
+                        m_UseImage.gameObject.SetActive(true);
+                        m_UseText.text = "Hold [E] To Revive.";
+                        yield return new WaitForSeconds(0.5f);
+                    }
+                }
+                else
+                {
+                    m_UseImage.gameObject.SetActive(false);
                 }
             }
-            else
-            {
-                m_UseImage.gameObject.SetActive(false);
-            }
+            yield return new WaitForSeconds(0.5f);
         }
     }
 

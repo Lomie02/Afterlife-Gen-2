@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.AI;
 using Photon.Pun;
 using UnityEngine.Events;
+using UnityEditor.Animations;
 enum GhostBehaviour
 {
     Idle = 0,
@@ -20,10 +22,16 @@ struct GhostModelKit
     public GameObject m_GhostObject;
 
     public Material m_GhostsMaterial;
+
+    [Space]
+    public AnimatorController m_Controller;
+    public Avatar m_Avatar;
 }
 
 public class GhostAI : MonoBehaviour
 {
+    Animator m_GhostAnimation;
+
     [SerializeField] GhostModelKit[] m_GhostKits;
     [Space]
 
@@ -74,6 +82,10 @@ public class GhostAI : MonoBehaviour
         m_ChaseTimer = m_ChaseDuration;
         m_AttackTimer = m_AttackCooldown;
 
+        m_MyAgent.autoRepath = false;
+
+        m_GhostAnimation = GetComponent<Animator>();
+
         if (PhotonNetwork.IsMasterClient)
         {
             m_PlayersGhostCanSee = new List<GameObject>();
@@ -87,6 +99,9 @@ public class GhostAI : MonoBehaviour
         m_ExfillArea = FindAnyObjectByType<ReadyZone>().gameObject.transform.parent.gameObject;
         m_ExfillArea.SetActive(false);
         m_OnGhostDeath.AddListener(delegate { m_ExfillArea.SetActive(true); });
+
+        StartCoroutine(CheckInteractions());
+        StartCoroutine(CheckDoorInteractions());
     }
 
     [PunRPC]
@@ -95,10 +110,15 @@ public class GhostAI : MonoBehaviour
         m_GhostKits[_index].m_GhostObject.SetActive(true);
         m_CurrentGhostKitActive = _index;
 
+        // Set Animator up.
+        m_GhostAnimation.runtimeAnimatorController = m_GhostKits[_index].m_Controller;
+        m_GhostAnimation.avatar = m_GhostKits[_index].m_Avatar;
+
         if (!m_IsGhostRevealingTrueForm)
             m_GhostKits[_index].m_GhostsMaterial.SetFloat("_AfterlifeForm", 0f); // false
         else
             m_GhostKits[_index].m_GhostsMaterial.SetFloat("_AfterlifeForm", 1f); // True
+
     }
 
     public void EnteredAfterlifeRealm()
@@ -139,7 +159,7 @@ public class GhostAI : MonoBehaviour
                 break;
         }
 
-        CheckInteractions();
+
 
         if (m_AttackIsOnCooldown)
         {
@@ -160,7 +180,11 @@ public class GhostAI : MonoBehaviour
                 m_LightInteractionOnCooldown = false;
             }
         }
+
+        m_GhostAnimation.SetFloat("GhostSpeed", m_MyAgent.velocity.magnitude);
     }
+
+
 
     void UpdateIdle()
     {
@@ -207,16 +231,21 @@ public class GhostAI : MonoBehaviour
         }
     }
 
-    public void CheckDoorInteractions()
+    private IEnumerator CheckDoorInteractions()
     {
-        RaycastHit HitDetectionInfo;
-
-        if (Physics.Raycast(m_RayView.position, m_RayView.forward, out HitDetectionInfo, 1.5f))
+        while (true)
         {
-            if (HitDetectionInfo.collider.GetComponent<DoorModule>())
+            RaycastHit HitDetectionInfo;
+
+            if (Physics.Raycast(m_RayView.position, m_RayView.forward, out HitDetectionInfo, 1.5f))
             {
-                HitDetectionInfo.collider.GetComponent<DoorModule>().CycleDoorState();
+                if (HitDetectionInfo.collider.GetComponent<DoorModule>())
+                {
+                    HitDetectionInfo.collider.GetComponent<DoorModule>().CycleDoorState();
+                }
             }
+
+            yield return new WaitForSeconds(0.5f);
         }
     }
 
@@ -226,66 +255,70 @@ public class GhostAI : MonoBehaviour
 
     }
 
-    void CheckInteractions()
+    IEnumerator CheckInteractions()
     {
-        // Interaction with power
-        float DistanceToPowerBox = Vector3.Distance(transform.position, m_PowerManager.gameObject.transform.position);
-        if (DistanceToPowerBox < 7 && m_PowerManager.GetPowerState() && !m_LightInteractionOnCooldown)
+        while (true)
         {
-            int RandomNum = Random.Range(0, 10);
 
-            if (RandomNum == 2)
-                m_PowerManager.CyclePower();
+            // Interaction with power
+            float DistanceToPowerBox = Vector3.Distance(transform.position, m_PowerManager.gameObject.transform.position);
+            if (DistanceToPowerBox < 7 && m_PowerManager.GetPowerState() && !m_LightInteractionOnCooldown)
+            {
+                int RandomNum = Random.Range(0, 10);
 
-            m_LightInteractionOnCooldown = true;
+                if (RandomNum == 2)
+                    m_PowerManager.CyclePower();
+
+                m_LightInteractionOnCooldown = true;
+            }
+
+            // Player detection
+            if (m_PlayersGhostCanSee.Count > 0 && m_PlayerTarget == null)
+                UpdatePlayerDetection();
+
+            // If AI can attack the player
+            if (!m_AttackIsOnCooldown)
+                CheckIfCanAttackTarget();
+
+            // Equipment
+            switch (m_Profile.m_Evidence1)
+            {
+                case EvidenceTypes.SpiritBox:
+                    CheckSpiritBox();
+                    break;
+
+                case EvidenceTypes.Emf:
+                    CheckEmf();
+                    break;
+
+                case EvidenceTypes.Writing:
+                    CheckWriting();
+                    break;
+
+                case EvidenceTypes.LaserProjector:
+                    break;
+
+                case EvidenceTypes.BloodyHandprints:
+                    break;
+
+                case EvidenceTypes.GhostOrb:
+                    break;
+
+                case EvidenceTypes.AudioSensor:
+                    break;
+
+                case EvidenceTypes.FreezingTemps:
+                    break;
+
+                case EvidenceTypes.FloatingObjects:
+                    break;
+
+                case EvidenceTypes.RemPod:
+                    break;
+            }
+
+            yield return new WaitForSeconds(3f);
         }
-
-        // Player detection
-        if (m_PlayersGhostCanSee.Count > 0 && m_PlayerTarget == null)
-            UpdatePlayerDetection();
-
-        // If AI can attack the player
-        if (!m_AttackIsOnCooldown)
-            CheckIfCanAttackTarget();
-
-        // Equipment
-        switch (m_Profile.m_Evidence1)
-        {
-            case EvidenceTypes.SpiritBox:
-                CheckSpiritBox();
-                break;
-
-            case EvidenceTypes.Emf:
-                CheckEmf();
-                break;
-
-            case EvidenceTypes.Writing:
-                CheckWriting();
-                break;
-
-            case EvidenceTypes.LaserProjector:
-                break;
-
-            case EvidenceTypes.BloodyHandprints:
-                break;
-
-            case EvidenceTypes.GhostOrb:
-                break;
-
-            case EvidenceTypes.AudioSensor:
-                break;
-
-            case EvidenceTypes.FreezingTemps:
-                break;
-
-            case EvidenceTypes.FloatingObjects:
-                break;
-
-            case EvidenceTypes.RemPod:
-                break;
-        }
-
-        //TODO: Add rest of evidence
     }
 
     public GhostProfile GetGhostProfile()

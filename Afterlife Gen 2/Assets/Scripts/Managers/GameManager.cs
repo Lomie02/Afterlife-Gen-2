@@ -11,6 +11,12 @@ public class GameManager : MonoBehaviourPunCallbacks
     void Start()
     {
         m_OnConfigure.Invoke();
+
+        if (Cursor.lockState == CursorLockMode.Locked)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 
     public void ChangeScene(string _name)

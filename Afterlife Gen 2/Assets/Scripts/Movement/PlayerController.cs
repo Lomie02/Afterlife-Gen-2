@@ -6,6 +6,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.Rendering;
 using Photon.Pun.UtilityScripts;
+using UnityEngine.Animations.Rigging;
 
 enum MovementType
 {
@@ -40,8 +41,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     PlayerStance m_Stance = PlayerStance.Stand;
     [SerializeField] PhotonView m_MyView;
-    [SerializeField] Animator[] m_BodyAnimations;
-    [SerializeField] Animator m_FirstPersonAnimator;
+    [SerializeField] Animator m_BodyAnimations;
 
     float m_PlayersOverallSpeed = 0;
     [SerializeField] float m_PlayerWalkSpeed = 2;
@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     GhostAI m_Ghost;
 
-    float m_AnimationLerpSpeed = 4;
+    float m_AnimationLerpSpeed = 10;
     float m_AnimXPos;
     float m_AnimYPos;
 
@@ -137,6 +137,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     ObjectiveManager m_ObjectiveManager;
 
+
+    private void Awake()
+    {
+        GetComponentInChildren<RigBuilder>().Build();
+    }
     void Start()
     {
         m_MyView = GetComponent<PhotonView>();
@@ -308,12 +313,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
             m_AnimYPos = Mathf.Lerp(m_AnimYPos, 0, m_AnimationLerpSpeed * Time.deltaTime);
         }
 
-
-        for (int i = 0; i < m_BodyAnimations.Length; i++)
-        {
-            m_BodyAnimations[i].SetFloat("xPos", m_AnimXPos);
-            m_BodyAnimations[i].SetFloat("yPos", m_AnimYPos);
-        }
+        m_BodyAnimations.SetFloat("xPos", m_AnimXPos);
+        m_BodyAnimations.SetFloat("yPos", m_AnimYPos);
     }
     void Update()
     {
@@ -359,7 +360,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
         {
-            m_BodyAnimations[0].SetInteger("IsEmoting", 0);
+            m_BodyAnimations.SetInteger("IsEmoting", 0);
         }
 
         // Players Movement 
@@ -441,10 +442,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         UpdateEmotes();
 
-        for (int i = 0; i < m_BodyAnimations.Length; i++)
-        {
-            m_BodyAnimations[i].SetBool("TacSprint", m_IsTacticalSprinting);
-        }
+        m_BodyAnimations.SetBool("TacSprint", m_IsTacticalSprinting);
 
         if (!m_IsSprinting)
         {
@@ -486,15 +484,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
             }
         }
 
-        m_BodyAnimations[0].SetLayerWeight(4, m_CrouchLerpAmount);
-
-        for (int i = 0; i < m_BodyAnimations.Length; i++)
-        {
-            m_BodyAnimations[i].SetBool("Sprinting", m_IsSprinting);
-        }
-
-        if (m_FirstPersonAnimator)
-            m_FirstPersonAnimator.SetBool("IsSprinting", m_IsSprinting);
+        m_BodyAnimations.SetLayerWeight(4, m_CrouchLerpAmount);
+        m_BodyAnimations.SetBool("Sprinting", m_IsSprinting);
 
         switch (m_SpecialistAbility.GetSpecialistType())
         {
@@ -611,13 +602,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
     void UpdateEmotes() // Add emotes here.
     {
         if (Input.GetKeyDown(KeyCode.Alpha1) && !Input.GetKeyDown(KeyCode.W)) // Emote Dance 1
-            m_BodyAnimations[0].SetInteger("IsEmoting", 1);
+            m_BodyAnimations.SetInteger("IsEmoting", 1);
 
-        if (Input.GetKeyDown(KeyCode.Alpha2) && !Input.GetKeyDown(KeyCode.W)) // Emote Dance 2
-            m_BodyAnimations[0].SetInteger("IsEmoting", 2);
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && !Input.GetKeyDown(KeyCode.W)) // Emote Dance 2
+            m_BodyAnimations.SetInteger("IsEmoting", 2);
 
-        if (Input.GetKeyDown(KeyCode.Alpha3) && !Input.GetKeyDown(KeyCode.W)) // Emote Dance 3
-            m_BodyAnimations[0].SetInteger("IsEmoting", 3);
+        else if (Input.GetKeyDown(KeyCode.Alpha3) && !Input.GetKeyDown(KeyCode.W)) // Emote Dance 3
+            m_BodyAnimations.SetInteger("IsEmoting", 3);
     }
 
     void StartSliding()
@@ -628,14 +619,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_PlayerCollider.center = new Vector3(0, 0.3788545f, 0);
         m_PlayerCollider.height = 0.8057906f;
 
-        m_BodyAnimations[0].SetTrigger("Slide");
+        m_BodyAnimations.SetTrigger("Slide");
         m_IsSliding = true;
         m_Body.AddForce(transform.forward * m_SlidePower, ForceMode.Impulse);
     }
 
     void SetRagdoll(bool _state) // Sets players ragdoll mode
     {
-        m_BodyAnimations[0].enabled = !_state;
+        m_BodyAnimations.enabled = !_state;
 
         for (int i = 0; i < m_RagdollBodys.Length; i++)
         {
@@ -738,9 +729,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_DownedFlareObject.SetActive(true);
 
         m_BleedoutObject.SetActive(true);
-        m_BodyAnimations[0].SetInteger("IsEmoting", 0);
+        m_BodyAnimations.SetInteger("IsEmoting", 0);
+        m_BodyAnimations.SetBool("IsDowned", m_IsDowned);
         m_IsDowned = true;
-        m_BodyAnimations[0].SetBool("IsDowned", m_IsDowned);
     }
 
     public bool IsSprinting()
@@ -768,7 +759,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         m_IsDowned = false;
         m_PlayerHealth = 100;
-        m_BodyAnimations[0].SetBool("IsDowned", m_IsDowned);
+        m_BodyAnimations.SetBool("IsDowned", m_IsDowned);
     }
 
     public bool IsPlayerDead()

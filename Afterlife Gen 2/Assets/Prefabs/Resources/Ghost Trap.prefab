@@ -716,7 +716,7 @@ Light:
   m_ForceVisible: 0
   m_ShadowRadius: 1.88
   m_ShadowAngle: 0
-  m_LightUnit: 1
+  m_LightUnit: 0
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
 --- !u!114 &8415461393220749198
@@ -856,7 +856,7 @@ MonoBehaviour:
   m_AreaLightEmissiveMeshShadowCastingMode: 0
   m_AreaLightEmissiveMeshMotionVectorGenerationMode: 0
   m_AreaLightEmissiveMeshLayer: -1
-  m_Version: 12
+  m_Version: 13
   m_ObsoleteShadowResolutionTier: 1
   m_ObsoleteUseShadowQualitySettings: 0
   m_ObsoleteCustomShadowResolution: 512
@@ -6228,7 +6228,7 @@ Light:
   m_ForceVisible: 0
   m_ShadowRadius: 1.88
   m_ShadowAngle: 0
-  m_LightUnit: 1
+  m_LightUnit: 0
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
 --- !u!114 &7568865128034055233
@@ -6368,7 +6368,7 @@ MonoBehaviour:
   m_AreaLightEmissiveMeshShadowCastingMode: 0
   m_AreaLightEmissiveMeshMotionVectorGenerationMode: 0
   m_AreaLightEmissiveMeshLayer: -1
-  m_Version: 12
+  m_Version: 13
   m_ObsoleteShadowResolutionTier: 1
   m_ObsoleteUseShadowQualitySettings: 0
   m_ObsoleteCustomShadowResolution: 512
@@ -11600,7 +11600,17 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 5928335897364102368}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: afc0a11e577e9c94a8a0c4b71527b472,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6207387064655490828}
   m_SourcePrefab: {fileID: 100100000, guid: afc0a11e577e9c94a8a0c4b71527b472, type: 3}
+--- !u!23 &2941847192404534361 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: afc0a11e577e9c94a8a0c4b71527b472,
+    type: 3}
+  m_PrefabInstance: {fileID: 4544729945815005405}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3734458393154225548 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: afc0a11e577e9c94a8a0c4b71527b472,
@@ -11672,6 +11682,33 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!205 &6207387064655490828
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3734458393154225548}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: -0.00004592864, y: -0.00029098522, z: 0.0047311755}
+  m_Size: 0.012057564
+  m_FadeMode: 1
+  m_AnimateCrossFading: 1
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.22632137
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 2941847192404534361}
+  - screenRelativeHeight: 0.22632137
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 0}
+  - screenRelativeHeight: 0.09975181
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 0}
+  m_Enabled: 1
 --- !u!4 &4078192754522283830 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: afc0a11e577e9c94a8a0c4b71527b472,

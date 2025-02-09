@@ -101,7 +101,7 @@ public class RealtimeLightLoader : MonoBehaviour
                 }
             }
 
-            if (m_OptimizationMode == RealtimeLightMode.UltraOptimized || m_OptimizationMode == RealtimeLightMode.HighOptimized)
+            if (m_OptimizationMode == RealtimeLightMode.UltraOptimized)
             {
                 foreach (MeshRenderer mesh in m_MeshRenderersInScene)
                 {

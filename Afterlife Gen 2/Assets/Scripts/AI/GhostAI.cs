@@ -1,11 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Animations;
 using UnityEngine.AI;
 using Photon.Pun;
 using UnityEngine.Events;
-using UnityEditor.Animations;
+using UnityEngine.Animations;
 enum GhostBehaviour
 {
     Idle = 0,
@@ -24,7 +23,7 @@ struct GhostModelKit
     public Material m_GhostsMaterial;
 
     [Space]
-    public AnimatorController m_Controller;
+    public RuntimeAnimatorController m_Controller;
     public Avatar m_Avatar;
 }
 
@@ -81,8 +80,6 @@ public class GhostAI : MonoBehaviour
 
         m_ChaseTimer = m_ChaseDuration;
         m_AttackTimer = m_AttackCooldown;
-
-        m_MyAgent.autoRepath = false;
 
         m_GhostAnimation = GetComponent<Animator>();
 

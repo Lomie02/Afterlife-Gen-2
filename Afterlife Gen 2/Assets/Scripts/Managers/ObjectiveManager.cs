@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
-using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 struct ObjectiveMod

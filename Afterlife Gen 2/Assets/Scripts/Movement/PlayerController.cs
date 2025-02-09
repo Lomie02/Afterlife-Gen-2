@@ -6,6 +6,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.Rendering;
 using Photon.Pun.UtilityScripts;
+using UnityEngine.Animations.Rigging;
 
 enum MovementType
 {
@@ -136,6 +137,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     ObjectiveManager m_ObjectiveManager;
 
+
+    private void Awake()
+    {
+        GetComponentInChildren<RigBuilder>().Build();
+    }
     void Start()
     {
         m_MyView = GetComponent<PhotonView>();

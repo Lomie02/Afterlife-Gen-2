@@ -94,7 +94,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_Ability = GetComponent<SpecialstAbility>();
 
         m_Network = FindFirstObjectByType<NetworkLobby>();
-        m_HostGameSettings = GameObject.Find("MapSelection");
+        m_HostGameSettings = GameObject.Find("GameSettings");
         m_ReadyHost = GameObject.Find("ReadyUpHost").GetComponent<Button>();
 
         m_PlayersFlashLight.gameObject.SetActive(false);
@@ -164,7 +164,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
         m_SpecialistMenu = GameObject.Find("SpecialistMenu");
         m_PauseMenu = GameObject.Find("PauseMenu");
-        m_HostGameSettings = GameObject.Find("MapSelection");
+        m_HostGameSettings = GameObject.Find("GameSettings");
 
         m_GameManager = FindObjectOfType<GameManager>();
         m_Ability = GetComponent<SpecialstAbility>();

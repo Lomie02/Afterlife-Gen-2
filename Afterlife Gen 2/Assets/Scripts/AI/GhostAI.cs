@@ -20,7 +20,7 @@ struct GhostModelKit
     public string m_GhostName;
     public GameObject m_GhostObject;
 
-    public Material m_GhostsMaterial;
+    public Material[] m_GhostsMaterial;
 
     [Space]
     public RuntimeAnimatorController m_Controller;
@@ -112,9 +112,11 @@ public class GhostAI : MonoBehaviour
         m_GhostAnimation.avatar = m_GhostKits[_index].m_Avatar;
 
         if (!m_IsGhostRevealingTrueForm)
-            m_GhostKits[_index].m_GhostsMaterial.SetFloat("_AfterlifeForm", 0f); // false
+            for (int i = 0; i < m_GhostKits[_index].m_GhostsMaterial.Length; i++)
+                m_GhostKits[_index].m_GhostsMaterial[i].SetFloat("_AfterlifeForm", 0f); // false
         else
-            m_GhostKits[_index].m_GhostsMaterial.SetFloat("_AfterlifeForm", 1f); // True
+            for (int i = 0; i < m_GhostKits[_index].m_GhostsMaterial.Length; i++)
+                m_GhostKits[_index].m_GhostsMaterial[i].SetFloat("_AfterlifeForm", 1f); // True
 
     }
 
@@ -127,7 +129,8 @@ public class GhostAI : MonoBehaviour
     public void RPC_ShowGhostTrueForm()
     {
         m_IsGhostRevealingTrueForm = true;
-        m_GhostKits[m_CurrentGhostKitActive].m_GhostsMaterial.SetFloat("_AfterlifeForm", 1f); // True
+        for (int i = 0; i < m_GhostKits[m_CurrentGhostKitActive].m_GhostsMaterial.Length; i++)
+            m_GhostKits[m_CurrentGhostKitActive].m_GhostsMaterial[i].SetFloat("_AfterlifeForm", 1f); // True
     }
 
     void Update() // Entire AI Is going to only be controlled on the Hosts side. 

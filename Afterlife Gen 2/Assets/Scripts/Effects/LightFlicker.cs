@@ -15,21 +15,29 @@ public class LightFlicker : MonoBehaviour
         m_LightObject = GetComponent<Light>();
         m_DefaultIntensity = m_LightObject.intensity;
         m_LowIntensity = m_DefaultIntensity / 2;
-    }
-    void FixedUpdate()
-    {
-        if (m_IsEnabled)
-        {
-            int rand = Random.Range(0, 8);
 
-            if (rand == 2 || rand == 4)
+        StartCoroutine(UpdateFlickerEffect());
+    }
+
+    IEnumerator UpdateFlickerEffect()
+    {
+        while (true)
+        {
+            if (m_IsEnabled)
             {
-                m_LightObject.intensity = m_LowIntensity;
+                int rand = Random.Range(0, 8);
+
+                if (rand == 2 || rand == 4)
+                {
+                    m_LightObject.intensity = m_LowIntensity;
+                }
+                else
+                {
+                    m_LightObject.intensity = m_DefaultIntensity;
+                }
             }
-            else
-            {
-                m_LightObject.intensity = m_DefaultIntensity;
-            }
+
+            yield return new WaitForSeconds(0.5f);
         }
     }
 

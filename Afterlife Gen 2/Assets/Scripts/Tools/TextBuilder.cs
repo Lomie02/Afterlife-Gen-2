@@ -9,7 +9,6 @@ public class TextBuilder : MonoBehaviour
     string m_OriginalTextContent;
 
     bool m_Displaytext = false;
-    float m_TimerForDisplayDuration = 0.05f;
     int m_CurrentLetter = 0;
 
     void Start()
@@ -22,24 +21,22 @@ public class TextBuilder : MonoBehaviour
 
         m_CurrentLetter = 0;
         m_Displaytext = true;
+
+        StartCoroutine(UpdateTextLetters());
     }
 
     // Update is called once per frame
-    void Update()
+    IEnumerator UpdateTextLetters()
     {
-        if (!m_Displaytext) return;
-
-        m_TimerForDisplayDuration -= Time.deltaTime;
-        if (m_TimerForDisplayDuration <= 0)
+        while (m_Displaytext)
         {
-            if (m_CurrentLetter >= m_OriginalTextContent.Length)
-                m_Displaytext = false;
-
-            m_TimerForDisplayDuration = 0.05f;
+            if (m_CurrentLetter == m_OriginalTextContent.Length - 1)
+                m_Displaytext = false; this.enabled = false; yield return null;
 
             m_TextObject.text += m_OriginalTextContent[m_CurrentLetter];
             m_CurrentLetter++;
-        }
 
+            yield return new WaitForSeconds(0.1f);
+        }
     }
 }

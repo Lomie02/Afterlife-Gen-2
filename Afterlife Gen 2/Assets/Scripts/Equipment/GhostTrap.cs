@@ -47,7 +47,7 @@ public class GhostTrap : MonoBehaviour
     bool m_EnteredTheAfterlife = false;
     float m_ZapTimer;
     float m_ZapTimerDuration = 5;
-
+    Light m_MoonDirectional;
     private void Start()
     {
 
@@ -63,6 +63,8 @@ public class GhostTrap : MonoBehaviour
 
         m_ZapParticle.SetActive(false);
         m_GhostObject = FindAnyObjectByType<GhostAI>();
+
+        m_MoonDirectional = GameObject.Find("MoonLight").GetComponent<Light>();
 
         StartCoroutine(UpdateGhostTrap());
     }
@@ -168,6 +170,8 @@ public class GhostTrap : MonoBehaviour
         GameObject[] m_Players = GameObject.FindGameObjectsWithTag("Player");
 
         m_EnteredTheAfterlife = true;
+        m_MoonDirectional.color = Color.red;
+
         for (int i = 0; i < m_Players.Length; i++)
         {
             m_Players[i].GetComponent<PlayerController>().EnterTheAfterlife();
@@ -186,6 +190,8 @@ public class GhostTrap : MonoBehaviour
 
     public void UpdateTrapsMode()
     {
+        if(!m_PowerManager)
+
         if (!m_PowerManager.GetPowerState())
             m_TrapsMode = TrapMode.Needs_Power;
         else

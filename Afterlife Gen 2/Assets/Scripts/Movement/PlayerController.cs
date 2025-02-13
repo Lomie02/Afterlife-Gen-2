@@ -137,7 +137,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     ObjectiveManager m_ObjectiveManager;
 
-
     private void Awake()
     {
         GetComponentInChildren<RigBuilder>().Build();
@@ -215,51 +214,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         m_PlayersCamera.cullingMask = m_AfterlifeRealmMask;
 
-    }
-    public void SetFirstPerson(bool _state)
-    {
-        if (_state)
-        {
-            if (m_BodyMaterial)
-                m_BodyMaterial.material.SetInt("_UseBodyMask", 1);
-
-            if (m_FirstPersonViewModel)
-                m_FirstPersonViewModel.SetActive(true);
-
-            foreach (Renderer FirstPersonChildObjects in m_FirstPersonMaskedItems.transform.GetComponentsInChildren<Renderer>(true)) // Set all objects to render only as shadow.
-            {
-                FirstPersonChildObjects.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
-            }
-
-            foreach (ParticleSystem FirstPersonChildObjects in m_FirstPersonMaskedItems.transform.GetComponentsInChildren<ParticleSystem>(true)) // Set all Particles to be on the default layer
-            {
-                FirstPersonChildObjects.gameObject.layer = 7; // Default Layer
-            }
-
-            m_FIrstPersonRenderTexture.gameObject.SetActive(true);
-
-        }
-        else
-        {
-            if (m_BodyMaterial)
-                m_BodyMaterial.material.SetInt("_UseBodyMask", 0);
-
-            if (m_FirstPersonViewModel)
-                m_FirstPersonViewModel.SetActive(false);
-
-            foreach (Renderer FirstPersonChildObjects in m_FirstPersonMaskedItems.transform.GetComponentsInChildren<Renderer>(true)) // Set all objects to render normally.
-            {
-                FirstPersonChildObjects.shadowCastingMode = ShadowCastingMode.On;
-            }
-
-
-
-            foreach (ParticleSystem FirstPersonChildObjects in m_FirstPersonMaskedItems.transform.GetComponentsInChildren<ParticleSystem>(true)) // Set all Particles to be on the default layer
-            {
-                FirstPersonChildObjects.gameObject.layer = 0; // Default Layer
-            }
-            m_FIrstPersonRenderTexture.gameObject.SetActive(false);
-        }
     }
 
     public PhotonView GetPlayersPhotonView()

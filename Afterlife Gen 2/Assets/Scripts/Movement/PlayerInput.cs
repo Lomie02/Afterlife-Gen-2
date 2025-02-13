@@ -78,6 +78,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     float m_FramesPassedForHover;
     float m_MxFramesForHover = 10;
 
+    SettingsPreferenceManager m_SettingsPreferenceManager;
     void Start()
     {
         //SearchForElements();
@@ -94,7 +95,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_Ability = GetComponent<SpecialstAbility>();
 
         m_Network = FindFirstObjectByType<NetworkLobby>();
-        m_HostGameSettings = GameObject.Find("MapSelection");
+        m_HostGameSettings = GameObject.Find("GameSettings");
         m_ReadyHost = GameObject.Find("ReadyUpHost").GetComponent<Button>();
 
         m_PlayersFlashLight.gameObject.SetActive(false);
@@ -111,18 +112,23 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
         m_VoiceRecorder = GetComponent<Recorder>();
 
+        m_SettingsPreferenceManager = GetComponentInChildren<SettingsPreferenceManager>();
 
-        m_PauseMenu.SetActive(false);
         m_TextChatManager = GetComponentInChildren<TextChatManager>();
         m_TextChatManager.SetChatDisplay(false);
 
+        m_SettingsPreferenceManager.ApplyAllDataSettings();
+        m_SettingsPreferenceManager.gameObject.SetActive(false); 
         m_SpecialistMenu.SetActive(false);
+
+        m_PauseMenu.SetActive(false);
         if (m_ReadyHost)
         {
             m_ReadyHost.onClick.AddListener(m_ReadyUp.ReadyUpHost);
             m_ReadyHost.onClick.AddListener(delegate { m_HostGameSettings.SetActive(false); });
             m_ReadyHost.onClick.AddListener(delegate { m_MyController.SetMovement(true); });
             m_ReadyHost.onClick.AddListener(delegate { m_MyCamera.MouseLockState(true); });
+
         }
 
         if (m_MyView.IsMine && m_LoadingScreenMaps)
@@ -164,7 +170,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
         m_SpecialistMenu = GameObject.Find("SpecialistMenu");
         m_PauseMenu = GameObject.Find("PauseMenu");
-        m_HostGameSettings = GameObject.Find("MapSelection");
+        m_HostGameSettings = GameObject.Find("GameSettings");
 
         m_GameManager = FindObjectOfType<GameManager>();
         m_Ability = GetComponent<SpecialstAbility>();
@@ -235,150 +241,143 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        if (m_MyView.IsMine)
+        if (!m_MyView.IsMine) return;
+
+        if (Input.GetKey(KeyCode.E) && IsLookingAtReviveTarget()) // revive player
         {
-            if (Input.GetKey(KeyCode.E) && IsLookingAtReviveTarget()) // revive player
+            m_ReviveTimer -= Time.deltaTime;
+            m_ReviveProgressBar.value += Time.deltaTime;
+            m_ReviveProgressBar.gameObject.SetActive(true);
+
+            if (m_ReviveTimer <= 0)
             {
-                m_ReviveTimer -= Time.deltaTime;
-                m_ReviveProgressBar.value += Time.deltaTime;
-                m_ReviveProgressBar.gameObject.SetActive(true);
-
-                if (m_ReviveTimer <= 0)
+                RaycastHit m_Cast;
+                if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_Cast, 2f))
                 {
-                    RaycastHit m_Cast;
-                    if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_Cast, 2f))
-                    {
-                        if (m_Cast.collider.GetComponent<PlayerController>() && !m_Cast.collider.GetComponent<PhotonView>().IsMine)
-                            m_Cast.collider.GetComponent<PlayerController>().GetPlayersPhotonView().RPC("RPC_RevivePlayer", RpcTarget.All);
+                    if (m_Cast.collider.GetComponent<PlayerController>() && !m_Cast.collider.GetComponent<PhotonView>().IsMine)
+                        m_Cast.collider.GetComponent<PlayerController>().GetPlayersPhotonView().RPC("RPC_RevivePlayer", RpcTarget.All);
 
-                    }
                 }
             }
-            else
-            {
-                m_ReviveTimer = m_ReviveDuration;
-                m_ReviveProgressBar.value = 0;
-                m_ReviveProgressBar.gameObject.SetActive(false);
-            }
-
-            // Voice Chat
-            if (Input.GetKey(KeyCode.V) && !m_MyController.IsPlayerDead())
-                m_VoiceRecorder.TransmitEnabled = true;
-            else
-                m_VoiceRecorder.TransmitEnabled = false;
-
-            // Text Chat
-            if (Input.GetKeyDown(KeyCode.T) && m_PlayersFlashLight.gameObject.activeSelf && !m_TextChatManager.IsTextChatShowing())
-            {
-                if (m_isLighterOpen)
-                {
-                    m_PlayersFlashLight.TurnOff();
-                    m_isLighterOpen = false;
-
-                }
-                else
-                {
-                    m_PlayersFlashLight.TurnOn();
-                    m_isLighterOpen = true;
-                }
-
-                m_LighterAnimator.SetBool("IsOpened", m_isLighterOpen);
-            }
-
-            if (Input.GetKeyDown(KeyCode.F) && !m_TextChatManager.IsTextChatShowing())
-            {
-                if (m_PlayersFlashLight.gameObject.activeSelf)
-                {
-
-                    m_PlayersFlashLight.RPC_SetObjectState(false);
-                    m_PlayersFlashLight.TurnOff();
-                    m_isLighterOpen = false;
-                }
-                else
-                {
-                    m_PlayersFlashLight.RPC_SetObjectState(true);
-                }
-            }
-
-            if (Input.GetKeyDown(KeyCode.R) && !m_TextChatManager.IsTextChatShowing())
-            {
-                m_Inventory.DropItemsOnPerson();
-            }
-
-            if (Input.GetKey(KeyCode.Tab) && !m_TextChatManager.IsTextChatShowing())
-                m_ScoreBoard.gameObject.SetActive(true);
-            else
-                m_ScoreBoard.gameObject.SetActive(false);
-
-            m_MyView.RPC("RPC_UpdatePlayerFlashlight", RpcTarget.All); //Update Players flashlight lerp over network too.
-
-            // bring up pause menu
-            if (Input.GetKeyDown(KeyCode.Escape) && m_PauseMenu && !m_IsPaused && !m_TextChatManager.IsTextChatShowing())
-            {
-                m_PauseMenu.SetActive(true);
-                m_IsPaused = true;
-
-                m_MyCamera.MouseLockState(false);
-                m_MyController.SetMovement(false);
-            }
-
-            if (Input.GetKeyDown(KeyCode.Return) && !m_TextChatManager.IsTextChatShowing())
-            {
-                m_TextChatManager.SetChatDisplay(true);
-                m_MyCamera.MouseLockState(false);
-                m_MyController.SetMovement(false);
-            }
-            else if (Input.GetKeyDown(KeyCode.Escape) && m_TextChatManager.IsTextChatShowing())
-            {
-                m_TextChatManager.SetChatDisplay(false);
-                m_MyCamera.MouseLockState(true);
-                m_MyController.SetMovement(true);
-            }
-
-            if (Input.GetKeyDown(KeyCode.Return) && m_TextChatManager.IsTextChatShowing())
-                m_TextChatManager.SendTextChatMessage();
-
-            // Use ultimate
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                m_Ability.UseAbility();
-            }
-
-            if (Input.GetKeyDown(KeyCode.Mouse0))
-            {
-                if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_ItemCast, 3f))
-                {
-                    if (m_ItemCast.collider.GetComponent<NetworkObject>() != null)
-                    {
-                        m_ItemCast.collider.GetComponent<NetworkObject>().CyclePowerStage();
-                    }
-                }
-            }
-
-            float previousDelta = Input.mouseScrollDelta.y * 0.06f;
-
-            if (Input.mouseScrollDelta.y != previousDelta)
-            {
-                m_Inventory.CycleInvetory();
-            }
-
-            if (Input.GetKeyDown(KeyCode.Mouse1) && m_Inventory.IsCurrentSlotTaken())
-            {
-                m_Inventory.CycleCurrentItemsPower();
-            }
-
-            if (Input.GetKeyDown(KeyCode.G) && m_Inventory.IsCurrentSlotTaken())
-            {
-                m_Inventory.DropItem();
-            }
-
-            // Item Pick up/ Interactions
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                CheckForItem();
-            }
-
         }
+        else
+        {
+            m_ReviveTimer = m_ReviveDuration;
+            m_ReviveProgressBar.value = 0;
+            m_ReviveProgressBar.gameObject.SetActive(false);
+        }
+
+        // Voice Chat
+        if (Input.GetKey(KeyCode.V) && !m_MyController.IsPlayerDead())
+            m_VoiceRecorder.TransmitEnabled = true;
+        else
+            m_VoiceRecorder.TransmitEnabled = false;
+
+        // Text Chat
+        if (Input.GetKeyDown(KeyCode.T) && m_PlayersFlashLight.gameObject.activeSelf && !m_TextChatManager.IsTextChatShowing())
+        {
+            if (m_isLighterOpen)
+            {
+                m_PlayersFlashLight.TurnOff();
+                m_isLighterOpen = false;
+
+            }
+            else
+            {
+                m_PlayersFlashLight.TurnOn();
+                m_isLighterOpen = true;
+            }
+
+            m_LighterAnimator.SetBool("IsOpened", m_isLighterOpen);
+        }
+
+        if (Input.GetKeyDown(KeyCode.F) && !m_TextChatManager.IsTextChatShowing())
+        {
+            if (m_PlayersFlashLight.gameObject.activeSelf)
+            {
+
+                m_PlayersFlashLight.RPC_SetObjectState(false);
+                m_PlayersFlashLight.TurnOff();
+                m_isLighterOpen = false;
+            }
+            else
+            {
+                m_PlayersFlashLight.RPC_SetObjectState(true);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.R) && !m_TextChatManager.IsTextChatShowing())
+        {
+            m_Inventory.DropItemsOnPerson();
+        }
+
+        if (Input.GetKey(KeyCode.Tab) && !m_TextChatManager.IsTextChatShowing())
+            m_ScoreBoard.gameObject.SetActive(true);
+        else
+            m_ScoreBoard.gameObject.SetActive(false);
+
+        m_MyView.RPC("RPC_UpdatePlayerFlashlight", RpcTarget.All); //Update Players flashlight lerp over network too.
+
+        // bring up pause menu
+        if (Input.GetKeyDown(KeyCode.Escape) && m_PauseMenu && !m_IsPaused && !m_TextChatManager.IsTextChatShowing())
+        {
+            m_PauseMenu.SetActive(true);
+            m_IsPaused = true;
+
+            m_MyCamera.MouseLockState(false);
+            m_MyController.SetMovement(false);
+        }
+        else if (Input.GetKeyDown(KeyCode.Return) && !m_TextChatManager.IsTextChatShowing())
+        {
+            m_TextChatManager.SetChatDisplay(true);
+            m_MyCamera.MouseLockState(false);
+            m_MyController.SetMovement(false);
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape) && m_TextChatManager.IsTextChatShowing())
+        {
+            m_TextChatManager.SetChatDisplay(false);
+            m_MyCamera.MouseLockState(true);
+            m_MyController.SetMovement(true);
+        }
+
+        else if (Input.GetKeyDown(KeyCode.Return) && m_TextChatManager.IsTextChatShowing())
+            m_TextChatManager.SendTextChatMessage();
+
+        else if (Input.GetKeyDown(KeyCode.Q))
+        {
+            m_Ability.UseAbility();
+        }
+        else if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_ItemCast, 3f))
+            {
+                if (m_ItemCast.collider.GetComponent<NetworkObject>() != null)
+                {
+                    m_ItemCast.collider.GetComponent<NetworkObject>().CyclePowerStage();
+                }
+            }
+        }
+
+        float previousDelta = Input.mouseScrollDelta.y * 0.06f;
+
+        if (Input.mouseScrollDelta.y != previousDelta)
+        {
+            m_Inventory.CycleInvetory();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Mouse1) && m_Inventory.IsCurrentSlotTaken())
+        {
+            m_Inventory.CycleCurrentItemsPower();
+        }
+        else if (Input.GetKeyDown(KeyCode.G) && m_Inventory.IsCurrentSlotTaken())
+        {
+            m_Inventory.DropItem();
+        }
+        // Item Pick up/ Interactions
+        else if (Input.GetKeyDown(KeyCode.E))
+        {
+            CheckForItem();
+        }
+
     }
 
     [PunRPC]
@@ -452,7 +451,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                     m_UseImage.gameObject.SetActive(false);
                 }
             }
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1f);
         }
     }
 

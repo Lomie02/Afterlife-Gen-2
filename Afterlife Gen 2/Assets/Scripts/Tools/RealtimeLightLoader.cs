@@ -20,7 +20,7 @@ public class RealtimeLightLoader : MonoBehaviour
 
     Light[] m_RealtimeLights;
     MeshRenderer[] m_MeshRenderersInScene;
-    float m_MaxDistanceFromCamera = 10;
+    float m_MaxDistanceFromCamera = 9;
 
     float m_FramesCheckLimit = 5;
     float m_FramesPassed;

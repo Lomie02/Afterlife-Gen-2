@@ -26,8 +26,7 @@ public class ObjectiveManager : MonoBehaviour
 
     private void Start()
     {
-        gameObject.AddComponent<PhotonView>();
-
+        m_MyPhotonView = GetComponent<PhotonView>();
     }
 
     public void SubmitObjectiveInterface(GameObject _obj, Text _ObjectiveTitle, Text _objectiveTaskText)

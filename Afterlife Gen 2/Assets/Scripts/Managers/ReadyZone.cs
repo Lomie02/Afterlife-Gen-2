@@ -30,6 +30,8 @@ public class ReadyZone : MonoBehaviour
     PhotonView m_View;
     bool m_StopAcceptingPlayers = false;
 
+    MapListManager m_MapListManager;
+
     private void Start()
     {
         if (m_ReadyZoneMode == ReadyZoneMode.Lobby)
@@ -37,6 +39,8 @@ public class ReadyZone : MonoBehaviour
             if (!PhotonNetwork.IsMasterClient)
                 m_MonitorFlare.SetActive(false);
         }
+
+        m_MapListManager = FindAnyObjectByType<MapListManager>();
 
         m_View = GetComponent<PhotonView>();
         m_GameManager = FindAnyObjectByType<GameManager>();
@@ -95,7 +99,7 @@ public class ReadyZone : MonoBehaviour
                     m_View.RPC("RPC_ReadyUP", RpcTarget.All);
 
                     m_View.RPC("RPC_DisplayLoadingScreen", RpcTarget.All);
-                    m_GameManager.ChangeNetworkScene("mansion_mp");
+                    m_GameManager.ChangeNetworkScene(m_MapListManager.GetMapProfileData().m_MapSceneName);
                 }
                 break;
 

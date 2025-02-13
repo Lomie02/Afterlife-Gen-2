@@ -85,7 +85,10 @@ public class NetworkObject : MonoBehaviourPunCallbacks
         m_ItemsBody = GetComponent<Rigidbody>();
         m_MyView = GetComponent<PhotonView>();
 
-        StartCoroutine(CheckVelocity());
+        if (!m_ItemsBody.isKinematic)
+        {
+            StartCoroutine(CheckVelocity());
+        }
     }
 
     IEnumerator CheckVelocity()

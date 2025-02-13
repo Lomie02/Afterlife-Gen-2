@@ -78,6 +78,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     float m_FramesPassedForHover;
     float m_MxFramesForHover = 10;
 
+    SettingsPreferenceManager m_SettingsPreferenceManager;
     void Start()
     {
         //SearchForElements();
@@ -111,18 +112,22 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
         m_VoiceRecorder = GetComponent<Recorder>();
 
+        m_SettingsPreferenceManager = GetComponentInChildren<SettingsPreferenceManager>();
 
-        m_PauseMenu.SetActive(false);
         m_TextChatManager = GetComponentInChildren<TextChatManager>();
         m_TextChatManager.SetChatDisplay(false);
 
+        m_SettingsPreferenceManager.ApplyAllDataSettings();
         m_SpecialistMenu.SetActive(false);
+
+        m_PauseMenu.SetActive(false);
         if (m_ReadyHost)
         {
             m_ReadyHost.onClick.AddListener(m_ReadyUp.ReadyUpHost);
             m_ReadyHost.onClick.AddListener(delegate { m_HostGameSettings.SetActive(false); });
             m_ReadyHost.onClick.AddListener(delegate { m_MyController.SetMovement(true); });
             m_ReadyHost.onClick.AddListener(delegate { m_MyCamera.MouseLockState(true); });
+
         }
 
         if (m_MyView.IsMine && m_LoadingScreenMaps)

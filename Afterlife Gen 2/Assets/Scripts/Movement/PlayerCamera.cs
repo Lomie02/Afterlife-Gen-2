@@ -17,6 +17,8 @@ public class PlayerCamera : MonoBehaviour
     float m_Yview;
 
     bool m_CanLookAround = true;
+
+    SettingsPreferenceManager m_SettingsPreferenceManager;
     public void Start()
     {
         m_MyView = GetComponent<PhotonView>();
@@ -32,6 +34,12 @@ public class PlayerCamera : MonoBehaviour
         {
             if (PlayerPrefs.HasKey("player_settings_mouse"))
                 m_Sens = PlayerPrefs.GetFloat("player_settings_mouse");
+
+            m_SettingsPreferenceManager = GetComponentInChildren<SettingsPreferenceManager>();
+
+            UpdateRelSettings();
+
+            m_SettingsPreferenceManager.m_OnSettingsApplied.AddListener(UpdateRelSettings);
 
             NetworkWorldCameraHud[] m_Canvases = FindObjectsOfType<NetworkWorldCameraHud>();
 
@@ -49,6 +57,12 @@ public class PlayerCamera : MonoBehaviour
         }
 
 
+    }
+
+    void UpdateRelSettings()
+    {
+        m_Sens = m_SettingsPreferenceManager.FetchMouseSens();
+        m_PlayersCamera.fieldOfView = m_SettingsPreferenceManager.FetchFieldofView();
     }
 
     IEnumerator UpdateCamera()

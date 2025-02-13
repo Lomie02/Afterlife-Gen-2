@@ -118,6 +118,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_TextChatManager.SetChatDisplay(false);
 
         m_SettingsPreferenceManager.ApplyAllDataSettings();
+        m_SettingsPreferenceManager.gameObject.SetActive(false); 
         m_SpecialistMenu.SetActive(false);
 
         m_PauseMenu.SetActive(false);

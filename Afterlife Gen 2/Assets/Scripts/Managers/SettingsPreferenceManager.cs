@@ -103,6 +103,24 @@ public class SettingsPreferenceManager : MonoBehaviour
             // TODO: Figure out how this should work with dropdowns.
         }
     }
+    public void ApplyAllDataSettings()
+    {
+        for (int i = 0; i < m_InterfaceElement.Length; i++)
+        {
+            switch (m_InterfaceElement[i].m_ElementType)
+            {
+                case UiElementType.Slider:
+                    PlayerPrefs.SetFloat(m_InterfaceElement[i].m_DataFileName, m_InterfaceElement[i].m_Slider.value);
+                    break;
+
+                case UiElementType.Dropdown:
+                    PlayerPrefs.SetInt(m_InterfaceElement[i].m_DataFileName, m_InterfaceElement[i].m_Dropmenu.value);
+                    break;
+            }
+        }
+
+        m_OnSettingsApplied.Invoke();
+    }
 
     // Get mouse sens
     public float FetchMouseSens()
@@ -129,23 +147,16 @@ public class SettingsPreferenceManager : MonoBehaviour
         return 0f;
     }
 
-    public void ApplyAllDataSettings()
+    public int FetchGraphicSettings()
     {
         for (int i = 0; i < m_InterfaceElement.Length; i++)
         {
-            switch (m_InterfaceElement[i].m_ElementType)
+            if (m_InterfaceElement[i].m_ElementType == UiElementType.Dropdown && m_InterfaceElement[i].m_Name == "Graphics")
             {
-                case UiElementType.Slider:
-                    PlayerPrefs.SetFloat(m_InterfaceElement[i].m_DataFileName, m_InterfaceElement[i].m_Slider.value);
-                    break;
-
-                case UiElementType.Dropdown:
-                    PlayerPrefs.SetInt(m_InterfaceElement[i].m_DataFileName, m_InterfaceElement[i].m_Dropmenu.value);
-                    break;
+                return m_InterfaceElement[i].m_Dropmenu.value;
             }
         }
-
-        m_OnSettingsApplied.Invoke();
+        return 0;
     }
 
 }

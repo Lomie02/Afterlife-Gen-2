@@ -50,15 +50,20 @@ public class NetworkObject : MonoBehaviourPunCallbacks
     // Important
     bool m_IsItemOn = false;
 
+    float m_Threshold = 0.05f;
+    float m_IdleTime = 0;
+    float m_IdleDuration = 2;
+
     public ItemID GetItemID()
     {
         return m_ItemsId;
     }
+
     private static byte[] JoinBytes(params byte[][] _arrays)
     {
         byte[] rv = new byte[_arrays.Sum(a => a.Length)];
         int offset = 0;
-        foreach(byte[] array in _arrays)
+        foreach (byte[] array in _arrays)
         {
             System.Buffer.BlockCopy(array, 0, rv, offset, array.Length);
             offset += array.Length;
@@ -80,6 +85,33 @@ public class NetworkObject : MonoBehaviourPunCallbacks
         m_ItemsBody = GetComponent<Rigidbody>();
         m_MyView = GetComponent<PhotonView>();
 
+        StartCoroutine(CheckVelocity());
+    }
+
+    IEnumerator CheckVelocity()
+    {
+        while (true)
+        {
+            if (m_ItemsBody.linearVelocity.magnitude < m_Threshold && m_ItemsBody.angularVelocity.magnitude > m_Threshold)
+            {
+                m_IdleTime += Time.deltaTime;
+                if (m_IdleTime >= m_IdleDuration && !m_ItemsBody.isKinematic)
+                {
+                    m_ItemsBody.isKinematic = true;
+                }
+            }
+            else
+            {
+                m_IdleTime = 0f;
+                if (m_ItemsBody.isKinematic)
+                {
+                    m_ItemsBody.isKinematic = false;
+                }
+            }
+
+
+            yield return new WaitForSeconds(1.5f);
+        }
     }
 
     [PunRPC]
@@ -180,4 +212,6 @@ public class NetworkObject : MonoBehaviourPunCallbacks
     {
         return m_WeightLayer;
     }
+
+
 }

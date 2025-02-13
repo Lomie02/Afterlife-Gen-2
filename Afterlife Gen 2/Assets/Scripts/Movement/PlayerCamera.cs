@@ -6,7 +6,7 @@ using Photon.Pun;
 public class PlayerCamera : MonoBehaviour
 {
     [SerializeField] Camera m_PlayersCamera;
-    [SerializeField] float m_Sens = 100;
+    [SerializeField] float m_Sens = 200;
 
     [SerializeField] Transform m_Body;
 
@@ -30,6 +30,9 @@ public class PlayerCamera : MonoBehaviour
 
         if (m_MyView)
         {
+            if (PlayerPrefs.HasKey("player_settings_mouse"))
+                m_Sens = PlayerPrefs.GetFloat("player_settings_mouse");
+
             NetworkWorldCameraHud[] m_Canvases = FindObjectsOfType<NetworkWorldCameraHud>();
 
             for (int i = 0; i < m_Canvases.Length; i++)
@@ -41,26 +44,32 @@ public class PlayerCamera : MonoBehaviour
                     break;
                 }
             }
-
+            MouseLockState(true);
+            StartCoroutine(UpdateCamera());
         }
 
-        MouseLockState(true);
+
     }
 
-    void Update()
+    IEnumerator UpdateCamera()
     {
-        if (m_MyView.IsMine && m_CanLookAround)
+        while (true)
         {
-            float xPos = Input.GetAxis("Mouse X") * m_Sens * Time.deltaTime;
-            float yPos = Input.GetAxis("Mouse Y") * m_Sens * Time.deltaTime;
+            if (m_CanLookAround)
+            {
+                float xPos = Input.GetAxis("Mouse X") * m_Sens * Time.deltaTime;
+                float yPos = Input.GetAxis("Mouse Y") * m_Sens * Time.deltaTime;
 
-            m_Xview += xPos;
-            m_Yview -= yPos;
-            m_Body.Rotate(Vector3.up, xPos);
+                m_Xview += xPos;
+                m_Yview -= yPos;
+                m_Body.Rotate(Vector3.up, xPos);
 
-            m_Yview = Mathf.Clamp(m_Yview, -30, 62);
+                m_Yview = Mathf.Clamp(m_Yview, -30, 62);
 
-            m_PlayersCamera.transform.localEulerAngles = new Vector3(m_Yview, 0, 0);
+                m_PlayersCamera.transform.localEulerAngles = new Vector3(m_Yview, 0, 0);
+            }
+
+            yield return new WaitForEndOfFrame();
         }
     }
 

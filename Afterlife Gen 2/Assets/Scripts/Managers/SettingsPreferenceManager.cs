@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -31,6 +32,15 @@ public class SettingsPreferenceManager : MonoBehaviour
 
     [SerializeField] UiElement[] m_InterfaceElement;
     public UnityEvent m_OnSettingsApplied;
+    float m_Fps;
+
+    [Header("System Details")]
+    [SerializeField] Text m_Processor;
+    [SerializeField] Text m_GraphicsCard;
+    [SerializeField] Text m_VirtualRam;
+
+    int m_TotalVirtualRam;
+    long m_VirtualRamUsedInMemory;
 
     void Awake()
     {
@@ -39,8 +49,25 @@ public class SettingsPreferenceManager : MonoBehaviour
             m_Pages[i].SetActive(false);
         }
 
+
+        if (PlayerPrefs.HasKey("settings_fps"))
+        {
+            StartCoroutine(DisplayFps());
+        }
+
         SetUpPrefEvents(true);
     }
+
+    IEnumerator DisplayFps()
+    {
+        while (true)
+        {
+            m_Fps = 1.0f / Time.deltaTime;
+            Debug.Log("FPS: " + Mathf.Ceil(m_Fps));
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+
     void SetUpPrefEvents(bool _IncludeElementSetUp = false)
     {
         if (!_IncludeElementSetUp)
@@ -84,6 +111,8 @@ public class SettingsPreferenceManager : MonoBehaviour
                 }
             }
         }
+
+        UpdateSystemDetails();
     }
 
     // Updates the live values from text without complex headaches
@@ -116,9 +145,11 @@ public class SettingsPreferenceManager : MonoBehaviour
                 case UiElementType.Dropdown:
                     PlayerPrefs.SetInt(m_InterfaceElement[i].m_DataFileName, m_InterfaceElement[i].m_Dropmenu.value);
                     break;
+
             }
         }
 
+        UpdateSystemDetails();
         m_OnSettingsApplied.Invoke();
     }
 
@@ -157,6 +188,16 @@ public class SettingsPreferenceManager : MonoBehaviour
             }
         }
         return 0;
+    }
+
+    public void UpdateSystemDetails()
+    {
+        m_Processor.text = SystemInfo.processorType.ToString();
+        m_GraphicsCard.text = SystemInfo.graphicsDeviceName.ToString();
+
+        m_TotalVirtualRam = SystemInfo.graphicsMemorySize;
+        m_VirtualRamUsedInMemory = UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong() / (1024 * 1024);
+        m_VirtualRam.text = "VRAM: " + m_VirtualRamUsedInMemory + " MB / " + m_TotalVirtualRam + " MB";
     }
 
 }

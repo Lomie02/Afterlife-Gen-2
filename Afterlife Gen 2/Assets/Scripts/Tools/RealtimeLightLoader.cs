@@ -57,6 +57,8 @@ public class RealtimeLightLoader : MonoBehaviour
                 if (m_OptimizationMode == RealtimeLightMode.UltraOptimized)
                     light.GetComponent<HDAdditionalLightData>().shadowUpdateMode = ShadowUpdateMode.OnDemand;
             }
+
+            light.shadows = LightShadows.Hard;
         }
     }
 

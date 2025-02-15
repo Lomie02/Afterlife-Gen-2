@@ -488,7 +488,7 @@ PlayerSettings:
       m_SubKind: 
   m_BuildTargetBatching:
   - m_BuildTarget: Standalone
-    m_StaticBatching: 0
+    m_StaticBatching: 1
     m_DynamicBatching: 0
   m_BuildTargetShaderSettings: []
   m_BuildTargetGraphicsJobs:
@@ -854,7 +854,8 @@ PlayerSettings:
     tvOS: PHOTON_UNITY_NETWORKING;PUN_2_0_OR_NEWER;PUN_2_OR_NEWER;PUN_2_19_OR_NEWER
   additionalCompilerArguments: {}
   platformArchitecture: {}
-  scriptingBackend: {}
+  scriptingBackend:
+    Standalone: 1
   il2cppCompilerConfiguration: {}
   il2cppCodeGeneration: {}
   il2cppStacktraceInformation: {}

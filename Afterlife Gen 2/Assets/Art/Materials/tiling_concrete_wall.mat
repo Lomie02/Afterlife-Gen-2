@@ -29,11 +29,14 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _DISABLE_SSR_TRANSPARENT
+  - _DISPLACEMENT_LOCK_TILING_SCALE
   - _HEIGHTMAP
+  - _MAPPING_TRIPLANAR
   - _MASKMAP
-  - _MATERIAL_FEATURE_CLEAR_COAT
   - _NORMALMAP
   - _NORMALMAP_TANGENT_SPACE
+  - _PIXEL_DISPLACEMENT
+  - _PIXEL_DISPLACEMENT_LOCK_OBJECT_SCALE
   m_InvalidKeywords:
   - _TESSELLATION_PHONG
   m_LightmapFlags: 4
@@ -68,7 +71,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _CoatMaskMap:
-        m_Texture: {fileID: 2800000, guid: 8caa409af998f404a85af4e6919b1f18, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailMap:
@@ -96,11 +99,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskMap:
-        m_Texture: {fileID: 2800000, guid: d507b7f8ae7df3c49a3294095de329ac, type: 3}
+        m_Texture: {fileID: 2800000, guid: 1c01d85af95fca7448e2337194df41c3, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
-        m_Texture: {fileID: 2800000, guid: a691e2d779d5283429f09c46c4b47977, type: 3}
+        m_Texture: {fileID: 2800000, guid: 2e32bde11354334499a8922a51ecb75e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMapOS:
@@ -149,7 +152,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AORemapMax: 0.54062736
+    - _AORemapMax: 1
     - _AORemapMin: 0
     - _ATDistance: 1
     - _AddPrecomputedVelocity: 0
@@ -169,7 +172,7 @@ Material:
     - _CullMode: 2
     - _CullModeForward: 2
     - _Cutoff: 0.5
-    - _DepthOffsetEnable: 1
+    - _DepthOffsetEnable: 0
     - _DetailAlbedoScale: 1
     - _DetailNormalScale: 1
     - _DetailSmoothnessScale: 1
@@ -177,7 +180,7 @@ Material:
     - _DiffusionProfileHash: 0
     - _DisplacementLockObjectScale: 1
     - _DisplacementLockTilingScale: 1
-    - _DisplacementMode: 0
+    - _DisplacementMode: 2
     - _DoubleSidedEnable: 0
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 1
@@ -192,7 +195,7 @@ Material:
     - _EnableGeometricSpecularAA: 0
     - _EnergyConservingSpecularColor: 1
     - _HeightAmplitude: 0.02
-    - _HeightCenter: 0.5
+    - _HeightCenter: 1
     - _HeightMapParametrization: 0
     - _HeightMax: 1
     - _HeightMin: -1
@@ -200,7 +203,7 @@ Material:
     - _HeightPoMAmplitude: 2
     - _HeightTessAmplitude: 2
     - _HeightTessCenter: 0.445
-    - _InvTilingScale: 1
+    - _InvTilingScale: 2
     - _Ior: 1.5
     - _IridescenceMask: 1
     - _IridescenceThickness: 1
@@ -214,18 +217,18 @@ Material:
     - _ObjectSpaceUVMapping: 0
     - _ObjectSpaceUVMappingEmissive: 0
     - _OpaqueCullMode: 2
-    - _PPDLodThreshold: 5
-    - _PPDMaxSamples: 24
+    - _PPDLodThreshold: 10
+    - _PPDMaxSamples: 17
     - _PPDMinSamples: 5
-    - _PPDPrimitiveLength: 2
-    - _PPDPrimitiveWidth: 2
+    - _PPDPrimitiveLength: 5
+    - _PPDPrimitiveWidth: 5
     - _PerPixelSorting: 0
     - _RayTracing: 0
     - _ReceivesSSR: 1
     - _ReceivesSSRTransparent: 0
     - _RefractionModel: 0
     - _Smoothness: 0.5
-    - _SmoothnessRemapMax: 0.6295382
+    - _SmoothnessRemapMax: 0.5408163
     - _SmoothnessRemapMin: 0
     - _SpecularAAScreenSpaceVariance: 0.1
     - _SpecularAAThreshold: 0.2
@@ -251,7 +254,7 @@ Material:
     - _TessellationObjectScale: 1
     - _TessellationShapeFactor: 0.636
     - _TessellationTilingScale: 1
-    - _TexWorldScale: 1
+    - _TexWorldScale: 0.5
     - _TexWorldScaleEmissive: 1
     - _Thickness: 1
     - _TransmissionEnable: 1
@@ -263,7 +266,7 @@ Material:
     - _TransparentSortPriority: 0
     - _TransparentWritingMotionVec: 0
     - _TransparentZWrite: 0
-    - _UVBase: 0
+    - _UVBase: 5
     - _UVDetail: 0
     - _UVEmissive: 0
     - _UseEmissiveIntensity: 0
@@ -281,13 +284,13 @@ Material:
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissiveColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissiveColorLDR: {r: 0, g: 0, b: 0, a: 1}
-    - _InvPrimScale: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _InvPrimScale: {r: 0.2, g: 0.2, b: 0, a: 0}
     - _IridescenceThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _ThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
     - _TransmittanceColor: {r: 1, g: 1, b: 1, a: 1}
     - _UVDetailsMappingMask: {r: 1, g: 0, b: 0, a: 0}
-    - _UVMappingMask: {r: 1, g: 0, b: 0, a: 0}
+    - _UVMappingMask: {r: 0, g: 0, b: 0, a: 0}
     - _UVMappingMaskEmissive: {r: 1, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

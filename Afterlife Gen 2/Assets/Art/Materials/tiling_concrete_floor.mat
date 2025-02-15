@@ -13,12 +13,11 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _DISABLE_SSR_TRANSPARENT
-  - _MASKMAP
   - _NORMALMAP
   - _NORMALMAP_TANGENT_SPACE
   m_InvalidKeywords: []
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 2225
   stringTagMap: {}
@@ -77,7 +76,7 @@ Material:
         m_Scale: {x: 20, y: 20}
         m_Offset: {x: 0, y: 0}
     - _MaskMap:
-        m_Texture: {fileID: 2800000, guid: b1ddc5717498dbf419f22dac3e6d7ee7, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
@@ -163,6 +162,7 @@ Material:
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 1
     - _DstBlend: 0
+    - _DstBlend2: 0
     - _EmissiveColorMode: 1
     - _EmissiveExposureWeight: 1
     - _EmissiveIntensity: 1
@@ -187,7 +187,7 @@ Material:
     - _LinkDetailsWithBase: 1
     - _MaterialID: 1
     - _Metallic: 0
-    - _MetallicRemapMax: 1
+    - _MetallicRemapMax: 0.9744898
     - _MetallicRemapMin: 0
     - _NormalMapSpace: 0
     - _NormalScale: 1
@@ -199,11 +199,12 @@ Material:
     - _PPDMinSamples: 5
     - _PPDPrimitiveLength: 1
     - _PPDPrimitiveWidth: 1
+    - _PerPixelSorting: 0
     - _RayTracing: 0
     - _ReceivesSSR: 1
     - _ReceivesSSRTransparent: 0
     - _RefractionModel: 0
-    - _Smoothness: 0.5
+    - _Smoothness: 0.8
     - _SmoothnessRemapMax: 1
     - _SmoothnessRemapMin: 0
     - _SpecularAAScreenSpaceVariance: 0.1
@@ -260,6 +261,7 @@ Material:
     - _UVMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMaskEmissive: {r: 1, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!114 &4316572330695820420
 MonoBehaviour:
   m_ObjectHideFlags: 11

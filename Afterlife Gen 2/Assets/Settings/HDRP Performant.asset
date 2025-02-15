@@ -146,7 +146,7 @@ MonoBehaviour:
       maxDirectionalShadowMapResolution: 1024
       maxPunctualShadowMapResolution: 2048
       maxAreaShadowMapResolution: 2048
-      supportScreenSpaceShadows: 0
+      supportScreenSpaceShadows: 1
       maxScreenSpaceShadowSlots: 4
       screenSpaceShadowBufferFormat: 48
     decalSettings:
@@ -166,7 +166,7 @@ MonoBehaviour:
       enabled: 1
       useMipBias: 0
       advancedUpscalersByPriority: 00
-      DLSSPerfQualitySetting: 1
+      DLSSPerfQualitySetting: 0
       DLSSInjectionPoint: 0
       TAAUInjectionPoint: 0
       STPInjectionPoint: 0
@@ -182,7 +182,7 @@ MonoBehaviour:
       fsrSharpness: 0.92
       maxPercentage: 100
       minPercentage: 100
-      dynResType: 1
+      dynResType: 0
       upsampleFilter: 1
       forceResolution: 0
       forcedPercentage: 100
@@ -226,7 +226,7 @@ MonoBehaviour:
       ChromaticAberrationMaxSamples: 03000000060000000c000000
     lightSettings:
       useContactShadow:
-        m_Values: 000100
+        m_Values: 010000
         m_SchemaId:
           m_Id: 
     maximumLODLevel:

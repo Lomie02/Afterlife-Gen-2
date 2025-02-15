@@ -270,7 +270,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_BodyAnimations.SetFloat("xPos", m_AnimXPos);
         m_BodyAnimations.SetFloat("yPos", m_AnimYPos);
     }
-    void Update()
+    void LateUpdate()
     {
         if (!m_MyView.IsMine)
             return;

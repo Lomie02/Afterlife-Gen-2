@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] UnityEvent m_OnConfigure;
 
     float m_Fps;
+
     void Start()
     {
         m_OnConfigure.Invoke();
@@ -20,6 +21,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
+
         StartCoroutine(DisplayFps());
     }
 
@@ -51,6 +53,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             yield return new WaitForSeconds(0.5f);
         }
     }
+
     public override void OnDisconnected(DisconnectCause cause)
     {
         base.OnDisconnected(cause);

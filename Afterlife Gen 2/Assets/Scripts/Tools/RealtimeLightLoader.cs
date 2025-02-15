@@ -6,17 +6,17 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 
-enum RealtimeLightMode
+public enum RealtimeLightMode
 {
     UltraOptimized = 0,
     HighOptimized,
     MediumOptimized,
-    LowOptimize,
+    Off,
 }
 
 public class RealtimeLightLoader : MonoBehaviour
 {
-    RealtimeLightMode m_OptimizationMode = RealtimeLightMode.HighOptimized;
+    RealtimeLightMode m_OptimizationMode;
 
     Light[] m_RealtimeLights;
     MeshRenderer[] m_MeshRenderersInScene;
@@ -28,16 +28,28 @@ public class RealtimeLightLoader : MonoBehaviour
     public int m_RealtimeShadowsLimit = 5;
     public int m_CurrentRealtimeShadowsActive = 0;
 
+    public SettingsPreferenceManager m_SettingsPreferenceManager;
+
     [System.Obsolete]
     void Start()
     {
         // Collect all Realtime Light data
 
-        if (!GetComponent<PhotonView>().IsMine) this.enabled = false;
+        m_SettingsPreferenceManager = GetComponentInChildren<SettingsPreferenceManager>(true);
 
+        UpdateData();
+
+        m_SettingsPreferenceManager.m_OnSettingsApplied.AddListener(UpdateData);
         GrabLights();
 
         StartCoroutine(UpdateShadows());
+    }
+
+
+    void UpdateData()
+    {
+        m_OptimizationMode = m_SettingsPreferenceManager.FetchLoaderMode();
+        m_MaxDistanceFromCamera = m_SettingsPreferenceManager.FetchLoaderDistance();
     }
 
     [System.Obsolete]
@@ -50,15 +62,12 @@ public class RealtimeLightLoader : MonoBehaviour
         {
             if (light.type != LightType.Directional)
             {
-                light.shadows = LightShadows.None;
                 light.GetComponent<HDAdditionalLightData>().affectsVolumetric = false;
                 light.GetComponent<HDAdditionalLightData>().volumetricFadeDistance = 10f;
 
-                if (m_OptimizationMode == RealtimeLightMode.UltraOptimized)
+                if (m_OptimizationMode == RealtimeLightMode.UltraOptimized || m_OptimizationMode == RealtimeLightMode.HighOptimized)
                     light.GetComponent<HDAdditionalLightData>().shadowUpdateMode = ShadowUpdateMode.OnDemand;
             }
-
-            light.shadows = LightShadows.Hard;
         }
     }
 
@@ -73,13 +82,6 @@ public class RealtimeLightLoader : MonoBehaviour
                 float distanceFromCamera = Vector3.Distance(transform.position, light.transform.position);
                 if (distanceFromCamera <= m_MaxDistanceFromCamera)
                 {
-                    if (light.shadows == LightShadows.None && m_CurrentRealtimeShadowsActive < m_RealtimeShadowsLimit)
-                    {
-                        light.shadows = LightShadows.Hard;
-                        m_CurrentRealtimeShadowsActive++;
-                    }
-
-
                     light.GetComponent<HDAdditionalLightData>().affectsVolumetric = true;
 
                     float smoothFactor = Mathf.Clamp01((m_MaxDistanceFromCamera - distanceFromCamera) / m_MaxDistanceFromCamera);
@@ -87,18 +89,27 @@ public class RealtimeLightLoader : MonoBehaviour
 
                     light.GetComponent<HDAdditionalLightData>().volumetricDimmer = Mathf.Lerp(0, 1, smoothFactor);
 
-                    if (m_OptimizationMode == RealtimeLightMode.UltraOptimized)
-                        light.GetComponent<HDAdditionalLightData>().RequestShadowMapRendering();
+                    switch (m_OptimizationMode)
+                    {
+                        case RealtimeLightMode.UltraOptimized:
+                            light.GetComponent<HDAdditionalLightData>().RequestShadowMapRendering();
+                            break;
+                        case RealtimeLightMode.HighOptimized:
+                            light.GetComponent<HDAdditionalLightData>().shadowUpdateMode = ShadowUpdateMode.EveryFrame;
+                            break;
+                    }
+
                 }
                 else
                 {
 
                     light.GetComponent<HDAdditionalLightData>().affectsVolumetric = false;
 
-                    if (light.shadows == LightShadows.Hard && light.type != LightType.Directional)
+                    if ( light.type != LightType.Directional && m_OptimizationMode == RealtimeLightMode.UltraOptimized)
                     {
-                        light.shadows = LightShadows.None;
-                        m_CurrentRealtimeShadowsActive--;
+                        if (m_OptimizationMode != RealtimeLightMode.UltraOptimized)
+                            light.GetComponent<HDAdditionalLightData>().shadowUpdateMode = ShadowUpdateMode.OnDemand;
+
                     }
                 }
             }

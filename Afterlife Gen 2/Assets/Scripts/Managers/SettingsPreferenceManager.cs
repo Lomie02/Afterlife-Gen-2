@@ -56,6 +56,45 @@ public class SettingsPreferenceManager : MonoBehaviour
         }
 
         SetUpPrefEvents(true);
+
+        UpdateLocalData();
+        m_OnSettingsApplied.AddListener(UpdateLocalData);
+
+    }
+
+    void UpdateLocalData()
+    {
+        QualitySettings.SetQualityLevel(FetchGraphicSettings());
+
+        QualitySettings.vSyncCount = FetchVirtualSync();
+        QualitySettings.shadows = FetchShadowQuality();
+
+        switch (FetchWindowRes())
+        {
+            case 0: // 960 x 540
+                Screen.SetResolution(960, 540, (FullScreenMode)FetchWindowMode(), Screen.mainWindowDisplayInfo.refreshRate);
+                break;
+            case 1:
+                Screen.SetResolution(1280, 720, (FullScreenMode)FetchWindowMode(), Screen.mainWindowDisplayInfo.refreshRate);
+                break;
+            case 2:
+                Screen.SetResolution(1920, 1080, (FullScreenMode)FetchWindowMode(), Screen.mainWindowDisplayInfo.refreshRate);
+                break;
+            case 3:
+                Screen.SetResolution(2048, 1080, (FullScreenMode)FetchWindowMode(), Screen.mainWindowDisplayInfo.refreshRate);
+                break;
+            case 4:
+                Screen.SetResolution(2560, 1440, (FullScreenMode)FetchWindowMode(), Screen.mainWindowDisplayInfo.refreshRate);
+                break;
+            case 5:
+                Screen.SetResolution(3840, 2160, (FullScreenMode)FetchWindowMode(), Screen.mainWindowDisplayInfo.refreshRate);
+                break;
+            case 6:
+                Screen.SetResolution(4096, 2160, (FullScreenMode)FetchWindowMode(), Screen.mainWindowDisplayInfo.refreshRate);
+                break;
+        }
+
+
     }
 
     IEnumerator DisplayFps()
@@ -81,6 +120,7 @@ public class SettingsPreferenceManager : MonoBehaviour
                         break;
 
                     case UiElementType.Dropdown:
+                        m_InterfaceElement[i].m_Dropmenu.onValueChanged.AddListener(LiveValueCatcher);
                         break;
                 }
             }
@@ -185,6 +225,97 @@ public class SettingsPreferenceManager : MonoBehaviour
             if (m_InterfaceElement[i].m_ElementType == UiElementType.Dropdown && m_InterfaceElement[i].m_Name == "Graphics")
             {
                 return m_InterfaceElement[i].m_Dropmenu.value;
+            }
+        }
+        return 0;
+    }
+
+    public int FetchWindowRes()
+    {
+        for (int i = 0; i < m_InterfaceElement.Length; i++)
+        {
+            if (m_InterfaceElement[i].m_ElementType == UiElementType.Dropdown && m_InterfaceElement[i].m_Name == "ScreenRes")
+            {
+                return m_InterfaceElement[i].m_Dropmenu.value;
+            }
+        }
+        return 0;
+    }
+
+    public float FetchLoaderDistance()
+    {
+        for (int i = 0; i < m_InterfaceElement.Length; i++)
+        {
+            if (m_InterfaceElement[i].m_ElementType == UiElementType.Slider && m_InterfaceElement[i].m_Name == "LoaderDistance")
+            {
+                return m_InterfaceElement[i].m_Slider.value;
+            }
+        }
+        return 0;
+    }
+
+    public RealtimeLightMode FetchLoaderMode()
+    {
+        for (int i = 0; i < m_InterfaceElement.Length; i++)
+        {
+            if (m_InterfaceElement[i].m_ElementType == UiElementType.Dropdown && m_InterfaceElement[i].m_Name == "LoaderMode")
+            {
+                switch (m_InterfaceElement[i].m_Dropmenu.value)
+                {
+                    case 0:
+                        return RealtimeLightMode.UltraOptimized;
+                    case 1:
+                        return RealtimeLightMode.HighOptimized;
+                    case 2:
+                        return RealtimeLightMode.MediumOptimized;
+                    case 3:
+                        return RealtimeLightMode.Off;
+
+                }
+            }
+        }
+        return 0;
+    }
+
+    public int FetchWindowMode()
+    {
+        for (int i = 0; i < m_InterfaceElement.Length; i++)
+        {
+            if (m_InterfaceElement[i].m_ElementType == UiElementType.Dropdown && m_InterfaceElement[i].m_Name == "ScreenMode")
+            {
+                return m_InterfaceElement[i].m_Dropmenu.value;
+            }
+        }
+        return 0;
+    }
+
+    public int FetchVirtualSync()
+    {
+        for (int i = 0; i < m_InterfaceElement.Length; i++)
+        {
+            if (m_InterfaceElement[i].m_ElementType == UiElementType.Dropdown && m_InterfaceElement[i].m_Name == "VirtualSync")
+            {
+                return m_InterfaceElement[i].m_Dropmenu.value;
+            }
+        }
+        return 0;
+    }
+
+    public ShadowQuality FetchShadowQuality()
+    {
+        for (int i = 0; i < m_InterfaceElement.Length; i++)
+        {
+            if (m_InterfaceElement[i].m_ElementType == UiElementType.Dropdown && m_InterfaceElement[i].m_Name == "ShadowQuality")
+            {
+                switch (m_InterfaceElement[i].m_Dropmenu.value)
+                {
+                    case 0:
+                        return ShadowQuality.Disable;
+                    case 1:
+                        return ShadowQuality.HardOnly;
+                    case 2:
+                        return ShadowQuality.All;
+                }
             }
         }
         return 0;

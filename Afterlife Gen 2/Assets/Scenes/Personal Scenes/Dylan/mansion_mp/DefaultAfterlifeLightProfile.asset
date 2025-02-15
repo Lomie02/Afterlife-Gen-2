@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da5ab44aadfb1804db5fd470983ac1b8, type: 3}
   m_Name: LiftGammaGain
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   lift:
     m_OverrideState: 1
     m_Value: {x: 1, y: 1, z: 1, w: 0}
@@ -110,7 +110,7 @@ MonoBehaviour:
     m_Value: 1
   threshold:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 4.6
   intensity:
     m_OverrideState: 1
     m_Value: 0.2
@@ -341,7 +341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a6b00fcf518bb94a90b408492e07b44, type: 3}
   m_Name: FilmGrain
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   type:
     m_OverrideState: 1
     m_Value: 0
@@ -366,7 +366,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b8bcdf71d7fafa419fca1ed162f5fc9, type: 3}
   m_Name: ColorAdjustments
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   postExposure:
     m_OverrideState: 1
     m_Value: 0
@@ -415,7 +415,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d877a03bef431a847adca8ab343db3e1, type: 3}
   m_Name: RayTracingSettings
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   rayBias:
     m_OverrideState: 1
     m_Value: 0.001
@@ -602,7 +602,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b24b200358312b4fa1004e2431c2f1f, type: 3}
   m_Name: ShadowsMidtonesHighlights
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   shadows:
     m_OverrideState: 1
     m_Value: {x: 1, y: 1, z: 1, w: 0}
@@ -636,7 +636,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f1984a7ac01bf84b86559f7595cdc68, type: 3}
   m_Name: LightCluster
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   cameraClusterRange:
     m_OverrideState: 1
     m_Value: 10
@@ -652,7 +652,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b709909182ba0943abef2c49ed59205, type: 3}
   m_Name: PaniniProjection
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   distance:
     m_OverrideState: 1
     m_Value: 0
@@ -1114,7 +1114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0775cbb206825d541bf6c0297ee524ca, type: 3}
   m_Name: SplitToning
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   shadows:
     m_OverrideState: 1
     m_Value: {r: 0.5, g: 0.5, b: 0.5, a: 1}
@@ -1196,8 +1196,6 @@ MonoBehaviour:
   - {fileID: 6682394532641158315}
   - {fileID: 3545391020978709596}
   - {fileID: -2829495696651130497}
-  - {fileID: 4183329920184861891}
-  - {fileID: 9050909978206328522}
   - {fileID: -8542283386228986258}
   - {fileID: -6267456603888552463}
   - {fileID: 2657350196302371862}
@@ -1237,7 +1235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7649d9368d3a5c4ab8ad01a63e04962, type: 3}
   m_Name: ChannelMixer
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   redOutRedIn:
     m_OverrideState: 1
     m_Value: 100
@@ -1277,7 +1275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31394aa05878563408489d5c1688f3a0, type: 3}
   m_Name: PathTracing
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   enable:
     m_OverrideState: 1
     m_Value: 0
@@ -1540,7 +1538,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32b6af8f7ad32324cb6941c3290e5895, type: 3}
   m_Name: MicroShadowing
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   enable:
     m_OverrideState: 1
     m_Value: 0
@@ -1559,7 +1557,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddcec8a8eb2d684d833ac8f5d26aebd, type: 3}
   m_Name: HDShadowSettings
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   interCascadeBorders: 1
   maxShadowDistance:
     m_OverrideState: 1
@@ -1625,7 +1623,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c604242b4dd4c8caa4d1944b94189e0, type: 3}
   m_Name: HighQualityLineRenderingVolumeComponent
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   enable:
     m_OverrideState: 1
     m_Value: 0
@@ -1660,7 +1658,7 @@ MonoBehaviour:
   master:
     m_OverrideState: 1
     m_Value:
-      <length>k__BackingField: 2
+      <length>k__BackingField: 4
       m_Loop: 0
       m_ZeroValue: 0
       m_Range: 1
@@ -1672,6 +1670,24 @@ MonoBehaviour:
           value: 0
           inSlope: 1
           outSlope: 1
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 0.16713092
+          value: 0.29585797
+          inSlope: 0.205574
+          outSlope: 0.205574
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 0.60724235
+          value: 0.75147927
+          inSlope: -0.12874247
+          outSlope: -0.12874247
           tangentMode: 0
           weightedMode: 0
           inWeight: 0
@@ -1846,7 +1862,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46a79c9cffef5cc469553b1341c2ecdf, type: 3}
   m_Name: RecursiveRendering
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   enable:
     m_OverrideState: 1
     m_Value: 0
@@ -1985,7 +2001,7 @@ MonoBehaviour:
     m_Value: 0
   intensity:
     m_OverrideState: 1
-    m_Value: 1.06
+    m_Value: 1.9
   directLightingStrength:
     m_OverrideState: 1
     m_Value: 1
@@ -2045,25 +2061,6 @@ MonoBehaviour:
   m_DenoiserRadius:
     m_OverrideState: 1
     m_Value: 0.25
---- !u!114 &4183329920184861891
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b51a78e223a2e504bb88a059b55229ea, type: 3}
-  m_Name: WhiteBalance
-  m_EditorClassIdentifier: 
-  active: 1
-  temperature:
-    m_OverrideState: 1
-    m_Value: 0
-  tint:
-    m_OverrideState: 1
-    m_Value: 0
 --- !u!114 &4928953697995336335
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -2076,7 +2073,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c1bfcd0f0fa7b8468f281d6bbbaf320, type: 3}
   m_Name: LensDistortion
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   intensity:
     m_OverrideState: 1
     m_Value: 0
@@ -2171,7 +2168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a81bcacc415a1f743bfdf703afc52027, type: 3}
   m_Name: GradientSky
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   rotation:
     m_OverrideState: 1
     m_Value: 0
@@ -2275,7 +2272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 598e2d32e2c7b0c418e030c3236d663a, type: 3}
   m_Name: ChromaticAberration
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   quality:
     m_OverrideState: 1
     m_Value: 1
@@ -2529,7 +2526,7 @@ MonoBehaviour:
   active: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   tintColor:
     m_OverrideState: 1
     m_Value: {r: 1, g: 1, b: 1, a: 1}
@@ -2627,7 +2624,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcf384b154398e341b6b29969c078198, type: 3}
   m_Name: MotionBlur
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   quality:
     m_OverrideState: 1
     m_Value: 1
@@ -2661,19 +2658,3 @@ MonoBehaviour:
   m_SampleCount:
     m_OverrideState: 1
     m_Value: 8
---- !u!114 &9050909978206328522
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e17fad69ea181b4483974138b566975, type: 3}
-  m_Name: ScreenSpaceRefraction
-  m_EditorClassIdentifier: 
-  active: 1
-  screenFadeDistance:
-    m_OverrideState: 1
-    m_Value: 0.1

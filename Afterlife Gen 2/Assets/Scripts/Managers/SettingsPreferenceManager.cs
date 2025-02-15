@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.UI;
 
 [System.Serializable]
@@ -44,11 +46,12 @@ public class SettingsPreferenceManager : MonoBehaviour
 
     void Awake()
     {
-        for (int i = 0; i < m_Pages.Length; i++)
+        m_Pages[0].SetActive(true);
+
+        for (int i = 1; i < m_Pages.Length; i++)
         {
             m_Pages[i].SetActive(false);
         }
-
 
         if (PlayerPrefs.HasKey("settings_fps"))
         {
@@ -66,8 +69,41 @@ public class SettingsPreferenceManager : MonoBehaviour
     {
         QualitySettings.SetQualityLevel(FetchGraphicSettings());
 
+        var m_Pipeline = GraphicsSettings.currentRenderPipeline as HDRenderPipelineAsset;
         QualitySettings.vSyncCount = FetchVirtualSync();
-        QualitySettings.shadows = FetchShadowQuality();
+
+        HDAdditionalLightData[] m_LightsInScene = FindObjectsByType<HDAdditionalLightData>(FindObjectsSortMode.None);
+
+        foreach (HDAdditionalLightData LightData in m_LightsInScene)
+        {
+            switch (FetchShadowQuality())
+            {
+                case 0: // Ultra
+                    LightData.EnableShadows(true);
+                    LightData.SetShadowResolution(4069);
+                    break;
+
+                case 1: // High
+                    LightData.EnableShadows(true);
+                    LightData.SetShadowResolution(2048);
+                    break;
+
+                case 2: // Medium
+                    LightData.EnableShadows(true);
+                    LightData.SetShadowResolution(1024);
+                    break;
+
+                case 3: // Low
+
+                    LightData.EnableShadows(true);
+                    LightData.SetShadowResolution(520);
+                    break;
+
+                case 4:
+                    LightData.EnableShadows(false);
+                    break;
+            }
+        }
 
         switch (FetchWindowRes())
         {
@@ -301,21 +337,13 @@ public class SettingsPreferenceManager : MonoBehaviour
         return 0;
     }
 
-    public ShadowQuality FetchShadowQuality()
+    public int FetchShadowQuality()
     {
         for (int i = 0; i < m_InterfaceElement.Length; i++)
         {
             if (m_InterfaceElement[i].m_ElementType == UiElementType.Dropdown && m_InterfaceElement[i].m_Name == "ShadowQuality")
             {
-                switch (m_InterfaceElement[i].m_Dropmenu.value)
-                {
-                    case 0:
-                        return ShadowQuality.Disable;
-                    case 1:
-                        return ShadowQuality.HardOnly;
-                    case 2:
-                        return ShadowQuality.All;
-                }
+                return m_InterfaceElement[i].m_Dropmenu.value;
             }
         }
         return 0;

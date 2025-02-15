@@ -86,7 +86,6 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_ReviveTimer = m_ReviveDuration;
 
         m_MyView = GetComponent<PhotonView>();
-        m_ReadyUp = FindFirstObjectByType<ReadyZone>();
         m_Inventory = GetComponent<InventoryManager>();
 
         m_MyCamera = GetComponent<PlayerCamera>();
@@ -118,11 +117,12 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_TextChatManager.SetChatDisplay(false);
 
         m_SettingsPreferenceManager.ApplyAllDataSettings();
-        m_SettingsPreferenceManager.gameObject.SetActive(false); 
+        m_SettingsPreferenceManager.gameObject.SetActive(false);
         m_SpecialistMenu.SetActive(false);
 
+        m_ReadyUp = FindFirstObjectByType<ReadyZone>();
         m_PauseMenu.SetActive(false);
-        if (m_ReadyHost)
+        if (m_ReadyHost && m_ReadyUp)
         {
             m_ReadyHost.onClick.AddListener(m_ReadyUp.ReadyUpHost);
             m_ReadyHost.onClick.AddListener(delegate { m_HostGameSettings.SetActive(false); });
@@ -273,24 +273,6 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         else
             m_VoiceRecorder.TransmitEnabled = false;
 
-        // Text Chat
-        if (Input.GetKeyDown(KeyCode.T) && m_PlayersFlashLight.gameObject.activeSelf && !m_TextChatManager.IsTextChatShowing())
-        {
-            if (m_isLighterOpen)
-            {
-                m_PlayersFlashLight.TurnOff();
-                m_isLighterOpen = false;
-
-            }
-            else
-            {
-                m_PlayersFlashLight.TurnOn();
-                m_isLighterOpen = true;
-            }
-
-            m_LighterAnimator.SetBool("IsOpened", m_isLighterOpen);
-        }
-
         if (Input.GetKeyDown(KeyCode.F) && !m_TextChatManager.IsTextChatShowing())
         {
             if (m_PlayersFlashLight.gameObject.activeSelf)
@@ -302,10 +284,15 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             }
             else
             {
+                m_PlayersAnimations.SetTrigger("FlickLighter");
                 m_PlayersFlashLight.RPC_SetObjectState(true);
+                m_isLighterOpen = true;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.R) && !m_TextChatManager.IsTextChatShowing())
+
+        m_LighterAnimator.SetBool("IsOpened", m_isLighterOpen);
+
+        if (Input.GetKeyDown(KeyCode.R) && !m_TextChatManager.IsTextChatShowing())
         {
             m_Inventory.DropItemsOnPerson();
         }
@@ -378,6 +365,11 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             CheckForItem();
         }
 
+    }
+
+    public void EnableLighter()
+    {
+        m_PlayersFlashLight.TurnOn();
     }
 
     [PunRPC]

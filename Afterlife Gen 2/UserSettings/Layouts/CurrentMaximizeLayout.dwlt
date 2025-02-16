@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 22942
+  controlID: 7990
   draggingID: 0
 --- !u!114 &2
 MonoBehaviour:
@@ -96,7 +96,7 @@ MonoBehaviour:
     m_HSlider: 0
     m_VSlider: 0
     m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 1
+    m_EnableMouseInput: 0
     m_EnableSliderZoomHorizontal: 0
     m_EnableSliderZoomVertical: 0
     m_UniformScale: 1
@@ -152,7 +152,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 22943
+  controlID: 7991
   draggingID: 0
 --- !u!114 &4
 MonoBehaviour:
@@ -178,7 +178,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 50}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 22881
+  controlID: 7919
   draggingID: 0
 --- !u!114 &5
 MonoBehaviour:
@@ -247,10 +247,10 @@ MonoBehaviour:
     m_OverlaysVisible: 1
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
-      m_LastClickedID: 0
-      m_ExpandedIDs: 528df1ff568df1ffaa8df1ffb48df1ffbe8df1ffc28df1ffc68df1ffd08df1ffd48df1ff1c8ef1ff2e8ef1ff3098f1ff469af1ff52bff5ff56bff5ffb0bff5ffb2bff5ffb8bff5ffbcbff5fff6bff5ff0cc0f5ff4ec1f5ffd2c1f5ffd4c1f5ff52cbf5ff6ecbf5ff52c10300aec10300c2c10300cac10300cec1030004c203002ec203006ec20300
+      scrollPos: {x: 0, y: 3254}
+      m_SelectedIDs: 48dffaff
+      m_LastClickedID: -336056
+      m_ExpandedIDs: 74e5fafffc13fbffb05cfcff88d1fffffafaffff46d50000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -850,17 +850,17 @@ MonoBehaviour:
       layout: 4
       size: {x: 0, y: 0}
       sizeOverridden: 0
-    - dockPosition: 1
-      containerId: overlay-container--right
+    - dockPosition: 0
+      containerId: Floating
       displayed: 1
       id: AINavigationOverlay
-      index: 13
-      contents: '{"m_Layout":4,"m_Collapsed":false,"m_Floating":false,"m_FloatingSnapOffset":{"x":24.0,"y":25.0},"m_SnapOffsetDelta":{"x":0.0,"y":0.0},"m_FloatingSnapCorner":0,"m_Size":{"x":0.0,"y":0.0},"m_SizeOverridden":false}'
-      floating: 0
+      index: 0
+      contents: '{"m_Layout":4,"m_Collapsed":false,"m_Floating":true,"m_FloatingSnapOffset":{"x":-207.0,"y":-194.0},"m_SnapOffsetDelta":{"x":0.0,"y":0.0},"m_FloatingSnapCorner":3,"m_Size":{"x":0.0,"y":0.0},"m_SizeOverridden":false}'
+      floating: 1
       collapsed: 0
-      snapOffset: {x: 24, y: 25}
+      snapOffset: {x: -207, y: -194}
       snapOffsetDelta: {x: 0, y: 0}
-      snapCorner: 0
+      snapCorner: 3
       layout: 4
       size: {x: 0, y: 0}
       sizeOverridden: 0
@@ -882,7 +882,7 @@ MonoBehaviour:
       containerId: overlay-container--right
       displayed: 0
       id: SceneView/CamerasOverlay
-      index: 14
+      index: 13
       contents: '{"m_Layout":4,"m_Collapsed":false,"m_Floating":false,"m_FloatingSnapOffset":{"x":0.0,"y":0.0},"m_SnapOffsetDelta":{"x":24.0,"y":0.0},"m_FloatingSnapCorner":0,"m_Size":{"x":0.0,"y":0.0},"m_SizeOverridden":false}'
       floating: 0
       collapsed: 0
@@ -896,7 +896,7 @@ MonoBehaviour:
       containerId: overlay-container--right
       displayed: 0
       id: Scene View/PBR Validation Settings
-      index: 15
+      index: 14
       contents: '{"m_Layout":4,"m_Collapsed":false,"m_Floating":false,"m_FloatingSnapOffset":{"x":0.0,"y":0.0},"m_SnapOffsetDelta":{"x":24.0,"y":0.0},"m_FloatingSnapCorner":0,"m_Size":{"x":0.0,"y":0.0},"m_SizeOverridden":false}'
       floating: 0
       collapsed: 0
@@ -910,7 +910,7 @@ MonoBehaviour:
       containerId: overlay-container--right
       displayed: 0
       id: Scene View/TrailRenderer
-      index: 16
+      index: 15
       contents: '{"m_Layout":4,"m_Collapsed":false,"m_Floating":false,"m_FloatingSnapOffset":{"x":0.0,"y":0.0},"m_SnapOffsetDelta":{"x":24.0,"y":0.0},"m_FloatingSnapCorner":0,"m_Size":{"x":0.0,"y":0.0},"m_SizeOverridden":false}'
       floating: 0
       collapsed: 0
@@ -961,9 +961,9 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: -2.8257718, y: 1.2131776, z: -22.604391}
+    m_Target: {x: -1.4042933, y: 5.504598, z: -4.7646947}
     speed: 2
-    m_Value: {x: 6.6078324, y: 1.5812804, z: 12.024582}
+    m_Value: {x: -1.4042933, y: 5.504598, z: -4.7646947}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1009,13 +1009,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.13075738, y: -0.782951, z: 0.17540835, w: 0.5828607}
+    m_Target: {x: 0.0023593344, y: 0.99739885, z: 0.038937613, w: -0.06687053}
     speed: 2
-    m_Value: {x: -0.0017250043, y: -0.9981969, z: -0.049140446, w: 0.03442625}
+    m_Value: {x: 0.003116878, y: 0.99550825, z: 0.038868703, w: -0.08627145}
   m_Size:
-    m_Target: 0.1068617
+    m_Target: 0.03659136
     speed: 2
-    m_Value: 0.06919401
+    m_Value: 0.03659136
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -5869,7 +5869,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 50}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 22944
+  controlID: 7992
   draggingID: 0
 --- !u!114 &18
 MonoBehaviour:
@@ -5937,7 +5937,7 @@ MonoBehaviour:
     m_ContainerData: []
     m_OverlaysVisible: 1
   m_SearchFilter:
-    m_NameFilter: Cultist
+    m_NameFilter: Exter
     m_ClassNames: []
     m_AssetLabels: []
     m_AssetBundleNames: []
@@ -5947,27 +5947,27 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Animation/Item
+    - Assets/Scenes/Main
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
-    m_OriginalText: Cultist
+    m_OriginalText: Exter
     m_ImportLogFlags: 0
     m_FilterByTypeIntersection: 0
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Animation/Item
+  - Assets/Scenes/Main
   m_LastFoldersGridSize: 64
   m_LastProjectPath: C:\Users\dylan\OneDrive\Documents\Afterlife Gen 2\Afterlife-Gen-2\Afterlife
     Gen 2
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 73.59012}
-    m_SelectedIDs: c6480200
-    m_LastClickedID: 149702
-    m_ExpandedIDs: 0000000004e4000006e4000008e400000ae400000ce400000ee4000010e4000012e4000014e4000016e4000018e400001ae400007ce6000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 466}
+    m_SelectedIDs: c65e0100
+    m_LastClickedID: 89798
+    m_ExpandedIDs: 000000007c5b01007e5b0100805b0100825b0100845b0100865b0100885b01008a5b01008c5b01008e5b0100905b0100925b0100945b010000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -5996,7 +5996,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000004e4000006e4000008e400000ae400000ce400000ee4000010e4000012e4000014e4000016e4000018e400001ae400007ce6000000ca9a3bffffff7f
+    m_ExpandedIDs: 000000007c5b01007e5b0100805b0100825b0100845b0100865b0100885b01008a5b01008c5b01008e5b0100905b0100925b0100945b010000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -6022,9 +6022,9 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 
-    m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 1
+    m_SelectedInstanceIDs: 48dffaff
+    m_LastClickedInstanceID: -336056
+    m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: 00000000bcef0000aa440100789401004ace0000b6d9000054c800005230030082c30000068d0100b88b01000cfa0000c46b0100a8160500a4160500bc6b01003a16050088190200a2d703009e660400ecd50000
     m_RenameOverlay:
       m_UserAcceptedRename: 0

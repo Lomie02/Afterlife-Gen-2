@@ -2227,7 +2227,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 577931599022666863}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &8221468532287551334
+--- !u!1 &8337463082570330289
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2235,9 +2235,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7213111390816329067}
-  - component: {fileID: 7525647683882108125}
-  - component: {fileID: 1320267439551515161}
+  - component: {fileID: 9006990937222798786}
+  - component: {fileID: 1964683593438905008}
+  - component: {fileID: 2601734153014891489}
   m_Layer: 0
   m_Name: Flame
   m_TagString: Untagged
@@ -2245,32 +2245,31 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7213111390816329067
+--- !u!4 &9006990937222798786
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8221468532287551334}
+  m_GameObject: {fileID: 8337463082570330289}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.00000003725288, y: 0.00000005960461, z: 0.000000014901152,
-    w: 1}
-  m_LocalPosition: {x: -0.0001700009, y: -0.0007699579, z: -0.0017600758}
-  m_LocalScale: {x: 0.13733003, y: 0.13733, z: 0.13732997}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.08028028, y: 0.08028033, z: 0.08028031}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 737884227627385065}
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!198 &7525647683882108125
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!198 &1964683593438905008
 ParticleSystem:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8221468532287551334}
+  m_GameObject: {fileID: 8337463082570330289}
   serializedVersion: 8
   lengthInSec: 2
-  simulationSpeed: 0.5
+  simulationSpeed: 0.2
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -2344,7 +2343,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.1
+      scalar: 0.05
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -2451,7 +2450,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 0.54371953, b: 0, a: 1}
+      maxColor: {r: 1, g: 0.7121449, b: 0.18396229, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -2515,7 +2514,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.6
+      scalar: 0.5
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -2979,7 +2978,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.1
+      value: 0.05
       mode: 0
       spread: 0
       speed:
@@ -3216,18 +3215,18 @@ ParticleSystem:
         - serializedVersion: 3
           time: 0
           value: 1
-          inSlope: -1
-          outSlope: -1
-          tangentMode: 34
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
           weightedMode: 0
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
           time: 1
           value: 0
-          inSlope: -1
-          outSlope: -1
-          tangentMode: 34
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
           weightedMode: 0
           inWeight: 0
           outWeight: 0
@@ -6984,14 +6983,14 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!199 &1320267439551515161
+--- !u!199 &2601734153014891489
 ParticleSystemRenderer:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8221468532287551334}
+  m_GameObject: {fileID: 8337463082570330289}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -7475,7 +7474,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &737884227627385065
 Transform:
   m_ObjectHideFlags: 0
@@ -7489,7 +7488,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7213111390816329067}
+  - {fileID: 9006990937222798786}
   m_Father: {fileID: 7829264894801577210}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &1514937931028872968
@@ -7552,9 +7551,9 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ForceVisible: 0
-  m_ShadowRadius: 0.02
+  m_ShadowRadius: 0.25
   m_ShadowAngle: 0
-  m_LightUnit: 1
+  m_LightUnit: 0
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
 --- !u!114 &8218888525911233137
@@ -7588,7 +7587,7 @@ MonoBehaviour:
   m_ShapeWidth: 0.5
   m_ShapeHeight: 0.5
   m_AspectRatio: 1
-  m_ShapeRadius: 0.02
+  m_ShapeRadius: 0.25
   m_SoftnessScale: 1
   m_UseCustomSpotLightShadowCone: 0
   m_CustomSpotLightShadowCone: 30
@@ -7694,7 +7693,7 @@ MonoBehaviour:
   m_AreaLightEmissiveMeshShadowCastingMode: 0
   m_AreaLightEmissiveMeshMotionVectorGenerationMode: 0
   m_AreaLightEmissiveMeshLayer: -1
-  m_Version: 12
+  m_Version: 13
   m_ObsoleteShadowResolutionTier: 1
   m_ObsoleteUseShadowQualitySettings: 0
   m_ObsoleteCustomShadowResolution: 512

@@ -30,6 +30,7 @@ public class ObjectiveManager : MonoBehaviour
     Text m_ObjectiveTitle;
     PhotonView m_MyPhotonView;
 
+    Animator m_ObjectiveAnimator;
     private void Start()
     {
         m_MyPhotonView = GetComponent<PhotonView>();
@@ -41,6 +42,7 @@ public class ObjectiveManager : MonoBehaviour
         m_ObjectiveTask = _objectiveTaskText;
         m_ObjectiveTitle = _ObjectiveTitle;
 
+        m_ObjectiveAnimator = m_ObjectiveInterface.GetComponent<Animator>();
         SetUpObjective();
     }
 
@@ -90,6 +92,8 @@ public class ObjectiveManager : MonoBehaviour
         m_ObjectiveTitle.text = "Objective: " + m_Objectives[m_CurrentObjective].ObjectiveName;
         m_ObjectiveTask.text = m_Objectives[m_CurrentObjective].ObjectiveText;
         m_Objectives[m_CurrentObjective].m_IsActiveObjective = true;
+
+        m_ObjectiveAnimator.SetTrigger("Replay");
 
         if (m_CurrentObjective >= m_Objectives.Length) // Objectives Completed;
         {

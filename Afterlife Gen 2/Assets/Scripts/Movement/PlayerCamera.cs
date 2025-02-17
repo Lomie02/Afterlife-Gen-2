@@ -17,7 +17,7 @@ public class PlayerCamera : MonoBehaviour
     float m_Yview;
 
     bool m_CanLookAround = true;
-
+    bool m_TrapStance;
     SettingsPreferenceManager m_SettingsPreferenceManager;
     public void Start()
     {
@@ -59,6 +59,26 @@ public class PlayerCamera : MonoBehaviour
 
     }
 
+    public void SetTrapStance(bool _state, Vector3 _positionTarget)
+    {
+        m_TrapStance = _state;
+
+        if (m_TrapStance)
+        {
+            Cursor.visible = true;
+            m_CanLookAround = false;
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            m_CanLookAround = true;
+        }
+
+        transform.forward = _positionTarget;
+    }
+
     void UpdateRelSettings()
     {
         m_Sens = m_SettingsPreferenceManager.FetchMouseSens();
@@ -89,7 +109,7 @@ public class PlayerCamera : MonoBehaviour
 
     public void MouseLockState(bool _state)
     {
-        if (!m_MyView.IsMine)
+        if (!m_MyView.IsMine || m_TrapStance)
             return;
 
         if (_state)

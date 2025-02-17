@@ -50,6 +50,8 @@ public class RealtimeLightLoader : MonoBehaviour
     {
         m_OptimizationMode = m_SettingsPreferenceManager.FetchLoaderMode();
         m_MaxDistanceFromCamera = m_SettingsPreferenceManager.FetchLoaderDistance();
+
+        UpdateLightsData();
     }
 
     [System.Obsolete]
@@ -58,12 +60,46 @@ public class RealtimeLightLoader : MonoBehaviour
         m_RealtimeLights = FindObjectsOfType<Light>();
         m_MeshRenderersInScene = FindObjectsOfType<MeshRenderer>();
 
+        UpdateLightsData();
+    }
+
+    void UpdateLightsData()
+    {
+        float ViewDistance = 0;
+
+        switch (m_OptimizationMode)
+        {
+            case RealtimeLightMode.UltraOptimized:
+                ViewDistance = 5f;
+                break;
+
+            case RealtimeLightMode.HighOptimized:
+                ViewDistance = 10f;
+                break;
+
+            case RealtimeLightMode.MediumOptimized:
+                ViewDistance = 15f;
+                break;
+
+            case RealtimeLightMode.Off:
+                ViewDistance = 50;
+                break;
+
+        }
+
+        foreach (MeshRenderer mesh in m_MeshRenderersInScene)
+            mesh.shadowCastingMode = ShadowCastingMode.On;
+
+        // Update lights in scene Data
         foreach (Light light in m_RealtimeLights)
         {
             if (light.type != LightType.Directional)
             {
-                light.GetComponent<HDAdditionalLightData>().affectsVolumetric = false;
-                light.GetComponent<HDAdditionalLightData>().volumetricFadeDistance = 10f;
+                if (m_OptimizationMode == RealtimeLightMode.UltraOptimized)
+                    light.GetComponent<HDAdditionalLightData>().affectsVolumetric = false;
+                light.GetComponent<HDAdditionalLightData>().fadeDistance = ViewDistance;
+                light.GetComponent<HDAdditionalLightData>().volumetricFadeDistance = ViewDistance;
+                light.GetComponent<HDAdditionalLightData>().shadowFadeDistance = ViewDistance;
 
                 if (m_OptimizationMode == RealtimeLightMode.UltraOptimized || m_OptimizationMode == RealtimeLightMode.HighOptimized)
                     light.GetComponent<HDAdditionalLightData>().shadowUpdateMode = ShadowUpdateMode.OnDemand;
@@ -105,7 +141,7 @@ public class RealtimeLightLoader : MonoBehaviour
 
                     light.GetComponent<HDAdditionalLightData>().affectsVolumetric = false;
 
-                    if ( light.type != LightType.Directional && m_OptimizationMode == RealtimeLightMode.UltraOptimized)
+                    if (light.type != LightType.Directional && m_OptimizationMode == RealtimeLightMode.UltraOptimized)
                     {
                         if (m_OptimizationMode != RealtimeLightMode.UltraOptimized)
                             light.GetComponent<HDAdditionalLightData>().shadowUpdateMode = ShadowUpdateMode.OnDemand;
@@ -118,7 +154,6 @@ public class RealtimeLightLoader : MonoBehaviour
             {
                 foreach (MeshRenderer mesh in m_MeshRenderersInScene)
                 {
-
                     float distanceFromCamera = Vector3.Distance(transform.position, mesh.transform.position);
 
                     if (distanceFromCamera <= m_MaxDistanceFromCamera)
@@ -132,7 +167,7 @@ public class RealtimeLightLoader : MonoBehaviour
                 }
             }
 
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(0.5f);
 
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
+using UnityEngine.Events;
 
 public enum TrapMode
 {
@@ -48,9 +49,14 @@ public class GhostTrap : MonoBehaviour
     float m_ZapTimer;
     float m_ZapTimerDuration = 5;
     Light m_MoonDirectional;
+
+    ObjectiveManager m_ObjectiveManager;
+
+    public UnityEvent m_OnExitTrap;
+    [SerializeField] Button m_TrapExitButton;
+
     private void Start()
     {
-
         m_ZapTimer = m_ZapTimerDuration;
         m_MyView = GetComponent<PhotonView>();
         m_TrapStateLight.color = Color.red;
@@ -64,9 +70,16 @@ public class GhostTrap : MonoBehaviour
         m_ZapParticle.SetActive(false);
         m_GhostObject = FindAnyObjectByType<GhostAI>();
 
+        m_ObjectiveManager = FindFirstObjectByType<ObjectiveManager>();
         m_MoonDirectional = GameObject.Find("MoonLight").GetComponent<Light>();
+        m_TrapExitButton.onClick.AddListener(m_OnExitTrap.Invoke);
 
         StartCoroutine(UpdateGhostTrap());
+    }
+
+    public Transform GetTrapScreenPosition()
+    {
+        return m_UseTrapButtonCollider.transform;
     }
 
     public bool CollectedPart(ItemID _itemId)
@@ -134,7 +147,9 @@ public class GhostTrap : MonoBehaviour
 
     public void OnTriggerStay(Collider other)
     {
-        if (m_TrapsMode != TrapMode.Trapping) return;
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        if (m_TrapsMode != TrapMode.Trapping && m_ObjectiveManager.GetCurrentObjective().m_Tag == "Trap") return;
 
         if (other.GetComponent<CursedObject>().IsCursedObject() && !other.GetComponent<CursedObject>().HasCursedBeenRemoved())
         {
@@ -147,8 +162,9 @@ public class GhostTrap : MonoBehaviour
             other.GetComponent<NetworkObject>().RenameObject(TempName);
             other.GetComponent<CursedObject>().DestroyCursedObject();
         }
-        else if (m_EnteredTheAfterlife && other.gameObject.GetComponent<GhostAI>())
+        else if (m_EnteredTheAfterlife && other.gameObject.GetComponent<GhostAI>() && m_ObjectiveManager.GetCurrentObjective().m_Tag == "Trap_Ghost")
         {
+            m_ObjectiveManager.ObjectiveCompleted("Trap_Ghost");
             m_MyView.RPC("RPC_GhostCaptured", RpcTarget.MasterClient);
             PhotonNetwork.Destroy(other.gameObject);
         }
@@ -176,6 +192,8 @@ public class GhostTrap : MonoBehaviour
         {
             m_Players[i].GetComponent<PlayerController>().EnterTheAfterlife();
         }
+
+        m_ObjectiveManager.ObjectiveCompleted("Cursed_Object");
     }
 
 
@@ -223,6 +241,8 @@ public class GhostTrap : MonoBehaviour
 
             m_UseTrapButtonCollider.SetActive(true);
             UpdateTrapInterface();
+
+            m_ObjectiveManager.ObjectiveCompleted("Trap");
         }
     }
 

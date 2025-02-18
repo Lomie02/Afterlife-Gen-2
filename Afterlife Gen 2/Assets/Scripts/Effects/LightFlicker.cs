@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,21 +24,8 @@ public class LightFlicker : MonoBehaviour
     {
         while (true)
         {
-            if (m_IsEnabled)
-            {
-                int rand = Random.Range(0, 8);
-
-                if (rand == 2 || rand == 4)
-                {
-                    m_LightObject.intensity = m_LowIntensity;
-                }
-                else
-                {
-                    m_LightObject.intensity = m_DefaultIntensity;
-                }
-            }
-
-            yield return new WaitForSeconds(0.5f);
+            m_LightObject.intensity = m_DefaultIntensity + UnityEngine.Random.Range(-2, 2f);
+            yield return new WaitForSeconds(0.1f);
         }
     }
 

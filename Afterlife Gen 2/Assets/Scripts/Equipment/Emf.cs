@@ -10,13 +10,17 @@ public class Emf : MonoBehaviour
     [SerializeField] CursedObject m_CursedObject;
     bool m_IsEvidence = false;
     NetworkObject m_NetworkObject;
-
+    ObjectiveManager m_ObjectiveManager;
     int m_EmfLevel = 0;
+
+    GhostAI m_Ghost;
+
+    float m_DistanceToTarget;
 
     void Start()
     {
         CursedObject[] _Temp = GameObject.FindObjectsByType<CursedObject>(FindObjectsSortMode.None);
-
+        m_ObjectiveManager = FindFirstObjectByType<ObjectiveManager>();
 
         m_NetworkObject = GetComponent<NetworkObject>();
 
@@ -29,7 +33,9 @@ public class Emf : MonoBehaviour
             }
         }
 
-        if (m_CursedObject.GetGhostProfile().m_Evidence1 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence2 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence3 == EvidenceTypes.Emf && m_CursedObject)
+        m_Ghost = FindFirstObjectByType<GhostAI>(); 
+
+        if (m_Ghost.GetGhostProfile().m_Evidence1 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence2 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence3 == EvidenceTypes.Emf && m_CursedObject)
         {
             m_IsEvidence = true;
         }
@@ -67,39 +73,42 @@ public class Emf : MonoBehaviour
                     }
                 }
 
-                float DistanceToGhost = Vector3.Distance(transform.position, m_CursedObject.gameObject.transform.position);
+                if (m_ObjectiveManager.GetCurrentObjective().m_Tag == "Cursed_Object")
+                    m_DistanceToTarget = Vector3.Distance(transform.position, m_CursedObject.gameObject.transform.position);
+                else
+                    m_DistanceToTarget = Vector3.Distance(transform.position, m_Ghost.gameObject.transform.position);
 
-                if (DistanceToGhost <= 2 && m_IsEvidence && m_CursedObject.IsCursedObject())
+                if (m_DistanceToTarget <= 2 && m_IsEvidence && m_CursedObject.IsCursedObject())
                 {
                     m_EmfLevel = 6;
                     if (m_WarningIcon)
                         m_WarningIcon.gameObject.SetActive(true);
                 }
-                else if (DistanceToGhost > 2 && DistanceToGhost <= 4)
+                else if (m_DistanceToTarget > 2 && m_DistanceToTarget <= 4)
                 {
                     if (m_WarningIcon)
                         m_WarningIcon.gameObject.SetActive(false);
                     m_EmfLevel = 5;
                 }
-                else if (DistanceToGhost > 4 && DistanceToGhost <= 6)
+                else if (m_DistanceToTarget > 4 && m_DistanceToTarget <= 6)
                 {
                     if (m_WarningIcon)
                         m_WarningIcon.gameObject.SetActive(false);
                     m_EmfLevel = 4;
                 }
-                else if (DistanceToGhost > 6 && DistanceToGhost <= 8)
+                else if (m_DistanceToTarget > 6 && m_DistanceToTarget <= 8)
                 {
                     if (m_WarningIcon)
                         m_WarningIcon.gameObject.SetActive(false);
                     m_EmfLevel = 3;
                 }
-                else if (DistanceToGhost > 8 && DistanceToGhost <= 10)
+                else if (m_DistanceToTarget > 8 && m_DistanceToTarget <= 10)
                 {
                     if (m_WarningIcon)
                         m_WarningIcon.gameObject.SetActive(false);
                     m_EmfLevel = 2;
                 }
-                else if (DistanceToGhost > 10)
+                else if (m_DistanceToTarget > 10)
                 {
                     if (m_WarningIcon)
                         m_WarningIcon.gameObject.SetActive(false);

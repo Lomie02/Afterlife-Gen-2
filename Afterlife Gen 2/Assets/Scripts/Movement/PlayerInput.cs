@@ -78,6 +78,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     float m_FramesPassedForHover;
     float m_MxFramesForHover = 10;
 
+    GhostTrap m_TrapObject;
     SettingsPreferenceManager m_SettingsPreferenceManager;
     void Start()
     {
@@ -122,6 +123,8 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
         m_ReadyUp = FindFirstObjectByType<ReadyZone>();
         m_PauseMenu.SetActive(false);
+
+        m_TrapObject = FindFirstObjectByType<GhostTrap>();
         if (m_ReadyHost && m_ReadyUp)
         {
             m_ReadyHost.onClick.AddListener(m_ReadyUp.ReadyUpHost);
@@ -218,7 +221,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     {
         m_FlashLightLerp = Mathf.Lerp(m_FlashLightLerp, _index, 5 * Time.deltaTime);
 
-        m_PlayersAnimations.SetLayerWeight(1, m_FlashLightLerp);
+        m_PlayersAnimations.SetLayerWeight(4, m_FlashLightLerp);
         m_LightAImConstrait.weight = m_FlashLightLerp;
     }
     public void LeaveGame()
@@ -403,31 +406,26 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 {
                     m_UseImage.gameObject.SetActive(true);
                     m_UseText.text = "Press [E] To Pick Up " + m_ItemCast.collider.GetComponent<NetworkObject>().GetItemsName();
-                    yield return new WaitForSeconds(0.5f);
                 }
                 else if (m_ItemCast.collider.tag == "ReadyMonitor" || m_ItemCast.collider.tag == "Door")
                 {
                     m_UseImage.gameObject.SetActive(true);
                     m_UseText.text = "Press [E] To Interact.";
-                    yield return new WaitForSeconds(0.5f);
                 }
                 else if (m_ItemCast.collider.name == "PartPlace" || m_ItemCast.collider.name == "PartPlace_Bat")
                 {
                     m_UseImage.gameObject.SetActive(true);
                     m_UseText.text = "Press [E] To Place Part.";
-                    yield return new WaitForSeconds(0.5f);
                 }
                 else if (m_ItemCast.collider.name == "Switch_Board")
                 {
                     m_UseImage.gameObject.SetActive(true);
                     m_UseText.text = "Press [E] To Toggle Power.";
-                    yield return new WaitForSeconds(0.5f);
                 }
                 else if (m_ItemCast.collider.name == "Monitor")
                 {
                     m_UseImage.gameObject.SetActive(true);
                     m_UseText.text = "Press [E] To Activate Trap.";
-                    yield return new WaitForSeconds(0.5f);
                 }
                 else if (m_ItemCast.collider.GetComponent<PlayerController>() != null && !m_ItemCast.collider.GetComponent<PhotonView>().IsMine)
                 {
@@ -435,13 +433,16 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                     {
                         m_UseImage.gameObject.SetActive(true);
                         m_UseText.text = "Hold [E] To Revive.";
-                        yield return new WaitForSeconds(0.5f);
                     }
                 }
                 else
                 {
                     m_UseImage.gameObject.SetActive(false);
                 }
+            }
+            else
+            {
+                    m_UseImage.gameObject.SetActive(false);
             }
             yield return new WaitForSeconds(1f);
         }
@@ -478,7 +479,11 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
             else if (m_ItemCast.collider.name == "Monitor")
             {
-                m_ItemCast.collider.GetComponentInParent<GhostTrap>().StartTrapSequence();
+                m_MyController.SetTrapStance(true, m_TrapObject.GetTrapStandingPlacement());
+                m_MyCamera.SetTrapStance(true, m_TrapObject.GetTrapScreenPosition().position);
+
+                m_TrapObject.m_OnExitTrap.AddListener(delegate { m_MyController.SetTrapStance(false, m_TrapObject.GetTrapStandingPlacement()); });
+                m_TrapObject.m_OnExitTrap.AddListener(delegate { m_MyCamera.SetTrapStance(false, m_TrapObject.GetTrapScreenPosition().position); });
                 return;
             }
             else if (m_ItemCast.collider.GetComponent<PowerManager>() != null)

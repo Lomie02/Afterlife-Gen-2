@@ -7,6 +7,7 @@ using Photon.Realtime;
 using UnityEngine.Rendering;
 using Photon.Pun.UtilityScripts;
 using UnityEngine.Animations.Rigging;
+using Unity.VisualScripting;
 
 enum MovementType
 {
@@ -48,6 +49,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] float m_PlayerSprintSpeed = 5;
     [SerializeField] float m_PlayerTacticalSprintSpeed = 8;
 
+    bool m_IsInTrapStance;
     public CapsuleCollider m_PlayerCollider;
 
     Vector3 m_DefaultCollider = new Vector3(0, 0.8321516f, 0);
@@ -275,7 +277,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (!m_MyView.IsMine)
             return;
 
-        if (m_CanMove && !m_IsDowned && !m_isDead)
+        if (m_CanMove && !m_IsDowned && !m_isDead && !m_IsInTrapStance)
             UpdateMovement();
 
         if (!m_ReplensishHealth)
@@ -400,7 +402,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         if (!m_IsSprinting)
         {
-            if (Input.GetKey(KeyCode.LeftControl))
+            if (Input.GetKey(KeyCode.LeftControl) || m_IsInTrapStance)
             {
                 m_CrouchLerpAmount = Mathf.Lerp(m_CrouchLerpAmount, 1, m_CrouchLerpSpeed * Time.deltaTime);
                 m_PlayerCollider.center = new Vector3(0, 0.3788545f, 0);
@@ -438,7 +440,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             }
         }
 
-        m_BodyAnimations.SetLayerWeight(4, m_CrouchLerpAmount);
+        m_BodyAnimations.SetLayerWeight(1, m_CrouchLerpAmount);
         m_BodyAnimations.SetBool("Sprinting", m_IsSprinting);
 
         switch (m_SpecialistAbility.GetSpecialistType())
@@ -594,6 +596,28 @@ public class PlayerController : MonoBehaviourPunCallbacks
         for (int i = 0; i < m_RagdollColliders.Length; i++)
             m_RagdollColliders[i].enabled = _state;
 
+    }
+
+    public void SetTrapStance(bool _state, Transform _trapPosition)
+    {
+        m_IsInTrapStance = _state;
+
+        if (m_IsInTrapStance)
+        {
+            m_BodyAnimations.SetLayerWeight(1, 1);
+            m_PlayerCollider.center = new Vector3(0, 0.3788545f, 0);
+            m_PlayerCollider.height = 0.8057906f;
+        }
+        else
+        {
+            m_BodyAnimations.SetLayerWeight(1, 0);
+            m_PlayerCollider.center = m_DefaultCollider;
+            m_PlayerCollider.height = m_DefaultHeight;
+        }
+
+
+        transform.position = _trapPosition.position;
+        transform.forward = _trapPosition.forward;
     }
 
     public bool m_IsTacSprinting()

@@ -58,10 +58,12 @@ public class PowerManager : MonoBehaviour
     {
         if (m_IsPowerOn)
         {
-            m_ObjectiveManager.ObjectiveCompleted(0);
             m_MyView.RPC("RPC_SetPowerState", RpcTarget.AllBuffered, false);
         }
         else
+        {
+            m_ObjectiveManager.ObjectiveCompleted(0);
             m_MyView.RPC("RPC_SetPowerState", RpcTarget.AllBuffered, true);
+        }
     }
 }

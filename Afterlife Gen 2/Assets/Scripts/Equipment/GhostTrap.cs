@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
+using UnityEngine.Events;
+using System.Linq;
 
 public enum TrapMode
 {
@@ -11,6 +13,24 @@ public enum TrapMode
     ReadyForUse,
     Cooldown,
     Trapping,
+}
+
+[System.Serializable]
+public class GhostData
+{
+    public string m_GhostType;
+    public List<string> m_GhostEvidence;
+}
+
+public class GhostDatabase : MonoBehaviour
+{
+    public List<GhostData> m_GhostLib = new List<GhostData>();
+    public GhostDatabase()
+    {
+        m_GhostLib.Add(new GhostData { m_GhostType = "Poltergeist", m_GhostEvidence = new List<string> { "EMF", "REMPOD", "GHOSTBOX", "LASER PROJECTOR" } });
+        m_GhostLib.Add(new GhostData { m_GhostType = "Spirit", m_GhostEvidence = new List<string> { "EMF", "BLOOD TRAIL", "GHOSTBOX", "LASER PROJECTOR" } });
+        m_GhostLib.Add(new GhostData { m_GhostType = "Phantom", m_GhostEvidence = new List<string> { "EMF", "BLOOD TRAIL", "GHOSTBOX", "LASER PROJECTOR" } });
+    }
 }
 
 public class GhostTrap : MonoBehaviour
@@ -48,9 +68,29 @@ public class GhostTrap : MonoBehaviour
     float m_ZapTimer;
     float m_ZapTimerDuration = 5;
     Light m_MoonDirectional;
+
+    ObjectiveManager m_ObjectiveManager;
+
+    [SerializeField] Transform m_TrapStandPosition;
+    public UnityEvent m_OnExitTrap;
+
+    [Header("Interface")]
+    [SerializeField] Button m_TrapExitButton;
+
+    [SerializeField] Dropdown m_EvidenceSelection1;
+    [SerializeField] Dropdown m_EvidenceSelection2;
+    [SerializeField] Dropdown m_EvidenceSelection3;
+    [SerializeField] Dropdown m_EvidenceSelection4;
+
+    [SerializeField] Text m_GhostTypeText;
+
+    public GhostDatabase m_GhostDataPack;
+
+    private List<string> m_AllEvidenceItems = new List<string>() { "EMF","REMPOD", "GHOSTBOX", "LASER PROJECTOR", "BLOOD TRAIL"};
+
     private void Start()
     {
-
+        m_GhostDataPack = new GhostDatabase();
         m_ZapTimer = m_ZapTimerDuration;
         m_MyView = GetComponent<PhotonView>();
         m_TrapStateLight.color = Color.red;
@@ -64,11 +104,56 @@ public class GhostTrap : MonoBehaviour
         m_ZapParticle.SetActive(false);
         m_GhostObject = FindAnyObjectByType<GhostAI>();
 
+        m_ObjectiveManager = FindFirstObjectByType<ObjectiveManager>();
         m_MoonDirectional = GameObject.Find("MoonLight").GetComponent<Light>();
+        m_TrapExitButton.onClick.AddListener(m_OnExitTrap.Invoke);
+
+        ApplyDropdownOptions(m_EvidenceSelection1);
+        ApplyDropdownOptions(m_EvidenceSelection2);
+        ApplyDropdownOptions(m_EvidenceSelection3);
+        ApplyDropdownOptions(m_EvidenceSelection4);
+
+        m_MyView.RPC("RPC_UpdateTrapScreenInterface", RpcTarget.All);
 
         StartCoroutine(UpdateGhostTrap());
     }
 
+    [PunRPC]
+    void RPC_UpdateTrapScreenInterface()
+    {
+        List<string> ResearchFound = new List<string>()
+        {
+            m_EvidenceSelection1.options[m_EvidenceSelection1.value].text,
+            m_EvidenceSelection2.options[m_EvidenceSelection2.value].text,
+            m_EvidenceSelection3.options[m_EvidenceSelection3.value].text,
+            m_EvidenceSelection4.options[m_EvidenceSelection4.value].text
+        }.Where(m_GhostEvidence => m_GhostEvidence != "UNKNOWN").ToList();
+
+        List<string> m_PotentialGhost = m_GhostDataPack.m_GhostLib.Where(ghost => ResearchFound.All(m_GhostEvidence => ghost.m_GhostEvidence.Contains(m_GhostEvidence)))
+            .Select(ghost => ghost.m_GhostType).ToList();
+
+        m_GhostTypeText.text = "GHOSTS: \n" + (m_PotentialGhost.Count > 0 ? string.Join("\n", m_PotentialGhost) : "UNKNOWN");
+    }
+
+    void ApplyDropdownOptions(Dropdown _object)
+    {
+        _object.ClearOptions();
+        List<string> NewOptions = new List<string>() { "UNKNOWN" };
+        NewOptions.AddRange(m_AllEvidenceItems);
+        _object.AddOptions(NewOptions);
+
+        _object.onValueChanged.AddListener(delegate { m_MyView.RPC("RPC_UpdateTrapScreenInterface", RpcTarget.All); });
+    }
+
+    public Transform GetTrapScreenPosition()
+    {
+        return m_UseTrapButtonCollider.transform;
+    }
+
+    public Transform GetTrapStandingPlacement()
+    {
+        return m_TrapStandPosition;
+    }
     public bool CollectedPart(ItemID _itemId)
     {
         switch (_itemId)
@@ -134,7 +219,9 @@ public class GhostTrap : MonoBehaviour
 
     public void OnTriggerStay(Collider other)
     {
-        if (m_TrapsMode != TrapMode.Trapping) return;
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        if (m_TrapsMode != TrapMode.Trapping && m_ObjectiveManager.GetCurrentObjective().m_Tag == "Trap") return;
 
         if (other.GetComponent<CursedObject>().IsCursedObject() && !other.GetComponent<CursedObject>().HasCursedBeenRemoved())
         {
@@ -147,8 +234,9 @@ public class GhostTrap : MonoBehaviour
             other.GetComponent<NetworkObject>().RenameObject(TempName);
             other.GetComponent<CursedObject>().DestroyCursedObject();
         }
-        else if (m_EnteredTheAfterlife && other.gameObject.GetComponent<GhostAI>())
+        else if (m_EnteredTheAfterlife && other.gameObject.GetComponent<GhostAI>() && m_ObjectiveManager.GetCurrentObjective().m_Tag == "Trap_Ghost")
         {
+            m_ObjectiveManager.ObjectiveCompleted("Trap_Ghost");
             m_MyView.RPC("RPC_GhostCaptured", RpcTarget.MasterClient);
             PhotonNetwork.Destroy(other.gameObject);
         }
@@ -176,6 +264,8 @@ public class GhostTrap : MonoBehaviour
         {
             m_Players[i].GetComponent<PlayerController>().EnterTheAfterlife();
         }
+
+        m_ObjectiveManager.ObjectiveCompleted("Cursed_Object");
     }
 
 
@@ -223,6 +313,8 @@ public class GhostTrap : MonoBehaviour
 
             m_UseTrapButtonCollider.SetActive(true);
             UpdateTrapInterface();
+
+            m_ObjectiveManager.ObjectiveCompleted("Trap");
         }
     }
 

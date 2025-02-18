@@ -79,19 +79,19 @@ public class NetworkLobby : MonoBehaviourPunCallbacks
         switch (_index)
         {
             case 0:
-                PhotonNetwork.Instantiate(m_Exterminator.name, m_PlayerSpawns[Location].position, Quaternion.LookRotation(transform.forward));
+                PhotonNetwork.Instantiate(m_Exterminator.name, m_PlayerSpawns[Location].position, Quaternion.Euler(m_PlayerSpawns[Location].eulerAngles));
                 m_SaveManager.SetPlayersSavedSpecialist(m_Exterminator.name);
                 return true;
             case 1:
-                PhotonNetwork.Instantiate(m_Pharmacist.name, m_PlayerSpawns[Location].position, Quaternion.LookRotation(transform.forward));
+                PhotonNetwork.Instantiate(m_Pharmacist.name, m_PlayerSpawns[Location].position, Quaternion.Euler(m_PlayerSpawns[Location].eulerAngles));
                 m_SaveManager.SetPlayersSavedSpecialist(m_Pharmacist.name);
                 return true;
             case 2:
-                PhotonNetwork.Instantiate(m_Trapper.name, m_PlayerSpawns[Location].position, Quaternion.LookRotation(transform.forward));
+                PhotonNetwork.Instantiate(m_Trapper.name, m_PlayerSpawns[Location].position, Quaternion.Euler(m_PlayerSpawns[Location].eulerAngles));
                 m_SaveManager.SetPlayersSavedSpecialist(m_Trapper.name);
                 return true;
             case 3:
-                PhotonNetwork.Instantiate(m_Cultist.name, m_PlayerSpawns[Location].position, Quaternion.LookRotation(transform.forward));
+                PhotonNetwork.Instantiate(m_Cultist.name, m_PlayerSpawns[Location].position, Quaternion.Euler(m_PlayerSpawns[Location].eulerAngles));
                 m_SaveManager.SetPlayersSavedSpecialist(m_Cultist.name);
                 return true;
         }

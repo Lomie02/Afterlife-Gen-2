@@ -598,10 +598,26 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     }
 
-    public void SetTrapStance(bool _state, Vector3 _trapPosition)
+    public void SetTrapStance(bool _state, Transform _trapPosition)
     {
         m_IsInTrapStance = _state;
-        transform.LookAt(_trapPosition);
+
+        if (m_IsInTrapStance)
+        {
+            m_BodyAnimations.SetLayerWeight(1, 1);
+            m_PlayerCollider.center = new Vector3(0, 0.3788545f, 0);
+            m_PlayerCollider.height = 0.8057906f;
+        }
+        else
+        {
+            m_BodyAnimations.SetLayerWeight(1, 0);
+            m_PlayerCollider.center = m_DefaultCollider;
+            m_PlayerCollider.height = m_DefaultHeight;
+        }
+
+
+        transform.position = _trapPosition.position;
+        transform.forward = _trapPosition.forward;
     }
 
     public bool m_IsTacSprinting()

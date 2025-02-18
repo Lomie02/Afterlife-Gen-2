@@ -479,11 +479,11 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
             else if (m_ItemCast.collider.name == "Monitor")
             {
-                m_MyController.SetTrapStance(true, m_TrapObject.GetTrapScreenPosition().position);
+                m_MyController.SetTrapStance(true, m_TrapObject.GetTrapStandingPlacement());
                 m_MyCamera.SetTrapStance(true, m_TrapObject.GetTrapScreenPosition().position);
 
-                m_TrapObject.m_OnExitTrap.AddListener(delegate { m_MyController.SetTrapStance(true, m_TrapObject.GetTrapScreenPosition().localPosition); });
-                m_TrapObject.m_OnExitTrap.AddListener(delegate { m_MyCamera.SetTrapStance(true, m_TrapObject.GetTrapScreenPosition().localPosition); });
+                m_TrapObject.m_OnExitTrap.AddListener(delegate { m_MyController.SetTrapStance(false, m_TrapObject.GetTrapStandingPlacement()); });
+                m_TrapObject.m_OnExitTrap.AddListener(delegate { m_MyCamera.SetTrapStance(false, m_TrapObject.GetTrapScreenPosition().position); });
                 return;
             }
             else if (m_ItemCast.collider.GetComponent<PowerManager>() != null)

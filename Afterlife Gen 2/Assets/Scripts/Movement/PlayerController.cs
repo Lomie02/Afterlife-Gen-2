@@ -617,7 +617,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
 
         transform.position = _trapPosition.position;
-        transform.forward = _trapPosition.forward;
+        Vector3 worldNormal = _trapPosition.transform.TransformDirection(Vector3.forward);
+        transform.rotation = Quaternion.LookRotation(worldNormal, Vector3.up);
     }
 
     public bool m_IsTacSprinting()

@@ -126,13 +126,6 @@ public class InventoryManager : MonoBehaviour
             return;
         }
 
-        if (_object.GetItemID() == ItemID.SantiyPill)
-        {
-            GetComponent<PlayerController>().RestorePossesion();
-            PhotonNetwork.Destroy(_object.GetComponent<PhotonView>());
-            return;
-        }
-
         m_Items[m_CurrentSlotSelected] = _object;
         m_ItemSlowName.text = m_Items[m_CurrentSlotSelected].GetItemsName();
 
@@ -192,7 +185,12 @@ public class InventoryManager : MonoBehaviour
         if (!m_MyView.IsMine)
             return;
 
-        if (m_Items[m_CurrentSlotSelected])
+        if(m_Items[m_CurrentSlotSelected].GetItemID() == ItemID.SantiyPill)
+        {
+            m_PlayerController.RestorePossesion();
+            DestroyCurrentItem();
+        }
+        else if (m_Items[m_CurrentSlotSelected])
         {
             for (int i = 0; i < m_ThirdPersonViewItems.Length; i++)
             {

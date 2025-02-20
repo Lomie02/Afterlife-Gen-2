@@ -93,7 +93,7 @@ public class RealtimeLightLoader : MonoBehaviour
         // Update lights in scene Data
         foreach (Light light in m_RealtimeLights)
         {
-            if (light.type != LightType.Directional)
+            if (light.type != LightType.Directional && light.shadows != LightShadows.None)
             {
                 if (m_OptimizationMode == RealtimeLightMode.UltraOptimized)
                     light.GetComponent<HDAdditionalLightData>().affectsVolumetric = false;
@@ -113,7 +113,7 @@ public class RealtimeLightLoader : MonoBehaviour
         {
             foreach (Light light in m_RealtimeLights)
             {
-                if (!light || light.type == LightType.Directional) continue;
+                if (!light || light.type == LightType.Directional || light.shadows == LightShadows.None) continue;
 
                 float distanceFromCamera = Vector3.Distance(transform.position, light.transform.position);
                 if (distanceFromCamera <= m_MaxDistanceFromCamera)
@@ -143,7 +143,7 @@ public class RealtimeLightLoader : MonoBehaviour
 
                     if (light.type != LightType.Directional && m_OptimizationMode == RealtimeLightMode.UltraOptimized)
                     {
-                        if (m_OptimizationMode != RealtimeLightMode.UltraOptimized)
+                        if (m_OptimizationMode != RealtimeLightMode.UltraOptimized && light.shadows != LightShadows.None)
                             light.GetComponent<HDAdditionalLightData>().shadowUpdateMode = ShadowUpdateMode.OnDemand;
 
                     }

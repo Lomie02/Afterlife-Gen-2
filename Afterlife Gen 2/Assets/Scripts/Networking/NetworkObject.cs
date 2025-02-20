@@ -48,7 +48,7 @@ public class NetworkObject : MonoBehaviourPunCallbacks
     [Header("Weight Layers")]
     [SerializeField] int m_WeightLayer = 2;
     // Important
-    bool m_IsItemOn = false;
+    public bool m_IsItemOn = false;
 
     float m_Threshold = 0.05f;
     float m_IdleTime = 0;
@@ -85,9 +85,10 @@ public class NetworkObject : MonoBehaviourPunCallbacks
         m_ItemsBody = GetComponent<Rigidbody>();
         m_MyView = GetComponent<PhotonView>();
 
-        if (!m_ItemsBody.isKinematic)
+        if (m_ItemsBody != null)
         {
-            StartCoroutine(CheckVelocity());
+            if (!m_ItemsBody.isKinematic)
+                StartCoroutine(CheckVelocity());
         }
     }
 

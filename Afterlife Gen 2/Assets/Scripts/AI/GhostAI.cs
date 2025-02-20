@@ -5,6 +5,7 @@ using UnityEngine.AI;
 using Photon.Pun;
 using UnityEngine.Events;
 using UnityEngine.Animations;
+using Palmmedia.ReportGenerator.Core.Reporting.Builders;
 enum GhostBehaviour
 {
     Idle = 0,
@@ -70,6 +71,15 @@ public class GhostAI : MonoBehaviour
     UnityEvent m_OnGhostDeath;
     GameObject m_ExfillArea;
 
+    [SerializeField] Transform m_GhostEmfLocation;
+    bool m_GiveEmfActivity;
+
+    int m_EmfLevel;
+    float m_EmfActivityTimer;
+    float m_EmfActivityDuration;
+
+    float m_GhostInteractionTimer;
+    float m_GhostInteractionDuration;
     private void Start()
     {
         m_MyAgent = GetComponent<NavMeshAgent>();
@@ -81,7 +91,15 @@ public class GhostAI : MonoBehaviour
         m_ChaseTimer = m_ChaseDuration;
         m_AttackTimer = m_AttackCooldown;
 
+        m_GhostInteractionDuration = Random.Range(5, 10);
+        m_GhostInteractionTimer = m_GhostInteractionDuration;
+
         m_GhostAnimation = GetComponent<Animator>();
+        m_GhostEmfLocation = GameObject.FindGameObjectWithTag("emf_locate").transform;
+
+        m_EmfActivityDuration = Random.Range(5, 10);
+
+        m_EmfActivityTimer = m_EmfActivityDuration;
 
         if (PhotonNetwork.IsMasterClient)
         {
@@ -159,7 +177,15 @@ public class GhostAI : MonoBehaviour
                 break;
         }
 
+        if (m_GiveEmfActivity)
+        {
+            m_EmfActivityTimer -= Time.deltaTime;
 
+            if(m_EmfActivityTimer <= 0)
+            {
+                m_View.RPC("RPC_StopEmf", RpcTarget.All);
+            }
+        }
 
         if (m_AttackIsOnCooldown)
         {
@@ -181,10 +207,25 @@ public class GhostAI : MonoBehaviour
             }
         }
 
+        m_GhostInteractionTimer -= Time.deltaTime;
+
+        if(m_GhostInteractionTimer <= 0)
+        {
+            GhostActivityEmf();
+
+            m_GhostEmfLocation.transform.position = transform.position;
+
+            m_GhostInteractionDuration = Random.Range(5, 10);
+            m_GhostInteractionTimer = m_GhostInteractionDuration;
+        }
+
         m_GhostAnimation.SetFloat("GhostSpeed", m_MyAgent.velocity.magnitude);
     }
 
+    void RandomGhostEvent()
+    {
 
+    }
 
     void UpdateIdle()
     {
@@ -245,14 +286,49 @@ public class GhostAI : MonoBehaviour
                 }
             }
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.1f);
         }
     }
 
+    public bool IsEmfActivityActive()
+    { 
+        return m_GiveEmfActivity;
+    }
+
+    public int GetEmfAcitivtyValue()
+    {
+        return m_EmfLevel;
+    }
+
+    void GhostActivityEmf()
+    {
+        m_EmfLevel = Random.Range(0, 5);
+        m_GiveEmfActivity = true;
+
+        m_EmfActivityDuration = Random.Range(5, 10);
+        m_EmfActivityTimer = m_EmfActivityDuration;
+
+        m_View.RPC("RPC_EmfLevel", RpcTarget.Others, m_EmfLevel);
+    }
+
+    [PunRPC]
+    public void RPC_EmfLevel(int _index)
+    {
+        m_EmfLevel = _index;
+        m_GiveEmfActivity = true;
+    }
+
+    [PunRPC]
+    public void RPC_StopEmf()
+    {
+        m_EmfActivityTimer = m_EmfActivityDuration;
+        m_GiveEmfActivity = false;
+        m_EmfLevel = 0;
+    }
     [PunRPC]
     public void RPC_GhostDeath()
     {
-
+        gameObject.SetActive(false);
     }
 
     IEnumerator CheckInteractions()

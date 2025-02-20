@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using UnityEngine.Events;
 using System.Linq;
+using UnityEngine.Animations.Rigging;
 
 public enum TrapMode
 {
@@ -82,8 +83,9 @@ public class GhostTrap : MonoBehaviour
     [SerializeField] Dropdown m_EvidenceSelection3;
     [SerializeField] Dropdown m_EvidenceSelection4;
 
-    [SerializeField] Text m_GhostTypeText;
+    [SerializeField] Button m_StartTrap;
 
+    [SerializeField] Text m_GhostTypeText;
     public GhostDatabase m_GhostDataPack;
 
     private List<string> m_AllEvidenceItems = new List<string>() { "EMF","REMPOD", "GHOSTBOX", "LASER PROJECTOR", "BLOOD TRAIL"};
@@ -95,7 +97,6 @@ public class GhostTrap : MonoBehaviour
         m_MyView = GetComponent<PhotonView>();
         m_TrapStateLight.color = Color.red;
         m_TrapInterface = GetComponentInChildren<Canvas>();
-        m_PowerManager = FindFirstObjectByType<PowerManager>();
 
         m_UseTrapButtonCollider.SetActive(false);
         m_TrapInterface.gameObject.SetActive(false);
@@ -107,6 +108,7 @@ public class GhostTrap : MonoBehaviour
         m_ObjectiveManager = FindFirstObjectByType<ObjectiveManager>();
         m_MoonDirectional = GameObject.Find("MoonLight").GetComponent<Light>();
         m_TrapExitButton.onClick.AddListener(m_OnExitTrap.Invoke);
+        m_PowerManager = FindFirstObjectByType<PowerManager>();
 
         ApplyDropdownOptions(m_EvidenceSelection1);
         ApplyDropdownOptions(m_EvidenceSelection2);
@@ -132,7 +134,7 @@ public class GhostTrap : MonoBehaviour
         List<string> m_PotentialGhost = m_GhostDataPack.m_GhostLib.Where(ghost => ResearchFound.All(m_GhostEvidence => ghost.m_GhostEvidence.Contains(m_GhostEvidence)))
             .Select(ghost => ghost.m_GhostType).ToList();
 
-        m_GhostTypeText.text = "GHOSTS: \n" + (m_PotentialGhost.Count > 0 ? string.Join("\n", m_PotentialGhost) : "UNKNOWN");
+        m_GhostTypeText.text = (m_PotentialGhost.Count > 0 ? string.Join("\n", m_PotentialGhost) : "UNKNOWN");
     }
 
     void ApplyDropdownOptions(Dropdown _object)
@@ -143,6 +145,12 @@ public class GhostTrap : MonoBehaviour
         _object.AddOptions(NewOptions);
 
         _object.onValueChanged.AddListener(delegate { m_MyView.RPC("RPC_UpdateTrapScreenInterface", RpcTarget.All); });
+    }
+
+    [PunRPC]
+    public void RPC_UpdateDropdowntext(int _index)
+    {
+
     }
 
     public Transform GetTrapScreenPosition()
@@ -268,6 +276,21 @@ public class GhostTrap : MonoBehaviour
         m_ObjectiveManager.ObjectiveCompleted("Cursed_Object");
     }
 
+    public void CalibrateTrap()
+    {
+        if(m_GhostObject.GetGhostProfile().m_GhostName == m_GhostTypeText.text)
+        {
+            m_ObjectiveManager.ObjectiveCompleted("Ghost");
+            m_MyView.RPC("RPC_TrapCalibrated", RpcTarget.All);
+        }
+    }
+
+    [PunRPC]
+    public void RPC_TrapCalibrated()
+    {
+        m_StartTrap.interactable = true;
+    }
+
 
     [PunRPC]
     public void RPC_GotBattery()
@@ -280,7 +303,7 @@ public class GhostTrap : MonoBehaviour
 
     public void UpdateTrapsMode()
     {
-        if(!m_PowerManager)
+        if (!m_PowerManager) m_PowerManager = FindFirstObjectByType<PowerManager>();
 
         if (!m_PowerManager.GetPowerState())
             m_TrapsMode = TrapMode.Needs_Power;

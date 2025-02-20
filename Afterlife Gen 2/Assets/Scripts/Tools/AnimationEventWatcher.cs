@@ -14,4 +14,9 @@ public class AnimationEventWatcher : MonoBehaviour
     {
         m_PlayerInput.EnableLighter();
     }
+
+    public void Hide()
+    {
+        transform.gameObject.SetActive(false);
+    }
 }

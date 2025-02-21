@@ -82,8 +82,10 @@ public class Emf : MonoBehaviour
 
                 if (m_DistanceToTarget <= 2 && m_Ghost.IsEmfActivityActive())
                 {
-
-                    m_EmfLevel = m_Ghost.GetEmfAcitivtyValue();
+                    if (m_ObjectiveManager.GetCurrentObjective().m_Tag == "Ghost" && m_IsEvidence)
+                        m_EmfLevel = 6;
+                    else
+                        m_EmfLevel = m_Ghost.GetEmfAcitivtyValue();
                 }
                 else
                 {

@@ -80,6 +80,8 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
     GhostTrap m_TrapObject;
     SettingsPreferenceManager m_SettingsPreferenceManager;
+
+    bool m_IkSystemEnabled = true;
     void Start()
     {
         //SearchForElements();
@@ -378,22 +380,52 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     [PunRPC]
     public void RPC_UpdatePlayerFlashlight()
     {
-        if (m_PlayersFlashLight.gameObject.activeSelf)
+        if (m_IkSystemEnabled)
         {
-            if (m_MyController.IsSprinting())
+            if (m_PlayersFlashLight.gameObject.activeSelf)
             {
-                LerpFlashLight(0.8f);
+                if (m_MyController.IsSprinting())
+                {
+                    LerpFlashLight(0.8f);
+                }
+                else
+                {
+
+                    LerpFlashLight(1);
+                }
             }
             else
             {
-
-                LerpFlashLight(1);
+                LerpFlashLight(0);
             }
         }
         else
         {
             LerpFlashLight(0);
         }
+    }
+
+    public void SetLighterBone(bool _state)
+    {
+        m_MyView.RPC("RPC_SetLighterBone", RpcTarget.All, _state);
+    }
+
+    [PunRPC]
+    public void RPC_SetLighterBone(bool _state)
+    {
+        m_PlayersFlashLight.transform.parent.gameObject.SetActive(_state);
+    }
+
+    public void ToggleInverseK(bool _state)
+    {
+        m_MyView.RPC("RPC_ToggleInverseK", RpcTarget.All, _state);
+    }
+
+
+    [PunRPC]
+    public void RPC_ToggleInverseK(bool _state)
+    {
+        m_IkSystemEnabled = _state;
     }
 
     IEnumerator CheckHoverItem()
@@ -442,7 +474,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             }
             else
             {
-                    m_UseImage.gameObject.SetActive(false);
+                m_UseImage.gameObject.SetActive(false);
             }
             yield return new WaitForSeconds(1f);
         }

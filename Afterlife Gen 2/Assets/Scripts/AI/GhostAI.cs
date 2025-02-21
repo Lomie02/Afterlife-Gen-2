@@ -116,7 +116,6 @@ public class GhostAI : MonoBehaviour
         m_OnGhostDeath.AddListener(delegate { m_ExfillArea.SetActive(true); });
 
         StartCoroutine(CheckInteractions());
-        StartCoroutine(CheckDoorInteractions());
     }
 
     [PunRPC]
@@ -181,7 +180,7 @@ public class GhostAI : MonoBehaviour
         {
             m_EmfActivityTimer -= Time.deltaTime;
 
-            if(m_EmfActivityTimer <= 0)
+            if (m_EmfActivityTimer <= 0)
             {
                 m_View.RPC("RPC_StopEmf", RpcTarget.All);
             }
@@ -209,7 +208,7 @@ public class GhostAI : MonoBehaviour
 
         m_GhostInteractionTimer -= Time.deltaTime;
 
-        if(m_GhostInteractionTimer <= 0)
+        if (m_GhostInteractionTimer <= 0)
         {
             GhostActivityEmf();
 
@@ -272,26 +271,18 @@ public class GhostAI : MonoBehaviour
         }
     }
 
-    private IEnumerator CheckDoorInteractions()
+    private void OnCollisionEnter(Collision collision)
     {
-        while (true)
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        if (collision.gameObject.GetComponent<DoorModule>())
         {
-            RaycastHit HitDetectionInfo;
-
-            if (Physics.Raycast(m_RayView.position, m_RayView.forward, out HitDetectionInfo, 1.5f))
-            {
-                if (HitDetectionInfo.collider.GetComponent<DoorModule>())
-                {
-                    HitDetectionInfo.collider.GetComponent<DoorModule>().CycleDoorState();
-                }
-            }
-
-            yield return new WaitForSeconds(0.1f);
+            collision.gameObject.GetComponent<DoorModule>().CycleDoorState();
         }
     }
 
     public bool IsEmfActivityActive()
-    { 
+    {
         return m_GiveEmfActivity;
     }
 
@@ -302,6 +293,7 @@ public class GhostAI : MonoBehaviour
 
     void GhostActivityEmf()
     {
+
         m_EmfLevel = Random.Range(0, 5);
         m_GiveEmfActivity = true;
 

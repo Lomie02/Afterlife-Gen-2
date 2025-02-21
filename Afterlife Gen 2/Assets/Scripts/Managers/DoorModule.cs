@@ -25,6 +25,10 @@ public class DoorModule : MonoBehaviour
         m_DoorAnimations.SetBool("IsOpen", _state);
     }
 
+    public bool GetDoorState()
+    {
+        return m_IsDoorOpen;
+    }
     public void SetDoorRandomState()
     {
         int RandomNum = Random.Range(0, 2);

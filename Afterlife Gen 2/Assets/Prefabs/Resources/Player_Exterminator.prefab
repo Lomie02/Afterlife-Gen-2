@@ -1474,7 +1474,6 @@ MonoBehaviour:
         m_CallState: 2
   m_SpecialistIcon: {fileID: 2817025369665217215}
   m_SpecialistChargeRate: 0.02
-  m_NightVisionDuration: 15
   m_PlayersVolume: {fileID: 1029340009321572742}
   m_NightVisionProfile: {fileID: 11400000, guid: 6c594270d91c22e4aac485a73e92cbbf,
     type: 2}
@@ -9776,6 +9775,12 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 1
     Name: FlickLighter
+  - Type: 9
+    SynchronizeType: 0
+    Name: ShoulderBash
+  - Type: 9
+    SynchronizeType: 0
+    Name: InspectLighter
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
@@ -9791,6 +9796,8 @@ MonoBehaviour:
     LayerIndex: 5
   - SynchronizeType: 1
     LayerIndex: 6
+  - SynchronizeType: 0
+    LayerIndex: 7
 --- !u!114 &7263942106677338070
 MonoBehaviour:
   m_ObjectHideFlags: 0

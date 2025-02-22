@@ -490,8 +490,15 @@ public class PlayerController : MonoBehaviourPunCallbacks
             if (DotPro > 0.9f)
             {
                 collision.gameObject.GetComponent<DoorModule>().CycleDoorState();
+                m_BodyAnimations.SetTrigger("ShoulderBash");
+                m_BodyAnimations.SetLayerWeight(7, 1);
             }
         }
+    }
+
+    public void ResetWeightLayer(int _index)
+    {
+        m_BodyAnimations.SetLayerWeight(_index, 0);
     }
 
     public void RestorePossesion() // Pharmacist Specialist

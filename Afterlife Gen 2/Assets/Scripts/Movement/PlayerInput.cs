@@ -82,6 +82,10 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     SettingsPreferenceManager m_SettingsPreferenceManager;
 
     bool m_IkSystemEnabled = true;
+    float m_IKLerpIndex;
+    bool m_KeepLighterWeight = true;
+    bool m_isInspecting = false;
+
     void Start()
     {
         //SearchForElements();
@@ -222,9 +226,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     void LerpFlashLight(float _index)
     {
         m_FlashLightLerp = Mathf.Lerp(m_FlashLightLerp, _index, 5 * Time.deltaTime);
-
         m_PlayersAnimations.SetLayerWeight(4, m_FlashLightLerp);
-        m_LightAImConstrait.weight = m_FlashLightLerp;
     }
     public void LeaveGame()
     {
@@ -270,6 +272,12 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             m_ReviveTimer = m_ReviveDuration;
             m_ReviveProgressBar.value = 0;
             m_ReviveProgressBar.gameObject.SetActive(false);
+        }
+
+        if (m_isLighterOpen && Input.GetKeyDown(KeyCode.I) && !m_isInspecting)
+        {
+            SetInspectStatus(true);
+            m_PlayersAnimations.SetTrigger("InspectLighter");
         }
 
         // Voice Chat
@@ -380,7 +388,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     [PunRPC]
     public void RPC_UpdatePlayerFlashlight()
     {
-        if (m_IkSystemEnabled)
+        if (m_IkSystemEnabled || m_isInspecting)
         {
             if (m_PlayersFlashLight.gameObject.activeSelf)
             {
@@ -403,6 +411,42 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         {
             LerpFlashLight(0);
         }
+
+        if (m_IkSystemEnabled)
+        {
+            if (m_PlayersFlashLight.gameObject.activeSelf)
+            {
+                if (m_MyController.IsSprinting())
+                {
+                    LerpIKWeight(0.8f);
+                }
+                else
+                {
+
+                    LerpIKWeight(1);
+                }
+            }
+            else
+            {
+                LerpIKWeight(0);
+            }
+        }
+        else
+        {
+            LerpIKWeight(0);
+        }
+
+    }
+
+    public void SetInspectStatus(bool _state)
+    {
+        m_isInspecting = _state;
+    }
+
+    void LerpIKWeight(float _index)
+    {
+        m_IKLerpIndex = Mathf.Lerp(m_IKLerpIndex, _index, 5 * Time.deltaTime);
+        m_LightAImConstrait.weight = Mathf.Lerp(m_LightAImConstrait.weight, m_IKLerpIndex, 5 * Time.deltaTime);
     }
 
     public void SetLighterBone(bool _state)
@@ -418,12 +462,16 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
     public void ToggleInverseK(bool _state)
     {
-        m_MyView.RPC("RPC_ToggleInverseK", RpcTarget.All, _state);
+        m_MyView.RPC("RPC_ToggleInverse", RpcTarget.All, _state);
     }
 
+    public void SetKeepLighterWeight(bool _state)
+    {
+        m_KeepLighterWeight = _state;
+    }
 
     [PunRPC]
-    public void RPC_ToggleInverseK(bool _state)
+    public void RPC_ToggleInverse(bool _state)
     {
         m_IkSystemEnabled = _state;
     }

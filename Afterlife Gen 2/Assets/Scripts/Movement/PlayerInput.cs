@@ -86,11 +86,18 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     bool m_KeepLighterWeight = true;
     bool m_isInspecting = false;
 
+    PositonLerp m_LighterIKPositionLerper;
+
+    float m_LighterDefaultIntensity;
+    float m_LighterIntensityHoldUp;
+
+    Light m_PlayersLighter;
     void Start()
     {
         //SearchForElements();
 
         m_ReviveTimer = m_ReviveDuration;
+        m_LighterIKPositionLerper = GetComponentInChildren<PositonLerp>();
 
         m_MyView = GetComponent<PhotonView>();
         m_Inventory = GetComponent<InventoryManager>();
@@ -131,6 +138,12 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_PauseMenu.SetActive(false);
 
         m_TrapObject = FindFirstObjectByType<GhostTrap>();
+
+        m_PlayersLighter = m_PlayersFlashLight.GetComponentInChildren<Light>(true);
+
+        m_LighterDefaultIntensity = m_PlayersLighter.intensity;
+        m_LighterIntensityHoldUp = m_LighterDefaultIntensity + 2f;
+
         if (m_ReadyHost && m_ReadyUp)
         {
             m_ReadyHost.onClick.AddListener(m_ReadyUp.ReadyUpHost);
@@ -181,9 +194,9 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_PauseMenu = GameObject.Find("PauseMenu");
         m_HostGameSettings = GameObject.Find("GameSettings");
 
-        m_GameManager = FindObjectOfType<GameManager>();
+        m_GameManager = FindAnyObjectByType<GameManager>();
         m_Ability = GetComponent<SpecialstAbility>();
-        m_Network = FindObjectOfType<NetworkLobby>();
+        m_Network = FindAnyObjectByType<NetworkLobby>();
 
         if (m_HostGameSettings)
             m_HostGameSettings.SetActive(false);
@@ -246,9 +259,25 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         return false;
     }
 
+    [PunRPC]
+    public void RPC_UpdateLighterPositionLerper(bool _state)
+    {
+        if (_state)
+        {
+            m_LighterIKPositionLerper.LerpPositions(1);
+            m_PlayersLighter.intensity = Mathf.Lerp(m_PlayersLighter.intensity, m_LighterIntensityHoldUp, 5 * Time.deltaTime);
+
+        }
+        else
+        {
+            m_PlayersLighter.intensity = Mathf.Lerp(m_PlayersLighter.intensity, m_LighterDefaultIntensity, 5 * Time.deltaTime);
+            m_LighterIKPositionLerper.LerpPositions(0);
+        }
+    }
+
     void Update()
     {
-        if (!m_MyView.IsMine) return;
+        if (!m_MyView.IsMine || !m_MyController.CanPlayerMove()) return;
 
         if (Input.GetKey(KeyCode.E) && IsLookingAtReviveTarget()) // revive player
         {
@@ -346,15 +375,14 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         {
             m_Ability.UseAbility();
         }
-        else if (Input.GetKeyDown(KeyCode.Mouse0))
+
+        if (Input.GetKey(KeyCode.Mouse0) && !m_isInspecting && !m_MyController.IsSprinting() && m_PlayersFlashLight.gameObject.activeSelf)
         {
-            if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_ItemCast, 3f))
-            {
-                if (m_ItemCast.collider.GetComponent<NetworkObject>() != null)
-                {
-                    m_ItemCast.collider.GetComponent<NetworkObject>().CyclePowerStage();
-                }
-            }
+            m_MyView.RPC("RPC_UpdateLighterPositionLerper", RpcTarget.All, true);
+        }
+        else
+        {
+            m_MyView.RPC("RPC_UpdateLighterPositionLerper", RpcTarget.All, false);
         }
 
         float previousDelta = Input.mouseScrollDelta.y * 0.06f;
@@ -537,6 +565,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 if (!m_Inventory.IsCurrentSlotTaken() || m_ItemCast.collider.GetComponent<NetworkObject>().GetItemID() == ItemID.SantiyPill)
                 {
                     m_Inventory.AssignItem(m_ItemCast.collider.GetComponent<NetworkObject>());
+                    ItemCollectAnimation();
                     return;
                 }
             }
@@ -581,9 +610,22 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             else if (m_ItemCast.collider.tag == "Door")
             {
                 m_ItemCast.collider.GetComponentInParent<DoorModule>().CycleDoorState();
+                OpenDoorAnimation();
                 return;
             }
         }
+    }
+
+    void ItemCollectAnimation()
+    {
+        m_PlayersAnimations.SetTrigger("TakeItem");
+        m_PlayersAnimations.SetLayerWeight(8, 1);
+    }
+
+    void OpenDoorAnimation()
+    {
+        m_PlayersAnimations.SetTrigger("DoorInteraction");
+        m_PlayersAnimations.SetLayerWeight(8, 1);
     }
 
     public void ResumeGame()

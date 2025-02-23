@@ -63,6 +63,11 @@ public class AnimationEventWatcher : MonoBehaviour
         m_PlayerController.ResetWeightLayer(7);
     }
 
+    public void ResetInteractWeight()
+    {
+        m_PlayerController.ResetWeightLayer(8);
+    }
+
     public void StopLighterInspect()
     {
         m_PlayerInput.SetInspectStatus(false);

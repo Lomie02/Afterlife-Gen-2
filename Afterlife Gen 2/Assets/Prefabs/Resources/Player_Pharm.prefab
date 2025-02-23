@@ -129,7 +129,7 @@ Transform:
   m_GameObject: {fileID: 2831025310758755426}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.000000089406946, z: -0.000000029802315, w: 1}
-  m_LocalPosition: {x: -2.3945827, y: -3.746151, z: 0.8035123}
+  m_LocalPosition: {x: -4.82, y: -4.24, z: -3.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -196,7 +196,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Weight: 1
   m_Data:
-    m_Root: {fileID: 8135836796727793347}
+    m_Root: {fileID: 82100362439279887}
     m_Mid: {fileID: 5071797435723184898}
     m_Tip: {fileID: 8829729661849489464}
     m_Target: {fileID: 1229449959445228989}
@@ -632,7 +632,6 @@ MonoBehaviour:
       m_Calls: []
   m_SpecialistIcon: {fileID: 0}
   m_SpecialistChargeRate: 0.02
-  m_NightVisionDuration: 10
   m_PlayersVolume: {fileID: 0}
   m_NightVisionProfile: {fileID: 0}
   m_DefaultProfile: {fileID: 0}
@@ -6235,7 +6234,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1229449959445228989}
-  - component: {fileID: 5788352829282243081}
+  - component: {fileID: 8877826396280594673}
   m_Layer: 2
   m_Name: Light Aim
   m_TagString: Untagged
@@ -6259,7 +6258,7 @@ Transform:
   - {fileID: 8201630958162161380}
   m_Father: {fileID: 4383376382092976261}
   m_LocalEulerAnglesHint: {x: 6.736, y: -261.125, z: 84.375}
---- !u!114 &5788352829282243081
+--- !u!114 &8877826396280594673
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6268,12 +6267,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8824010949111104461}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65165a7eb90c00b4facaaa169df97f5e, type: 3}
+  m_Script: {fileID: 11500000, guid: 249bd09a968eb5640b62bb4681210496, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  swayAmount: 0.02
-  maxSwayAmount: 0.06
-  smoothAmount: 6
+  m_LerpPositions:
+  - {x: -0.183, y: -0.173, z: 0.174}
+  - {x: -0.207, y: 0.029, z: 0.265}
 --- !u!1 &8839729155372969216
 GameObject:
   m_ObjectHideFlags: 0
@@ -7519,6 +7518,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2612046984745842473}
   m_SourcePrefab: {fileID: 100100000, guid: 68453a5aeb1c13341b37ad14990e257b, type: 3}
+--- !u!4 &82100362439279887 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6803169544883306252, guid: 68453a5aeb1c13341b37ad14990e257b,
+    type: 3}
+  m_PrefabInstance: {fileID: 2357041286074484219}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &785998769374021627 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -6170625038081293824, guid: 68453a5aeb1c13341b37ad14990e257b,
@@ -8624,12 +8629,6 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!4 &8135836796727793347 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -3432401550182100168, guid: 68453a5aeb1c13341b37ad14990e257b,
-    type: 3}
-  m_PrefabInstance: {fileID: 2357041286074484219}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8166098172634869907 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -3321919801592875672, guid: 68453a5aeb1c13341b37ad14990e257b,

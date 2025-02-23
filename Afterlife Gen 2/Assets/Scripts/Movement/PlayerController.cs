@@ -296,6 +296,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
             UpdateDownedState();
     }
 
+    public bool CanPlayerMove()
+    {
+        return m_CanMove;
+    }
+
     void UpdateReplen()
     {
         m_PlayerHealth += 0.1f * Time.deltaTime;

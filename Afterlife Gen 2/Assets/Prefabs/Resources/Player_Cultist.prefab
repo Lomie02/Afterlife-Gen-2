@@ -5015,7 +5015,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Weight: 1
   m_Data:
-    m_Root: {fileID: 5198321853423743832}
+    m_Root: {fileID: 4174774737498808468}
     m_Mid: {fileID: 9128460803588988569}
     m_Tip: {fileID: 4775480271854056867}
     m_Target: {fileID: 1229449959445228989}
@@ -5382,7 +5382,6 @@ MonoBehaviour:
       m_Calls: []
   m_SpecialistIcon: {fileID: 2110573963983589241}
   m_SpecialistChargeRate: 0.02
-  m_NightVisionDuration: 10
   m_PlayersVolume: {fileID: 0}
   m_NightVisionProfile: {fileID: 0}
   m_DefaultProfile: {fileID: 0}
@@ -6142,7 +6141,7 @@ Transform:
   m_GameObject: {fileID: 7734414344067321548}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.000000089406946, z: -0.000000029802315, w: 1}
-  m_LocalPosition: {x: -3.7772622, y: -3.3698924, z: 0.86032575}
+  m_LocalPosition: {x: -4.82, y: -4.24, z: -3.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6157,7 +6156,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1229449959445228989}
-  - component: {fileID: 224383961096408191}
+  - component: {fileID: 6017991063540482263}
   m_Layer: 0
   m_Name: Light Aim
   m_TagString: Untagged
@@ -6181,7 +6180,7 @@ Transform:
   - {fileID: 3829456959318809741}
   m_Father: {fileID: 4383376382092976261}
   m_LocalEulerAnglesHint: {x: 6.736, y: -261.125, z: 84.375}
---- !u!114 &224383961096408191
+--- !u!114 &6017991063540482263
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6190,12 +6189,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8824010949111104461}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65165a7eb90c00b4facaaa169df97f5e, type: 3}
+  m_Script: {fileID: 11500000, guid: 249bd09a968eb5640b62bb4681210496, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  swayAmount: 0.02
-  maxSwayAmount: 0.06
-  smoothAmount: 6
+  m_LerpPositions:
+  - {x: -0.183, y: -0.173, z: 0.174}
+  - {x: -0.207, y: 0.029, z: 0.265}
 --- !u!1 &8839729155372969216
 GameObject:
   m_ObjectHideFlags: 0
@@ -7403,6 +7402,12 @@ CapsuleCollider:
   m_Height: 0.39346611
   m_Direction: 1
   m_Center: {x: -0.00000005971899, y: 0.1717331, z: 0.069999695}
+--- !u!4 &4174774737498808468 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6803169544883306252, guid: 61afdfa9321506f4385191322db75df3,
+    type: 3}
+  m_PrefabInstance: {fileID: 1763597782215401568}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4761988575616400498 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6515712193588681746, guid: 61afdfa9321506f4385191322db75df3,
@@ -7412,12 +7417,6 @@ Transform:
 --- !u!4 &4775480271854056867 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6502182839619065283, guid: 61afdfa9321506f4385191322db75df3,
-    type: 3}
-  m_PrefabInstance: {fileID: 1763597782215401568}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &5198321853423743832 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -3432401550182100168, guid: 61afdfa9321506f4385191322db75df3,
     type: 3}
   m_PrefabInstance: {fileID: 1763597782215401568}
   m_PrefabAsset: {fileID: 0}

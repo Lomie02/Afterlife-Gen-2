@@ -28,6 +28,7 @@ public enum ItemID
     Cranium,
     Doll,
     Perma_Item,
+    Laser_Projector,
 }
 
 public class NetworkObject : MonoBehaviourPunCallbacks

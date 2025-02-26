@@ -139,6 +139,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     ObjectiveManager m_ObjectiveManager;
 
+    PlayerInput m_PlayerInput;
+    InventoryManager m_InventoryManager;
+    bool m_IsEmoting = false;
+
     private void Awake()
     {
         GetComponentInChildren<RigBuilder>().Build();
@@ -148,7 +152,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_MyView = GetComponent<PhotonView>();
         m_SpectateSystem = FindAnyObjectByType<SpectateSystem>();
         m_SpecialistAbility = GetComponent<SpecialstAbility>();
+        m_PlayerInput = GetComponent<PlayerInput>();
 
+        m_InventoryManager = GetComponent<InventoryManager>();
         m_DefaultCollider = m_PlayerCollider.center;
         m_DefaultHeight = m_PlayerCollider.height;
 
@@ -290,6 +296,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
             UpdateDownedState();
     }
 
+    public bool CanPlayerMove()
+    {
+        return m_CanMove;
+    }
+
     void UpdateReplen()
     {
         m_PlayerHealth += 0.1f * Time.deltaTime;
@@ -314,9 +325,16 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         // Emotes
 
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D) && m_IsEmoting)
         {
             m_BodyAnimations.SetInteger("IsEmoting", 0);
+            m_PlayerInput.SetLighterBone(true);
+            m_PlayerInput.ToggleInverseK(true);
+
+            m_InventoryManager.SetAllItemStates(true);
+            m_InventoryManager.ToggleInverseK(true);
+
+            m_IsEmoting = false;
         }
 
         // Players Movement 
@@ -408,6 +426,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
                 m_PlayerCollider.center = new Vector3(0, 0.3788545f, 0);
                 m_PlayerCollider.height = 0.8057906f;
                 m_IsCrouched = true;
+
             }
             else
             {
@@ -458,6 +477,33 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
                 break;
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        if (collision.gameObject.GetComponent<DoorModule>() && m_IsSprinting &&
+            m_SpecialistAbility.GetSpecialistType() == SpecialistSelected.Exterminator
+            && !collision.gameObject.GetComponent<DoorModule>().GetDoorState())
+        {
+            ContactPoint point = collision.contacts[0];
+            Vector3 pointNormalDir = point.normal;
+
+            float DotPro = Vector3.Dot(pointNormalDir, -collision.gameObject.transform.up);
+
+            if (DotPro > 0.9f)
+            {
+                collision.gameObject.GetComponent<DoorModule>().CycleDoorState();
+                m_BodyAnimations.SetTrigger("ShoulderBash");
+                m_BodyAnimations.SetLayerWeight(7, 1);
+            }
+        }
+    }
+
+    public void ResetWeightLayer(int _index)
+    {
+        m_BodyAnimations.SetLayerWeight(_index, 0);
     }
 
     public void RestorePossesion() // Pharmacist Specialist
@@ -558,13 +604,36 @@ public class PlayerController : MonoBehaviourPunCallbacks
     void UpdateEmotes() // Add emotes here.
     {
         if (Input.GetKeyDown(KeyCode.Alpha1) && !Input.GetKeyDown(KeyCode.W)) // Emote Dance 1
+        {
             m_BodyAnimations.SetInteger("IsEmoting", 1);
+            m_PlayerInput.SetLighterBone(false);
+            m_PlayerInput.ToggleInverseK(false);
 
+            m_InventoryManager.SetAllItemStates(false);
+            m_InventoryManager.ToggleInverseK(false);
+            m_IsEmoting = true;
+        }
         else if (Input.GetKeyDown(KeyCode.Alpha2) && !Input.GetKeyDown(KeyCode.W)) // Emote Dance 2
+        {
             m_BodyAnimations.SetInteger("IsEmoting", 2);
+            m_PlayerInput.SetLighterBone(false);
+            m_PlayerInput.ToggleInverseK(false);
 
+            m_InventoryManager.SetAllItemStates(false);
+            m_InventoryManager.ToggleInverseK(false);
+            m_IsEmoting = true;
+        }
         else if (Input.GetKeyDown(KeyCode.Alpha3) && !Input.GetKeyDown(KeyCode.W)) // Emote Dance 3
+        {
             m_BodyAnimations.SetInteger("IsEmoting", 3);
+            m_PlayerInput.SetLighterBone(false);
+            m_PlayerInput.ToggleInverseK(false);
+
+            m_InventoryManager.SetAllItemStates(false);
+            m_InventoryManager.ToggleInverseK(false);
+
+            m_IsEmoting = true;
+        }
     }
 
     void StartSliding()
@@ -607,17 +676,30 @@ public class PlayerController : MonoBehaviourPunCallbacks
             m_BodyAnimations.SetLayerWeight(1, 1);
             m_PlayerCollider.center = new Vector3(0, 0.3788545f, 0);
             m_PlayerCollider.height = 0.8057906f;
+
+            m_PlayerInput.ToggleInverseK(false);
+            m_PlayerInput.SetLighterBone(false);
+
+            m_InventoryManager.SetAllItemStates(false);
+            m_InventoryManager.ToggleInverseK(false);
         }
         else
         {
             m_BodyAnimations.SetLayerWeight(1, 0);
             m_PlayerCollider.center = m_DefaultCollider;
             m_PlayerCollider.height = m_DefaultHeight;
+
+            m_PlayerInput.SetLighterBone(true);
+            m_PlayerInput.ToggleInverseK(true);
+
+            m_InventoryManager.SetAllItemStates(true);
+            m_InventoryManager.ToggleInverseK(true);
         }
 
 
         transform.position = _trapPosition.position;
-        transform.forward = _trapPosition.forward;
+        Vector3 worldNormal = _trapPosition.transform.TransformDirection(Vector3.forward);
+        transform.rotation = Quaternion.LookRotation(worldNormal, Vector3.up);
     }
 
     public bool m_IsTacSprinting()

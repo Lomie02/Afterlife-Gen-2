@@ -16,6 +16,7 @@ public class Emf : MonoBehaviour
     GhostAI m_Ghost;
 
     float m_DistanceToTarget;
+    Transform m_GhostEmfLocation;
 
     void Start()
     {
@@ -23,6 +24,7 @@ public class Emf : MonoBehaviour
         m_ObjectiveManager = FindFirstObjectByType<ObjectiveManager>();
 
         m_NetworkObject = GetComponent<NetworkObject>();
+        m_GhostEmfLocation = GameObject.FindGameObjectWithTag("emf_locate").transform;
 
         for (int i = 0; i < _Temp.Length; i++) // Find out the cursed objects position in the list.
         {
@@ -33,7 +35,9 @@ public class Emf : MonoBehaviour
             }
         }
 
-        m_Ghost = FindFirstObjectByType<GhostAI>(); 
+        m_WarningIcon.gameObject.SetActive(false);
+
+        m_Ghost = FindFirstObjectByType<GhostAI>();
 
         if (m_Ghost.GetGhostProfile().m_Evidence1 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence2 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence3 == EvidenceTypes.Emf && m_CursedObject)
         {
@@ -45,12 +49,10 @@ public class Emf : MonoBehaviour
         StartCoroutine(UpdateEmf());
     }
 
-
     public IEnumerator UpdateEmf()
     {
         while (true)
         {
-
             if (m_NetworkObject.GetPowerState())
             {
                 if (!m_CursedObject)
@@ -63,7 +65,7 @@ public class Emf : MonoBehaviour
                         {
                             m_CursedObject = _Temp[i];
 
-                            if (m_CursedObject.GetGhostProfile().m_Evidence1 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence2 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence3 == EvidenceTypes.Emf && m_CursedObject)
+                            if (m_CursedObject.GetGhostProfile().m_Evidence1 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence2 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence3 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence4 == EvidenceTypes.Emf || m_CursedObject.GetGhostProfile().m_Evidence3 == EvidenceTypes.Emf && m_CursedObject)
                             {
                                 m_IsEvidence = true;
                             }
@@ -76,48 +78,25 @@ public class Emf : MonoBehaviour
                 if (m_ObjectiveManager.GetCurrentObjective().m_Tag == "Cursed_Object")
                     m_DistanceToTarget = Vector3.Distance(transform.position, m_CursedObject.gameObject.transform.position);
                 else
-                    m_DistanceToTarget = Vector3.Distance(transform.position, m_Ghost.gameObject.transform.position);
+                    m_DistanceToTarget = Vector3.Distance(transform.position, m_GhostEmfLocation.position);
 
-                if (m_DistanceToTarget <= 2 && m_IsEvidence && m_CursedObject.IsCursedObject())
+                if (m_DistanceToTarget <= 2 && m_Ghost.IsEmfActivityActive())
                 {
-                    m_EmfLevel = 6;
-                    if (m_WarningIcon)
-                        m_WarningIcon.gameObject.SetActive(true);
+                    if (m_ObjectiveManager.GetCurrentObjective().m_Tag == "Ghost" && m_IsEvidence)
+                        m_EmfLevel = 6;
+                    else
+                        m_EmfLevel = m_Ghost.GetEmfAcitivtyValue();
                 }
-                else if (m_DistanceToTarget > 2 && m_DistanceToTarget <= 4)
+                else
                 {
-                    if (m_WarningIcon)
-                        m_WarningIcon.gameObject.SetActive(false);
-                    m_EmfLevel = 5;
+                    m_EmfLevel = 0;
                 }
-                else if (m_DistanceToTarget > 4 && m_DistanceToTarget <= 6)
-                {
-                    if (m_WarningIcon)
-                        m_WarningIcon.gameObject.SetActive(false);
-                    m_EmfLevel = 4;
-                }
-                else if (m_DistanceToTarget > 6 && m_DistanceToTarget <= 8)
-                {
-                    if (m_WarningIcon)
-                        m_WarningIcon.gameObject.SetActive(false);
-                    m_EmfLevel = 3;
-                }
-                else if (m_DistanceToTarget > 8 && m_DistanceToTarget <= 10)
-                {
-                    if (m_WarningIcon)
-                        m_WarningIcon.gameObject.SetActive(false);
-                    m_EmfLevel = 2;
-                }
-                else if (m_DistanceToTarget > 10)
-                {
-                    if (m_WarningIcon)
-                        m_WarningIcon.gameObject.SetActive(false);
-                    m_EmfLevel = 1;
-                }
+
+                m_WarningIcon.gameObject.SetActive(m_EmfLevel == 6);
                 m_EmfText.text = m_EmfLevel.ToString();
-            }
 
-            yield return new WaitForSeconds(5f);
+            }
+            yield return new WaitForSeconds(1f);
         }
     }
 }

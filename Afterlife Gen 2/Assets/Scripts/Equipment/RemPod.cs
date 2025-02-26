@@ -12,59 +12,62 @@ public class RemPod : MonoBehaviour
     NetworkObject m_NetworkObject;
     bool m_IsEvidence = false;
 
+    ObjectiveManager m_ObjectiveManager;
     void Start()
     {
         m_MyView = GetComponent<PhotonView>();
-        m_Ghost = FindObjectOfType<GhostAI>();
+        m_ObjectiveManager = FindAnyObjectByType<ObjectiveManager>();
 
+        AttemptToFindGhost();
         m_NetworkObject = GetComponent<NetworkObject>();
-
-        if (m_Ghost.GetGhostProfile().m_Evidence1 == EvidenceTypes.RemPod || m_Ghost.GetGhostProfile().m_Evidence2 == EvidenceTypes.RemPod || m_Ghost.GetGhostProfile().m_Evidence3 == EvidenceTypes.RemPod)
-        {
-            m_IsEvidence = true;
-        }
-
-        StartCoroutine(UpdateRemPods());
 
     }
 
-    IEnumerator UpdateRemPods()
+    void AttemptToFindGhost()
     {
-        while (true)
+        m_Ghost = FindAnyObjectByType<GhostAI>();
+
+        if (m_Ghost != null)
         {
 
-            if (m_NetworkObject.GetPowerState())
+            if (m_Ghost.GetGhostProfile().m_Evidence1 == EvidenceTypes.RemPod || m_Ghost.GetGhostProfile().m_Evidence2 == EvidenceTypes.RemPod || m_Ghost.GetGhostProfile().m_Evidence3 == EvidenceTypes.RemPod || m_Ghost.GetGhostProfile().m_Evidence4 == EvidenceTypes.RemPod)
             {
-                if (!m_Ghost)
-                {
-                    m_Ghost = FindObjectOfType<GhostAI>();
-                }
+                m_IsEvidence = true;
+            }
+        }
+    }
 
-                float DistanceToGhost = Vector3.Distance(transform.position, m_Ghost.gameObject.transform.position);
-
-                if (DistanceToGhost < 5 && m_IsEvidence)
-                {
-                    ShowLights(5);
-                }
-                else if (DistanceToGhost > 10 && DistanceToGhost < 15)
-                {
-                    ShowLights(4);
-                }
-                else if (DistanceToGhost > 15 && DistanceToGhost < 20)
-                {
-                    ShowLights(3);
-                }
-                else if (DistanceToGhost > 20 && DistanceToGhost < 25)
-                {
-                    ShowLights(2);
-                }
-                else if (DistanceToGhost > 25 && DistanceToGhost < 30)
-                {
-                    ShowLights(1);
-                }
+    void Update()
+    {
+        if (m_NetworkObject.GetPowerState() && m_Ghost != null)
+        {
+            if (!m_Ghost)
+            {
+                AttemptToFindGhost();
             }
 
-            yield return new WaitForSeconds(5f);
+            float DistanceToGhost = Vector3.Distance(transform.position, m_Ghost.gameObject.transform.position);
+
+            if (DistanceToGhost < 5 && m_IsEvidence && m_ObjectiveManager.GetCurrentObjective().m_Tag == "Ghost")
+            {
+                ShowLights(5);
+            }
+            else if (DistanceToGhost > 10 && DistanceToGhost < 15)
+            {
+                ShowLights(4);
+            }
+            else if (DistanceToGhost > 15 && DistanceToGhost < 20)
+            {
+                ShowLights(3);
+            }
+            else if (DistanceToGhost > 20 && DistanceToGhost < 25)
+            {
+                ShowLights(2);
+            }
+            else if (DistanceToGhost > 25 && DistanceToGhost < 30)
+            {
+                ShowLights(1);
+            }
         }
     }
 

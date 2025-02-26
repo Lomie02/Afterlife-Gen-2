@@ -10,6 +10,10 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] NetworkObject[] m_Items;
     [SerializeField] int m_ItemSlots = 3;
 
+    [Space]
+
+    [SerializeField] GameObject m_EquipmentBone;
+
     PhotonView m_MyView;
     int m_CurrentSlotSelected = 0;
     int m_PreviousSelected;
@@ -36,6 +40,7 @@ public class InventoryManager : MonoBehaviour
 
     [Header("Cultist Only")]
     [SerializeField] NetworkObject m_BookObject;
+    bool m_IkEnabled = true;
 
     void Start()
     {
@@ -51,7 +56,7 @@ public class InventoryManager : MonoBehaviour
 
         m_MaxSlotsCurrent = m_Items.Length;
 
-        if(m_ItemSlowName) m_ItemSlowName.text = "";
+        if (m_ItemSlowName) m_ItemSlowName.text = "";
 
         int _convertedSlotNumber = m_CurrentSlotSelected;
         _convertedSlotNumber++;
@@ -126,13 +131,6 @@ public class InventoryManager : MonoBehaviour
             return;
         }
 
-        if (_object.GetItemID() == ItemID.SantiyPill)
-        {
-            GetComponent<PlayerController>().RestorePossesion();
-            PhotonNetwork.Destroy(_object.GetComponent<PhotonView>());
-            return;
-        }
-
         m_Items[m_CurrentSlotSelected] = _object;
         m_ItemSlowName.text = m_Items[m_CurrentSlotSelected].GetItemsName();
 
@@ -192,7 +190,12 @@ public class InventoryManager : MonoBehaviour
         if (!m_MyView.IsMine)
             return;
 
-        if (m_Items[m_CurrentSlotSelected])
+        if (m_Items[m_CurrentSlotSelected].GetItemID() == ItemID.SantiyPill)
+        {
+            m_PlayerController.RestorePossesion();
+            DestroyCurrentItem();
+        }
+        else if (m_Items[m_CurrentSlotSelected])
         {
             for (int i = 0; i < m_ThirdPersonViewItems.Length; i++)
             {
@@ -283,7 +286,7 @@ public class InventoryManager : MonoBehaviour
         int _convertedSlotNumber = m_CurrentSlotSelected;
         _convertedSlotNumber++;
 
-        if(m_ItemCurrentlyOnSlot) m_ItemCurrentlyOnSlot.text = "Slot " + _convertedSlotNumber.ToString() + "/" + m_MaxSlotsCurrent.ToString();
+        if (m_ItemCurrentlyOnSlot) m_ItemCurrentlyOnSlot.text = "Slot " + _convertedSlotNumber.ToString() + "/" + m_MaxSlotsCurrent.ToString();
     }
 
     [PunRPC]
@@ -303,18 +306,47 @@ public class InventoryManager : MonoBehaviour
 
     public void UpdateItemLerp()
     {
-        if (m_Items[m_CurrentSlotSelected])
+        if (m_IkEnabled)
         {
-            if (m_PlayerController.IsSprinting())
-                m_MyView.RPC("RPC_LerpItem", RpcTarget.All, 0f);
+            if (m_Items[m_CurrentSlotSelected])
+            {
+                if (m_PlayerController.IsSprinting())
+                    m_MyView.RPC("RPC_LerpItem", RpcTarget.All, 0f);
+                else
+                    m_MyView.RPC("RPC_LerpItem", RpcTarget.All, 1f);
+            }
             else
-                m_MyView.RPC("RPC_LerpItem", RpcTarget.All, 1f);
+            {
+                m_MyView.RPC("RPC_LerpItem", RpcTarget.All, 0f);
+            }
         }
         else
         {
             m_MyView.RPC("RPC_LerpItem", RpcTarget.All, 0f);
         }
 
+    }
+
+    public void SetAllItemStates(bool _state)
+    {
+        m_MyView.RPC("RPC_SetAllItemStates", RpcTarget.All, _state);
+    }
+
+    [PunRPC]
+    public void RPC_SetAllItemStates(bool _state)
+    {
+        m_EquipmentBone.SetActive(_state);
+    }
+
+    public void ToggleInverseK(bool _state)
+    {
+        m_MyView.RPC("RPC_ToggleInverseK", RpcTarget.All, _state);
+    }
+
+    [PunRPC]
+    public void RPC_ToggleInverseK(bool _state)
+    {
+        m_IkEnabled = _state;
     }
 
 

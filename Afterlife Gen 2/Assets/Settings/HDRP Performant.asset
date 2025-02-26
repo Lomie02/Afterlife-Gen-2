@@ -30,8 +30,8 @@ MonoBehaviour:
     supportVolumetrics: 1
     supportVolumetricClouds: 0
     supportLightLayers: 1
-    renderingLayerMaskBuffer: 0
-    supportWater: 0
+    renderingLayerMaskBuffer: 1
+    supportWater: 1
     waterSimulationResolution: 128
     supportWaterExclusion: 0
     supportWaterDecals: 1
@@ -86,7 +86,7 @@ MonoBehaviour:
     supportVFXRayTracing: 0
     supportedRayTracingMode: 2
     lightLoopSettings:
-      cookieAtlasSize: 512
+      cookieAtlasSize: 1024
       cookieFormat: 74
       cookieAtlasLastValidMip: 0
       cookieTexArraySize: 16

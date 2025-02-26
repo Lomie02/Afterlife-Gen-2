@@ -80,11 +80,24 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
     GhostTrap m_TrapObject;
     SettingsPreferenceManager m_SettingsPreferenceManager;
+
+    bool m_IkSystemEnabled = true;
+    float m_IKLerpIndex;
+    bool m_KeepLighterWeight = true;
+    bool m_isInspecting = false;
+
+    PositonLerp m_LighterIKPositionLerper;
+
+    float m_LighterDefaultIntensity;
+    float m_LighterIntensityHoldUp;
+
+    Light m_PlayersLighter;
     void Start()
     {
         //SearchForElements();
 
         m_ReviveTimer = m_ReviveDuration;
+        m_LighterIKPositionLerper = GetComponentInChildren<PositonLerp>();
 
         m_MyView = GetComponent<PhotonView>();
         m_Inventory = GetComponent<InventoryManager>();
@@ -125,6 +138,12 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_PauseMenu.SetActive(false);
 
         m_TrapObject = FindFirstObjectByType<GhostTrap>();
+
+        m_PlayersLighter = m_PlayersFlashLight.GetComponentInChildren<Light>(true);
+
+        m_LighterDefaultIntensity = m_PlayersLighter.intensity;
+        m_LighterIntensityHoldUp = m_LighterDefaultIntensity + 2f;
+
         if (m_ReadyHost && m_ReadyUp)
         {
             m_ReadyHost.onClick.AddListener(m_ReadyUp.ReadyUpHost);
@@ -175,9 +194,9 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_PauseMenu = GameObject.Find("PauseMenu");
         m_HostGameSettings = GameObject.Find("GameSettings");
 
-        m_GameManager = FindObjectOfType<GameManager>();
+        m_GameManager = FindAnyObjectByType<GameManager>();
         m_Ability = GetComponent<SpecialstAbility>();
-        m_Network = FindObjectOfType<NetworkLobby>();
+        m_Network = FindAnyObjectByType<NetworkLobby>();
 
         if (m_HostGameSettings)
             m_HostGameSettings.SetActive(false);
@@ -220,9 +239,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     void LerpFlashLight(float _index)
     {
         m_FlashLightLerp = Mathf.Lerp(m_FlashLightLerp, _index, 5 * Time.deltaTime);
-
         m_PlayersAnimations.SetLayerWeight(4, m_FlashLightLerp);
-        m_LightAImConstrait.weight = m_FlashLightLerp;
     }
     public void LeaveGame()
     {
@@ -242,9 +259,25 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         return false;
     }
 
+    [PunRPC]
+    public void RPC_UpdateLighterPositionLerper(bool _state)
+    {
+        if (_state)
+        {
+            m_LighterIKPositionLerper.LerpPositions(1);
+            m_PlayersLighter.intensity = Mathf.Lerp(m_PlayersLighter.intensity, m_LighterIntensityHoldUp, 5 * Time.deltaTime);
+
+        }
+        else
+        {
+            m_PlayersLighter.intensity = Mathf.Lerp(m_PlayersLighter.intensity, m_LighterDefaultIntensity, 5 * Time.deltaTime);
+            m_LighterIKPositionLerper.LerpPositions(0);
+        }
+    }
+
     void Update()
     {
-        if (!m_MyView.IsMine) return;
+        if (!m_MyView.IsMine || !m_MyController.CanPlayerMove()) return;
 
         if (Input.GetKey(KeyCode.E) && IsLookingAtReviveTarget()) // revive player
         {
@@ -268,6 +301,12 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             m_ReviveTimer = m_ReviveDuration;
             m_ReviveProgressBar.value = 0;
             m_ReviveProgressBar.gameObject.SetActive(false);
+        }
+
+        if (m_isLighterOpen && Input.GetKeyDown(KeyCode.I) && !m_isInspecting)
+        {
+            SetInspectStatus(true);
+            m_PlayersAnimations.SetTrigger("InspectLighter");
         }
 
         // Voice Chat
@@ -336,15 +375,14 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         {
             m_Ability.UseAbility();
         }
-        else if (Input.GetKeyDown(KeyCode.Mouse0))
+
+        if (Input.GetKey(KeyCode.Mouse0) && !m_isInspecting && !m_MyController.IsSprinting() && m_PlayersFlashLight.gameObject.activeSelf)
         {
-            if (Physics.Raycast(m_PlayersCamera.transform.position, m_PlayersCamera.transform.forward, out m_ItemCast, 3f))
-            {
-                if (m_ItemCast.collider.GetComponent<NetworkObject>() != null)
-                {
-                    m_ItemCast.collider.GetComponent<NetworkObject>().CyclePowerStage();
-                }
-            }
+            m_MyView.RPC("RPC_UpdateLighterPositionLerper", RpcTarget.All, true);
+        }
+        else
+        {
+            m_MyView.RPC("RPC_UpdateLighterPositionLerper", RpcTarget.All, false);
         }
 
         float previousDelta = Input.mouseScrollDelta.y * 0.06f;
@@ -378,22 +416,92 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     [PunRPC]
     public void RPC_UpdatePlayerFlashlight()
     {
-        if (m_PlayersFlashLight.gameObject.activeSelf)
+        if (m_IkSystemEnabled || m_isInspecting)
         {
-            if (m_MyController.IsSprinting())
+            if (m_PlayersFlashLight.gameObject.activeSelf)
             {
-                LerpFlashLight(0.8f);
+                if (m_MyController.IsSprinting())
+                {
+                    LerpFlashLight(0.8f);
+                }
+                else
+                {
+
+                    LerpFlashLight(1);
+                }
             }
             else
             {
-
-                LerpFlashLight(1);
+                LerpFlashLight(0);
             }
         }
         else
         {
             LerpFlashLight(0);
         }
+
+        if (m_IkSystemEnabled)
+        {
+            if (m_PlayersFlashLight.gameObject.activeSelf)
+            {
+                if (m_MyController.IsSprinting())
+                {
+                    LerpIKWeight(0.8f);
+                }
+                else
+                {
+
+                    LerpIKWeight(1);
+                }
+            }
+            else
+            {
+                LerpIKWeight(0);
+            }
+        }
+        else
+        {
+            LerpIKWeight(0);
+        }
+
+    }
+
+    public void SetInspectStatus(bool _state)
+    {
+        m_isInspecting = _state;
+    }
+
+    void LerpIKWeight(float _index)
+    {
+        m_IKLerpIndex = Mathf.Lerp(m_IKLerpIndex, _index, 5 * Time.deltaTime);
+        m_LightAImConstrait.weight = Mathf.Lerp(m_LightAImConstrait.weight, m_IKLerpIndex, 5 * Time.deltaTime);
+    }
+
+    public void SetLighterBone(bool _state)
+    {
+        m_MyView.RPC("RPC_SetLighterBone", RpcTarget.All, _state);
+    }
+
+    [PunRPC]
+    public void RPC_SetLighterBone(bool _state)
+    {
+        m_PlayersFlashLight.transform.parent.gameObject.SetActive(_state);
+    }
+
+    public void ToggleInverseK(bool _state)
+    {
+        m_MyView.RPC("RPC_ToggleInverse", RpcTarget.All, _state);
+    }
+
+    public void SetKeepLighterWeight(bool _state)
+    {
+        m_KeepLighterWeight = _state;
+    }
+
+    [PunRPC]
+    public void RPC_ToggleInverse(bool _state)
+    {
+        m_IkSystemEnabled = _state;
     }
 
     IEnumerator CheckHoverItem()
@@ -442,7 +550,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             }
             else
             {
-                    m_UseImage.gameObject.SetActive(false);
+                m_UseImage.gameObject.SetActive(false);
             }
             yield return new WaitForSeconds(1f);
         }
@@ -457,6 +565,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 if (!m_Inventory.IsCurrentSlotTaken() || m_ItemCast.collider.GetComponent<NetworkObject>().GetItemID() == ItemID.SantiyPill)
                 {
                     m_Inventory.AssignItem(m_ItemCast.collider.GetComponent<NetworkObject>());
+                    ItemCollectAnimation();
                     return;
                 }
             }
@@ -479,11 +588,11 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
             else if (m_ItemCast.collider.name == "Monitor")
             {
-                m_MyController.SetTrapStance(true, m_TrapObject.GetTrapStandingPlacement());
                 m_MyCamera.SetTrapStance(true, m_TrapObject.GetTrapScreenPosition().position);
+                m_MyController.SetTrapStance(true, m_TrapObject.GetTrapStandingPlacement());
 
-                m_TrapObject.m_OnExitTrap.AddListener(delegate { m_MyController.SetTrapStance(false, m_TrapObject.GetTrapStandingPlacement()); });
                 m_TrapObject.m_OnExitTrap.AddListener(delegate { m_MyCamera.SetTrapStance(false, m_TrapObject.GetTrapScreenPosition().position); });
+                m_TrapObject.m_OnExitTrap.AddListener(delegate { m_MyController.SetTrapStance(false, m_TrapObject.GetTrapStandingPlacement()); });
                 return;
             }
             else if (m_ItemCast.collider.GetComponent<PowerManager>() != null)
@@ -501,9 +610,22 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             else if (m_ItemCast.collider.tag == "Door")
             {
                 m_ItemCast.collider.GetComponentInParent<DoorModule>().CycleDoorState();
+                OpenDoorAnimation();
                 return;
             }
         }
+    }
+
+    void ItemCollectAnimation()
+    {
+        m_PlayersAnimations.SetTrigger("TakeItem");
+        m_PlayersAnimations.SetLayerWeight(8, 1);
+    }
+
+    void OpenDoorAnimation()
+    {
+        m_PlayersAnimations.SetTrigger("DoorInteraction");
+        m_PlayersAnimations.SetLayerWeight(8, 1);
     }
 
     public void ResumeGame()

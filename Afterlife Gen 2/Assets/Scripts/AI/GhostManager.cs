@@ -15,6 +15,7 @@ public enum EvidenceTypes
     FreezingTemps,
     FloatingObjects,
     RemPod,
+    Bloodtrail,
 }
 
 [System.Serializable]
@@ -24,6 +25,7 @@ public struct GhostProfile
     public EvidenceTypes m_Evidence1;
     public EvidenceTypes m_Evidence2;
     public EvidenceTypes m_Evidence3;
+    public EvidenceTypes m_Evidence4;
 }
 public class GhostManager : MonoBehaviour
 {

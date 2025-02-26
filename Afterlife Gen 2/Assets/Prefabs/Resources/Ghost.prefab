@@ -2144,10 +2144,12 @@ MonoBehaviour:
     m_Evidence1: 0
     m_Evidence2: 1
     m_Evidence3: 3
+    m_Evidence4: 0
   m_View: {fileID: 5942073849677170462}
   m_GhostManager: {fileID: 0}
   m_RoamingDistance: 50
   m_RayView: {fileID: 6123923374568684468}
+  m_GhostEmfLocation: {fileID: 0}
 --- !u!114 &5942073849677170462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7447,6 +7449,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Mannequinn
+      objectReference: {fileID: 0}
+    - target: {fileID: 2956579766578821551, guid: c99e1d43f2f519949b2ac830a4aed82f,
+        type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2956579766578821551, guid: c99e1d43f2f519949b2ac830a4aed82f,
         type: 3}

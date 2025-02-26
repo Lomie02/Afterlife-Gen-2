@@ -8732,6 +8732,21 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -0.003
       objectReference: {fileID: 0}
+    - target: {fileID: 6112761993206330463, guid: 9ab5f453e3860ca47a0b65d5a0ccdb8b,
+        type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0385a6f91e63d5145ba45df625d2c54a, type: 2}
+    - target: {fileID: 6112761993206330463, guid: 9ab5f453e3860ca47a0b65d5a0ccdb8b,
+        type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 6f563badbad1e4c4ea197d53bbb41ad1, type: 2}
+    - target: {fileID: 6112761993206330463, guid: 9ab5f453e3860ca47a0b65d5a0ccdb8b,
+        type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: e9055bcd10b7f7247b9935bfbcb4a190, type: 2}
     m_RemovedComponents:
     - {fileID: 5866666021909216657, guid: 9ab5f453e3860ca47a0b65d5a0ccdb8b, type: 3}
     m_RemovedGameObjects: []
@@ -9788,6 +9803,12 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 0
     Name: InspectLighter
+  - Type: 9
+    SynchronizeType: 0
+    Name: DoorInteraction
+  - Type: 9
+    SynchronizeType: 0
+    Name: TakeItem
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
@@ -9805,6 +9826,8 @@ MonoBehaviour:
     LayerIndex: 6
   - SynchronizeType: 0
     LayerIndex: 7
+  - SynchronizeType: 0
+    LayerIndex: 8
 --- !u!114 &7263942106677338070
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -11866,7 +11866,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 61afdfa9321506f4385191322db75df3,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 61afdfa9321506f4385191322db75df3,
         type: 3}
@@ -24487,7 +24487,7 @@ MonoBehaviour:
   m_AreaLightEmissiveMeshShadowCastingMode: 0
   m_AreaLightEmissiveMeshMotionVectorGenerationMode: 0
   m_AreaLightEmissiveMeshLayer: -1
-  m_Version: 12
+  m_Version: 13
   m_ObsoleteShadowResolutionTier: 1
   m_ObsoleteUseShadowQualitySettings: 0
   m_ObsoleteCustomShadowResolution: 512
@@ -24554,7 +24554,7 @@ Light:
   m_ForceVisible: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
-  m_LightUnit: 1
+  m_LightUnit: 0
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
 --- !u!1 &1367003339
@@ -25864,6 +25864,21 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: dbf2d1d2b2799c34a9bd7eeb554c4ea0, type: 2}
+    - target: {fileID: 6112761993206330463, guid: 9ab5f453e3860ca47a0b65d5a0ccdb8b,
+        type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0385a6f91e63d5145ba45df625d2c54a, type: 2}
+    - target: {fileID: 6112761993206330463, guid: 9ab5f453e3860ca47a0b65d5a0ccdb8b,
+        type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 6f563badbad1e4c4ea197d53bbb41ad1, type: 2}
+    - target: {fileID: 6112761993206330463, guid: 9ab5f453e3860ca47a0b65d5a0ccdb8b,
+        type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: e9055bcd10b7f7247b9935bfbcb4a190, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

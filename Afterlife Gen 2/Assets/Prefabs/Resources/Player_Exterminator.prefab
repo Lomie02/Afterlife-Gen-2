@@ -2256,7 +2256,7 @@ Transform:
   m_GameObject: {fileID: 8337463082570330289}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.00001, y: -0, z: -0.00089}
   m_LocalScale: {x: 0.08028028, y: 0.08028033, z: 0.08028031}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2398,7 +2398,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 5
+      scalar: 0
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -2894,7 +2894,7 @@ ParticleSystem:
     serializedVersion: 6
     enabled: 1
     type: 4
-    angle: 0
+    angle: 0.16
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
@@ -2980,7 +2980,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.05
+      value: 0.0001
       mode: 0
       spread: 0
       speed:
@@ -3099,7 +3099,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 86.7
+      scalar: 25
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -3217,20 +3217,29 @@ ParticleSystem:
         - serializedVersion: 3
           time: 0
           value: 1
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
+          inSlope: -0.15951228
+          outSlope: -0.15951228
+          tangentMode: 34
           weightedMode: 0
           inWeight: 0
-          outWeight: 0
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.50152904
+          value: 0.91999996
+          inSlope: 0.000489302
+          outSlope: 0.000489302
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
         - serializedVersion: 3
           time: 1
-          value: 0
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
+          value: 1
+          inSlope: 0.16049089
+          outSlope: 0.16049089
+          tangentMode: 34
           weightedMode: 0
-          inWeight: 0
+          inWeight: 0.33333334
           outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
@@ -5780,7 +5789,7 @@ ParticleSystem:
     separateAxes: 0
     range: {x: 0, y: 1}
   ColorBySpeedModule:
-    enabled: 0
+    enabled: 1
     gradient:
       serializedVersion: 2
       minMaxState: 1
@@ -7009,7 +7018,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 0cca025ceecbd7840bfc6b784fa968e0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7030,7 +7039,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_RenderMode: 0
+  m_RenderMode: 3
   m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -7042,7 +7051,7 @@ ParticleSystemRenderer:
   m_NormalDirection: 1
   m_ShadowBias: 0
   m_RenderAlignment: 0
-  m_Pivot: {x: 0, y: 0, z: 0}
+  m_Pivot: {x: 0, y: 0.33, z: 0}
   m_Flip: {x: 0, y: 0, z: 0}
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 1
@@ -7476,7 +7485,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &737884227627385065
 Transform:
   m_ObjectHideFlags: 0
@@ -7504,8 +7513,8 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1.2732395
-  m_Range: 17
+  m_Intensity: 0.9947184
+  m_Range: 1.3989353
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -7547,7 +7556,7 @@ Light:
   m_LightShadowCasterMode: 2
   m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
-  m_ColorTemperature: 2722
+  m_ColorTemperature: 1900
   m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
@@ -7580,7 +7589,7 @@ MonoBehaviour:
   m_InnerSpotPercent: 0
   m_SpotIESCutoffPercent: 100
   m_LightDimmer: 1
-  m_VolumetricDimmer: 0.3
+  m_VolumetricDimmer: 0.2
   m_FadeDistance: 10000
   m_VolumetricFadeDistance: 10000
   m_AffectDiffuse: 1
@@ -7657,7 +7666,7 @@ MonoBehaviour:
     m_UseOverride: 0
     m_Level: 1
   m_ShadowDimmer: 1
-  m_VolumetricShadowDimmer: 1
+  m_VolumetricShadowDimmer: 0
   m_ShadowFadeDistance: 10000
   m_UseContactShadow:
     m_Override: 0
@@ -7690,7 +7699,7 @@ MonoBehaviour:
   m_ShadowVariant: 0
   m_ShadowPrecision: 0
   useOldInspector: 0
-  useVolumetric: 0
+  useVolumetric: 1
   featuresFoldout: 1
   m_AreaLightEmissiveMeshShadowCastingMode: 0
   m_AreaLightEmissiveMeshMotionVectorGenerationMode: 0
@@ -10291,17 +10300,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 568550d053171624ca936313ba814d14,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.00861
+      value: -0.00816
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 568550d053171624ca936313ba814d14,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.00288
+      value: -0.00307
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 568550d053171624ca936313ba814d14,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.0003
+      value: -0.00027
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 568550d053171624ca936313ba814d14,
         type: 3}
@@ -10758,17 +10767,17 @@ PrefabInstance:
     - target: {fileID: 5041052130301585351, guid: 681b416784719784182fa39cb13a55ca,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.0012
       objectReference: {fileID: 0}
     - target: {fileID: 5041052130301585351, guid: 681b416784719784182fa39cb13a55ca,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.0005
       objectReference: {fileID: 0}
     - target: {fileID: 5041052130301585351, guid: 681b416784719784182fa39cb13a55ca,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.0167
       objectReference: {fileID: 0}
     - target: {fileID: 5041052130301585351, guid: 681b416784719784182fa39cb13a55ca,
         type: 3}

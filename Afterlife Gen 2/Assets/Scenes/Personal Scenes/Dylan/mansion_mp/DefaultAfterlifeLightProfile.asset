@@ -85,13 +85,13 @@ MonoBehaviour:
   active: 1
   quality:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   threshold:
     m_OverrideState: 1
-    m_Value: 1.5
+    m_Value: 0
   intensity:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 0.142
   scatter:
     m_OverrideState: 1
     m_Value: 0.7
@@ -109,13 +109,13 @@ MonoBehaviour:
     m_Value: 1
   m_Resolution:
     m_OverrideState: 1
-    m_Value: 4
+    m_Value: 2
   m_HighQualityPrefiltering:
     m_OverrideState: 1
     m_Value: 0
   m_HighQualityFiltering:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
 --- !u!114 &-8518302652283251949
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -343,10 +343,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d08ce26990eb1a4a9177b860541e702, type: 3}
   m_Name: Exposure
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   mode:
     m_OverrideState: 1
-    m_Value: 4
+    m_Value: 0
   meteringMode:
     m_OverrideState: 1
     m_Value: 2
@@ -355,16 +355,16 @@ MonoBehaviour:
     m_Value: 1
   fixedExposure:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: -1.74
   compensation:
     m_OverrideState: 1
     m_Value: 0
   limitMin:
     m_OverrideState: 1
-    m_Value: -1.7021277
+    m_Value: 3.3191488
   limitMax:
     m_OverrideState: 1
-    m_Value: 1.5
+    m_Value: 5.7872343
   curveMap:
     m_OverrideState: 1
     m_Value:
@@ -826,8 +826,9 @@ MonoBehaviour:
   diffusionProfiles:
     m_OverrideState: 1
     m_Value:
-    - {fileID: 11400000, guid: 404820c4cf36ad944862fa59c56064f0, type: 2}
     - {fileID: 11400000, guid: 2384dbf2c1c420f45a792fbc315fbfb1, type: 2}
+    - {fileID: 11400000, guid: 404820c4cf36ad944862fa59c56064f0, type: 2}
+    - {fileID: 11400000, guid: cb724139ea2be234da0b4c3fcd984446, type: 2}
 --- !u!114 &-2889465419136566213
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -870,8 +871,8 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 1
   multiplier:
-    m_OverrideState: 1
-    m_Value: 1
+    m_OverrideState: 0
+    m_Value: 5.03
   upperHemisphereLuxValue:
     m_OverrideState: 1
     m_Value: 0.051467065
@@ -880,7 +881,7 @@ MonoBehaviour:
     m_Value: {x: 0.33266637, y: 0.39868358, z: 0.5}
   desiredLuxValue:
     m_OverrideState: 1
-    m_Value: 50
+    m_Value: -0.35
   updateMode:
     m_OverrideState: 1
     m_Value: 0
@@ -2432,7 +2433,7 @@ MonoBehaviour:
     m_Value: 1
   cloudType:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   skyAmbientMode:
     m_OverrideState: 1
     m_Value: 1

@@ -116,7 +116,7 @@ public class RealtimeLightLoader : MonoBehaviour
                 if (!light || light.type == LightType.Directional || light.shadows == LightShadows.None) continue;
 
                 float distanceFromCamera = Vector3.Distance(transform.position, light.transform.position);
-                if (distanceFromCamera <= m_MaxDistanceFromCamera)
+                if (distanceFromCamera <= m_MaxDistanceFromCamera && Physics.Linecast(transform.position, light.transform.position))
                 {
                     light.GetComponent<HDAdditionalLightData>().affectsVolumetric = true;
 

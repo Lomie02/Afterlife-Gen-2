@@ -20,7 +20,7 @@ public class RealtimeLightLoader : MonoBehaviour
 
     Light[] m_RealtimeLights;
     MeshRenderer[] m_MeshRenderersInScene;
-    float m_MaxDistanceFromCamera = 9;
+    float m_MaxDistanceFromCamera = 10;
 
     float m_FramesCheckLimit = 5;
     float m_FramesPassed;
@@ -30,7 +30,6 @@ public class RealtimeLightLoader : MonoBehaviour
 
     public SettingsPreferenceManager m_SettingsPreferenceManager;
 
-    [System.Obsolete]
     void Start()
     {
         // Collect all Realtime Light data
@@ -54,11 +53,10 @@ public class RealtimeLightLoader : MonoBehaviour
         UpdateLightsData();
     }
 
-    [System.Obsolete]
     void GrabLights()
     {
-        m_RealtimeLights = FindObjectsOfType<Light>();
-        m_MeshRenderersInScene = FindObjectsOfType<MeshRenderer>();
+        m_RealtimeLights = FindObjectsByType<Light>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        m_MeshRenderersInScene = FindObjectsByType<MeshRenderer>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         UpdateLightsData();
     }
@@ -87,8 +85,11 @@ public class RealtimeLightLoader : MonoBehaviour
 
         }
 
-        foreach (MeshRenderer mesh in m_MeshRenderersInScene)
-            mesh.shadowCastingMode = ShadowCastingMode.On;
+        if (m_MeshRenderersInScene.Length != 0)
+        {
+            foreach (MeshRenderer mesh in m_MeshRenderersInScene)
+                mesh.shadowCastingMode = ShadowCastingMode.On;
+        }
 
         // Update lights in scene Data
         foreach (Light light in m_RealtimeLights)
@@ -116,7 +117,7 @@ public class RealtimeLightLoader : MonoBehaviour
                 if (!light || light.type == LightType.Directional || light.shadows == LightShadows.None) continue;
 
                 float distanceFromCamera = Vector3.Distance(transform.position, light.transform.position);
-                if (distanceFromCamera <= m_MaxDistanceFromCamera && Physics.Linecast(transform.position, light.transform.position))
+                if (distanceFromCamera <= m_MaxDistanceFromCamera && !Physics.Linecast(transform.position, light.transform.position) && light.GetComponent<Renderer>().isVisible)
                 {
                     light.GetComponent<HDAdditionalLightData>().affectsVolumetric = true;
 
@@ -145,7 +146,6 @@ public class RealtimeLightLoader : MonoBehaviour
                     {
                         if (m_OptimizationMode != RealtimeLightMode.UltraOptimized && light.shadows != LightShadows.None)
                             light.GetComponent<HDAdditionalLightData>().shadowUpdateMode = ShadowUpdateMode.OnDemand;
-
                     }
                 }
             }
@@ -167,7 +167,7 @@ public class RealtimeLightLoader : MonoBehaviour
                 }
             }
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.2f);
 
         }
 

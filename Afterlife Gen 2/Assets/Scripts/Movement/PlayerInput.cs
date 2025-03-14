@@ -15,6 +15,8 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     NetworkLobby m_Network;
     [SerializeField] PhotonView m_MyView;
 
+
+
     GameManager m_GameManager;
     PlayerCamera m_MyCamera;
     PlayerController m_MyController;
@@ -422,7 +424,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             {
                 if (m_MyController.IsSprinting())
                 {
-                    LerpFlashLight(0.8f);
+                    LerpFlashLight(0.2f);
                 }
                 else
                 {
@@ -446,7 +448,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             {
                 if (m_MyController.IsSprinting())
                 {
-                    LerpIKWeight(0.8f);
+                    LerpIKWeight(0.2f);
                 }
                 else
                 {

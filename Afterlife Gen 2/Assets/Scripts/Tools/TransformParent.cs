@@ -31,7 +31,7 @@ public class TransformParent : MonoBehaviour
         else
             m_NewPosition.z = transform.position.z;
 
-        transform.position = m_NewPosition;
+        transform.position = Vector3.Lerp(transform.position,m_NewPosition, 15 * Time.deltaTime);
 
         if (m_LockRotationToParent)
         {

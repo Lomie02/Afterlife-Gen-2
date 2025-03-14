@@ -143,6 +143,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     InventoryManager m_InventoryManager;
     bool m_IsEmoting = false;
 
+    public AnimationEventWatcher m_ThirdPersonCameraWatcher;
     private void Awake()
     {
         GetComponentInChildren<RigBuilder>().Build();
@@ -496,6 +497,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
             {
                 collision.gameObject.GetComponent<DoorModule>().CycleDoorState();
                 m_BodyAnimations.SetTrigger("ShoulderBash");
+                if (m_ThirdPersonCameraWatcher)
+                    m_ThirdPersonCameraWatcher.DoorBashCamAnim();
                 m_BodyAnimations.SetLayerWeight(7, 1);
             }
         }

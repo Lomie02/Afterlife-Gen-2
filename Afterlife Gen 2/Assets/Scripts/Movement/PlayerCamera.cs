@@ -125,4 +125,9 @@ public class PlayerCamera : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
         }
     }
+
+    public void SetCameraState(bool _state)
+    {
+        m_PlayersCamera.enabled = _state;
+    }
 }

@@ -163,7 +163,7 @@ MonoBehaviour:
       - rid: 7923695518245716041
       - rid: 7923695518245716042
       - rid: 7923695518245716043
-      - rid: 7923695518245716044
+      - rid: 5045800937297018880
       - rid: 7923695518245716045
       - rid: 7923695518245716046
       - rid: 7923695518245716047
@@ -193,28 +193,7 @@ MonoBehaviour:
       - rid: 7923695518245716071
       - rid: 7923695518245716072
     m_RuntimeSettings:
-      m_List:
-      - rid: 7923695518245716042
-      - rid: 7923695518245716044
-      - rid: 7923695518245716046
-      - rid: 7923695518245716047
-      - rid: 7923695518245716049
-      - rid: 7923695518245716050
-      - rid: 7923695518245716052
-      - rid: 7923695518245716053
-      - rid: 7923695518245716054
-      - rid: 7923695518245716055
-      - rid: 7923695518245716056
-      - rid: 7923695518245716057
-      - rid: 7923695518245716058
-      - rid: 7923695518245716059
-      - rid: 7923695518245716060
-      - rid: 7923695518245716064
-      - rid: 7923695518245716065
-      - rid: 7923695518245716068
-      - rid: 7923695518245716069
-      - rid: 7923695518245716070
-      - rid: 7923695518245716071
+      m_List: []
   renderingLayerNames:
   - Light Layer default
   - Light Layer 1
@@ -265,6 +244,13 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
+    - rid: 5045800937297018880
+      type: {class: HDRPDefaultVolumeProfileSettings, ns: UnityEngine.Rendering.HighDefinition,
+        asm: Unity.RenderPipelines.HighDefinition.Runtime}
+      data:
+        m_Version: 0
+        m_VolumeProfile: {fileID: 11400000, guid: 14b392ee213d25a48b1feddbd9f5a9be,
+          type: 2}
     - rid: 7923695518245716040
       type: {class: VolumetricCloudsRuntimeResources, ns: UnityEngine.Rendering.HighDefinition,
         asm: Unity.RenderPipelines.HighDefinition.Runtime}
@@ -321,13 +307,6 @@ MonoBehaviour:
         m_DefaultDecalMat: {fileID: 2100000, guid: 500e733574922d04ea961553b1b26a63,
           type: 2}
         m_GUITextureBlit2SRGB: {fileID: 2100000, guid: 6e95c04e4e686554e8bed96ee69f690c,
-          type: 2}
-    - rid: 7923695518245716044
-      type: {class: HDRPDefaultVolumeProfileSettings, ns: UnityEngine.Rendering.HighDefinition,
-        asm: Unity.RenderPipelines.HighDefinition.Runtime}
-      data:
-        m_Version: 0
-        m_VolumeProfile: {fileID: 11400000, guid: e2585a0d2bac3384e8b7650d350017a8,
           type: 2}
     - rid: 7923695518245716045
       type: {class: HDRenderPipelineEditorTextures, ns: UnityEngine.Rendering.HighDefinition,

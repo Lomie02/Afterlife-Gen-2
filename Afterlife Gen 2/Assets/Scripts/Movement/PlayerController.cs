@@ -8,6 +8,7 @@ using UnityEngine.Rendering;
 using Photon.Pun.UtilityScripts;
 using UnityEngine.Animations.Rigging;
 using Unity.VisualScripting;
+using System.Runtime.CompilerServices;
 
 enum MovementType
 {
@@ -144,6 +145,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     bool m_IsEmoting = false;
 
     public AnimationEventWatcher m_ThirdPersonCameraWatcher;
+
+   
     private void Awake()
     {
         GetComponentInChildren<RigBuilder>().Build();
@@ -215,6 +218,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         DisablePlayerCollision();
         SetRagdoll(false);
     }
+
+
 
     public void EnterTheAfterlife()
     {
@@ -459,6 +464,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
                 m_SlideTimer = m_SlideDuration;
             }
         }
+
+       
 
         m_BodyAnimations.SetLayerWeight(1, m_CrouchLerpAmount);
         m_BodyAnimations.SetBool("Sprinting", m_IsSprinting);

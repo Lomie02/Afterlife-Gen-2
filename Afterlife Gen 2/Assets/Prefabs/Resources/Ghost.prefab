@@ -2069,6 +2069,7 @@ GameObject:
   - component: {fileID: 5942073849677170462}
   - component: {fileID: 6756784113857387912}
   - component: {fileID: 8995457584979140492}
+  - component: {fileID: 1052455071934559777}
   m_Layer: 0
   m_Name: Ghost
   m_TagString: Untagged
@@ -2228,6 +2229,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!135 &1052455071934559777
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2419426403500487198}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 6.0219893
+  m_Center: {x: 0, y: 0.82, z: 0}
 --- !u!1 &2557262403831959948
 GameObject:
   m_ObjectHideFlags: 0

@@ -115,6 +115,7 @@ public class GhostAI : MonoBehaviour
         m_OnGhostDeath.AddListener(delegate { m_ExfillArea.SetActive(true); });
 
         StartCoroutine(CheckInteractions());
+
     }
 
     [PunRPC]
@@ -246,10 +247,21 @@ public class GhostAI : MonoBehaviour
             {
                 m_GhostsBehaviour = GhostBehaviour.Idle; return;
             }
-            else
+
+            if (m_PlayersGhostCanSee.Count != 0)
                 m_MyAgent.SetDestination(RandomNavSphere(transform.position, m_RoamingDistance, -1));
+            else
+                m_MyAgent.SetDestination(m_PlayersGhostCanSee[Random.Range(0, m_PlayersGhostCanSee.Count)].transform.position);
         }
     }
+
+    GameObject GetPlayerWithHighestPossesion()
+    {
+        if (m_PlayersGhostCanSee.Count == 0) return null;
+
+        return gameObject;
+    }
+
 
     void CheckIfCanAttackTarget()
     {
@@ -270,6 +282,69 @@ public class GhostAI : MonoBehaviour
         }
     }
 
+    void ComparePlayerPossesionLevels()
+    {
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        if (other.tag == "Player")
+            m_PlayersGhostCanSee.Add(other.gameObject);
+
+        if (other.gameObject.GetComponent<NetworkObject>() && ContainsEvidence(EvidenceTypes.FloatingObjects))
+        {
+            other.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+            other.gameObject.GetComponent<Rigidbody>().useGravity = false;
+            other.gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up, ForceMode.Impulse);
+
+        }
+
+    }
+
+    /// <summary>
+    /// Check if Ghost Profile contains the given evidence.
+    /// </summary>
+    /// <param name="_evidenceType"></param>
+    /// <returns></returns>
+    public bool ContainsEvidence(EvidenceTypes _evidenceType)
+    {
+        if (m_Profile.m_Evidence1 == _evidenceType)
+        {
+            return true;
+        }
+        else if (m_Profile.m_Evidence2 == _evidenceType)
+        {
+            return true;
+        }
+        else if (m_Profile.m_Evidence3 == _evidenceType)
+        {
+            return true;
+        }
+        else if(m_Profile.m_Evidence4 == _evidenceType)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        if (other.tag == "Player")
+            m_PlayersGhostCanSee.Remove(other.gameObject);
+
+        if (other.gameObject.GetComponent<NetworkObject>() && ContainsEvidence(EvidenceTypes.FloatingObjects))
+        {
+            other.gameObject.GetComponent<Rigidbody>().useGravity = true;
+        }
+
+
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (!PhotonNetwork.IsMasterClient) return;
@@ -280,15 +355,24 @@ public class GhostAI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Is The emf active currently
+    /// </summary>
+    /// <returns></returns>
     public bool IsEmfActivityActive()
     {
         return m_GiveEmfActivity;
     }
 
+    /// <summary>
+    /// Get the current level of the EMF
+    /// </summary>
+    /// <returns></returns>
     public int GetEmfAcitivtyValue()
     {
         return m_EmfLevel;
     }
+
 
     void GhostActivityEmf()
     {
@@ -326,7 +410,6 @@ public class GhostAI : MonoBehaviour
     {
         while (true)
         {
-
             // Interaction with power
             float DistanceToPowerBox = Vector3.Distance(transform.position, m_PowerManager.gameObject.transform.position);
             if (DistanceToPowerBox < 7 && m_PowerManager.GetPowerState() && !m_LightInteractionOnCooldown)
@@ -472,6 +555,7 @@ public class GhostAI : MonoBehaviour
             m_GhostsBehaviour = GhostBehaviour.Idle; return;
         }
     }
+
 
     void CheckSpiritBox()
     {

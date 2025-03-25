@@ -111,6 +111,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
     void SetUpPlayerProfile()
     {
+
         if (m_PlayerProps.ContainsKey("PlayerLevel"))
             m_PlayerProps["PlayerLevel"] = m_Level;
         else
@@ -151,6 +152,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
         else
             m_Level = 1;
+
+        m_Level = Mathf.Clamp(m_Level, 1, 999);
 
         m_Username.text = SteamFriends.GetPersonaName() + " Lvl: " + m_Level.ToString();
         m_OnConnected.Invoke();

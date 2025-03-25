@@ -15,6 +15,8 @@ public class PowerManager : MonoBehaviour
     GhostTrap m_GhostTrap;
     PhotonView m_MyView;
 
+    [SerializeField] AudioSource m_PowerFlickSound;
+
     ObjectiveManager m_ObjectiveManager;
 
     void Start()
@@ -45,6 +47,8 @@ public class PowerManager : MonoBehaviour
 
         for (int i = 0; i < m_LightsToPower.Length; i++)
             m_LightsToPower[i].gameObject.SetActive(_state);
+
+        m_PowerFlickSound.Play();
 
         m_GhostTrap.UpdateTrapsMode();
     }

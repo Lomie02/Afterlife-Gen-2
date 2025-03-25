@@ -19,6 +19,15 @@ public class PlayerCamera : MonoBehaviour
     bool m_CanLookAround = true;
     bool m_TrapStance;
     SettingsPreferenceManager m_SettingsPreferenceManager;
+
+    // Leg IK
+    public Transform TorsoController;
+    public Transform CharacterRoot;
+
+    public float maxTorsoRotation = 45f;
+    public float fullBodyTurnSpeed = 5f;
+
+    float torsoRotationY = 0f;
     public void Start()
     {
         m_MyView = GetComponent<PhotonView>();
@@ -96,11 +105,13 @@ public class PlayerCamera : MonoBehaviour
 
                 m_Xview += xPos;
                 m_Yview -= yPos;
+
                 m_Body.Rotate(Vector3.up, xPos);
 
                 m_Yview = Mathf.Clamp(m_Yview, -30, 62);
 
                 m_PlayersCamera.transform.localEulerAngles = new Vector3(m_Yview, 0, 0);
+
             }
 
             yield return new WaitForEndOfFrame();
@@ -124,5 +135,10 @@ public class PlayerCamera : MonoBehaviour
             m_CanLookAround = false;
             Cursor.lockState = CursorLockMode.None;
         }
+    }
+
+    public void SetCameraState(bool _state)
+    {
+        m_PlayersCamera.enabled = _state;
     }
 }

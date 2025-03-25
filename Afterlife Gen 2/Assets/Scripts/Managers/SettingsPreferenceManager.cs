@@ -32,6 +32,7 @@ public class SettingsPreferenceManager : MonoBehaviour
 {
     [SerializeField] GameObject[] m_Pages;
 
+    Volume m_PostProcessingWorld;
     [SerializeField] UiElement[] m_InterfaceElement;
     public UnityEvent m_OnSettingsApplied;
     float m_Fps;
@@ -60,6 +61,8 @@ public class SettingsPreferenceManager : MonoBehaviour
 
         SetUpPrefEvents(true);
 
+        m_PostProcessingWorld = GameObject.FindGameObjectWithTag("WorldPost").GetComponent<Volume>();
+
         UpdateLocalData();
         m_OnSettingsApplied.AddListener(UpdateLocalData);
 
@@ -68,6 +71,16 @@ public class SettingsPreferenceManager : MonoBehaviour
     void UpdateLocalData()
     {
         QualitySettings.SetQualityLevel(FetchGraphicSettings());
+
+        if (QualitySettings.GetQualityLevel() == 3)
+        {
+            m_PostProcessingWorld.enabled = false;
+        }
+        else
+        {
+            m_PostProcessingWorld.enabled = true;
+        }
+
 
         var m_Pipeline = GraphicsSettings.currentRenderPipeline as HDRenderPipelineAsset;
         QualitySettings.vSyncCount = FetchVirtualSync();

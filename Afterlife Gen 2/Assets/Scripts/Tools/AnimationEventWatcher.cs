@@ -3,15 +3,31 @@ using UnityEngine;
 
 public class AnimationEventWatcher : MonoBehaviour
 {
+    public Transform m_PlayerRoot;
+    public LayerMask m_FootStepRaycast;
+
     PlayerInput m_PlayerInput;
     InventoryManager m_InventoryManager;
-
     PlayerController m_PlayerController;
+    PlayerCamera m_PlayerCamera;
+
+    Animator m_Animator;
+
+    public bool m_IsThirdPersonCamera;
+
     void Start()
     {
         m_PlayerInput = GetComponentInParent<PlayerInput>();
         m_InventoryManager = GetComponentInParent<InventoryManager>();
         m_PlayerController = GetComponentInParent<PlayerController>();
+        m_PlayerCamera = GetComponentInParent<PlayerCamera>();
+
+        if (m_IsThirdPersonCamera)
+        {
+            GetComponent<Camera>().enabled = false;
+            m_Animator = GetComponent<Animator>();
+        }
+
     }
 
     public void EnableLighter()
@@ -53,7 +69,7 @@ public class AnimationEventWatcher : MonoBehaviour
         m_PlayerInput.SetLighterBone(converted);
 
         m_PlayerInput.SetKeepLighterWeight(converted);
-        
+
         m_InventoryManager.SetAllItemStates(converted);
         m_InventoryManager.ToggleInverseK(converted);
     }
@@ -71,5 +87,43 @@ public class AnimationEventWatcher : MonoBehaviour
     public void StopLighterInspect()
     {
         m_PlayerInput.SetInspectStatus(false);
+    }
+
+    public void HidePlayerCamera()
+    {
+        m_PlayerCamera.SetCameraState(false);
+        if (m_IsThirdPersonCamera)
+            GetComponent<Camera>().enabled = true;
+    }
+
+    public void DoorBashCameraStart()
+    {
+
+    }
+
+    public void DoorBashCamAnim()
+    {
+        m_Animator.SetTrigger("DoorBash");
+    }
+
+    public void DoorBashCameraStop()
+    {
+
+    }
+
+    public void ShowPlayerCamera()
+    {
+        m_PlayerCamera.SetCameraState(true);
+        if (m_IsThirdPersonCamera)
+            GetComponent<Camera>().enabled = false;
+    }
+
+    public void FootStep()
+    {
+        RaycastHit Hit;
+        if (Physics.Raycast(m_PlayerRoot.position, Vector3.down, out Hit, 1.5f, m_FootStepRaycast))
+        {
+            m_PlayerController.PlayFootStepAudio(Hit.collider.sharedMaterial.name);
+        }
     }
 }

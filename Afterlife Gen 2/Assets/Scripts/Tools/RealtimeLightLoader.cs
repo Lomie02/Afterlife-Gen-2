@@ -14,13 +14,22 @@ public enum RealtimeLightMode
     Off,
 }
 
+[System.Serializable]
+public struct LightDataPack
+{
+    public Light m_LightObject;
+    public HDAdditionalLightData m_AdditionalLightData;
+}
+
 public class RealtimeLightLoader : MonoBehaviour
 {
-    RealtimeLightMode m_OptimizationMode;
-
+    RealtimeLightMode m_OptimizationMode = RealtimeLightMode.HighOptimized;
+    public LayerMask m_RealTimeCasterLayers;
     Light[] m_RealtimeLights;
-    MeshRenderer[] m_MeshRenderersInScene;
-    float m_MaxDistanceFromCamera = 9;
+    HDAdditionalLightData[] m_AdditionalLights;
+
+    public LightDataPack[] m_Lights;
+    float m_MaxDistanceFromCamera = 10;
 
     float m_FramesCheckLimit = 5;
     float m_FramesPassed;
@@ -30,19 +39,21 @@ public class RealtimeLightLoader : MonoBehaviour
 
     public SettingsPreferenceManager m_SettingsPreferenceManager;
 
-    [System.Obsolete]
     void Start()
     {
         // Collect all Realtime Light data
 
         m_SettingsPreferenceManager = GetComponentInChildren<SettingsPreferenceManager>(true);
 
-        UpdateData();
-
-        m_SettingsPreferenceManager.m_OnSettingsApplied.AddListener(UpdateData);
         GrabLights();
 
-        StartCoroutine(UpdateShadows());
+        if (m_SettingsPreferenceManager)
+        {
+            UpdateData();
+            m_SettingsPreferenceManager.m_OnSettingsApplied.AddListener(UpdateData);
+        }
+
+        StartCoroutine(UpdateLightShadowData());
     }
 
 
@@ -54,11 +65,16 @@ public class RealtimeLightLoader : MonoBehaviour
         UpdateLightsData();
     }
 
-    [System.Obsolete]
     void GrabLights()
     {
-        m_RealtimeLights = FindObjectsOfType<Light>();
-        m_MeshRenderersInScene = FindObjectsOfType<MeshRenderer>();
+        m_RealtimeLights = FindObjectsByType<Light>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        m_Lights = new LightDataPack[m_RealtimeLights.Length];
+
+        for (int i = 0; i < m_RealtimeLights.Length; i++)
+        {
+            m_Lights[i].m_LightObject = m_RealtimeLights[i];
+            m_Lights[i].m_AdditionalLightData = m_RealtimeLights[i].GetComponent<HDAdditionalLightData>();
+        }
 
         UpdateLightsData();
     }
@@ -87,89 +103,79 @@ public class RealtimeLightLoader : MonoBehaviour
 
         }
 
-        foreach (MeshRenderer mesh in m_MeshRenderersInScene)
-            mesh.shadowCastingMode = ShadowCastingMode.On;
 
         // Update lights in scene Data
-        foreach (Light light in m_RealtimeLights)
+        for (int i = 0; i < m_Lights.Length; i++)
         {
-            if (light.type != LightType.Directional && light.shadows != LightShadows.None)
+            if (m_Lights[i].m_LightObject.type != LightType.Directional)
             {
                 if (m_OptimizationMode == RealtimeLightMode.UltraOptimized)
-                    light.GetComponent<HDAdditionalLightData>().affectsVolumetric = false;
-                light.GetComponent<HDAdditionalLightData>().fadeDistance = ViewDistance;
-                light.GetComponent<HDAdditionalLightData>().volumetricFadeDistance = ViewDistance;
-                light.GetComponent<HDAdditionalLightData>().shadowFadeDistance = ViewDistance;
+                    m_Lights[i].m_AdditionalLightData.affectsVolumetric = false;
 
-                if (m_OptimizationMode == RealtimeLightMode.UltraOptimized || m_OptimizationMode == RealtimeLightMode.HighOptimized)
-                    light.GetComponent<HDAdditionalLightData>().shadowUpdateMode = ShadowUpdateMode.OnDemand;
+                m_Lights[i].m_LightObject.shadows = LightShadows.Soft;
+                m_Lights[i].m_AdditionalLightData.fadeDistance = ViewDistance;
+                m_Lights[i].m_AdditionalLightData.volumetricFadeDistance = ViewDistance;
+                m_Lights[i].m_AdditionalLightData.shadowFadeDistance = ViewDistance;
             }
         }
     }
 
-    private IEnumerator UpdateShadows()
+    private IEnumerator UpdateLightShadowData()
     {
         while (true)
         {
-            foreach (Light light in m_RealtimeLights)
+            if (m_OptimizationMode == RealtimeLightMode.Off) yield return null;
+
+            for (int i = 0; i < m_Lights.Length; i++)
             {
-                if (!light || light.type == LightType.Directional || light.shadows == LightShadows.None) continue;
-
-                float distanceFromCamera = Vector3.Distance(transform.position, light.transform.position);
-                if (distanceFromCamera <= m_MaxDistanceFromCamera)
+                if (m_Lights[i].m_LightObject != null && m_Lights[i].m_LightObject.type != LightType.Directional)
                 {
-                    light.GetComponent<HDAdditionalLightData>().affectsVolumetric = true;
-
-                    float smoothFactor = Mathf.Clamp01((m_MaxDistanceFromCamera - distanceFromCamera) / m_MaxDistanceFromCamera);
-                    light.shadowStrength = Mathf.Lerp(0, 1, smoothFactor);
-
-                    light.GetComponent<HDAdditionalLightData>().volumetricDimmer = Mathf.Lerp(0, 1, smoothFactor);
-
-                    switch (m_OptimizationMode)
-                    {
-                        case RealtimeLightMode.UltraOptimized:
-                            light.GetComponent<HDAdditionalLightData>().RequestShadowMapRendering();
-                            break;
-                        case RealtimeLightMode.HighOptimized:
-                            light.GetComponent<HDAdditionalLightData>().shadowUpdateMode = ShadowUpdateMode.EveryFrame;
-                            break;
-                    }
-
-                }
-                else
-                {
-
-                    light.GetComponent<HDAdditionalLightData>().affectsVolumetric = false;
-
-                    if (light.type != LightType.Directional && m_OptimizationMode == RealtimeLightMode.UltraOptimized)
-                    {
-                        if (m_OptimizationMode != RealtimeLightMode.UltraOptimized && light.shadows != LightShadows.None)
-                            light.GetComponent<HDAdditionalLightData>().shadowUpdateMode = ShadowUpdateMode.OnDemand;
-
-                    }
-                }
-            }
-
-            if (m_OptimizationMode == RealtimeLightMode.UltraOptimized)
-            {
-                foreach (MeshRenderer mesh in m_MeshRenderersInScene)
-                {
-                    float distanceFromCamera = Vector3.Distance(transform.position, mesh.transform.position);
+                    float distanceFromCamera = Vector3.Distance(transform.position, m_Lights[i].m_LightObject.transform.position);
 
                     if (distanceFromCamera <= m_MaxDistanceFromCamera)
                     {
-                        mesh.shadowCastingMode = ShadowCastingMode.On;
+                        if (m_OptimizationMode == RealtimeLightMode.UltraOptimized) // Is opitmise mode on
+                            m_Lights[i].m_LightObject.enabled = true;
+
+                        m_Lights[i].m_LightObject.shadows = LightShadows.Soft;
+                        m_Lights[i].m_LightObject.shadowResolution = LightShadowResolution.Medium;
                     }
                     else
                     {
-                        mesh.shadowCastingMode = ShadowCastingMode.Off;
+                        if (m_OptimizationMode == RealtimeLightMode.UltraOptimized) // Is opitmise mode on
+                            m_Lights[i].m_LightObject.enabled = false;
+
+
+                        m_Lights[i].m_LightObject.shadows = LightShadows.None;
+                        m_Lights[i].m_LightObject.shadowResolution = LightShadowResolution.Low;
                     }
                 }
             }
-
-            yield return new WaitForSeconds(0.5f);
-
+            yield return new WaitForSeconds(0.1f);
         }
-
     }
+
+    private bool IsLightInView(Light _light)
+    {
+        Camera cam = Camera.main;
+        Vector3 lightPos = _light.transform.position;
+
+        Plane[] planes = GeometryUtility.CalculateFrustumPlanes(cam);
+
+        return GeometryUtility.TestPlanesAABB(planes, new Bounds(lightPos, Vector2.zero));
+    }
+
+    private bool IsLightCulled(Light _light)
+    {
+        Camera cam = Camera.main;
+        Vector3 lightPos = _light.transform.position;
+        Ray RaycastRay = new Ray(transform.position, lightPos - transform.transform.position);
+
+        RaycastHit RaycastHit;
+        if (Physics.Raycast(RaycastRay, out RaycastHit, m_MaxDistanceFromCamera))
+            if (RaycastHit.collider.gameObject.isStatic) return true;
+
+        return false;
+    }
+
 }

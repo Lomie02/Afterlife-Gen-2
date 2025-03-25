@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class AnimationEventWatcher : MonoBehaviour
 {
+    public Transform m_PlayerRoot;
+    public LayerMask m_FootStepRaycast;
+
     PlayerInput m_PlayerInput;
     InventoryManager m_InventoryManager;
     PlayerController m_PlayerController;
@@ -66,7 +69,7 @@ public class AnimationEventWatcher : MonoBehaviour
         m_PlayerInput.SetLighterBone(converted);
 
         m_PlayerInput.SetKeepLighterWeight(converted);
-        
+
         m_InventoryManager.SetAllItemStates(converted);
         m_InventoryManager.ToggleInverseK(converted);
     }
@@ -113,5 +116,14 @@ public class AnimationEventWatcher : MonoBehaviour
         m_PlayerCamera.SetCameraState(true);
         if (m_IsThirdPersonCamera)
             GetComponent<Camera>().enabled = false;
+    }
+
+    public void FootStep()
+    {
+        RaycastHit Hit;
+        if (Physics.Raycast(m_PlayerRoot.position, Vector3.down, out Hit, 1.5f, m_FootStepRaycast))
+        {
+            m_PlayerController.PlayFootStepAudio(Hit.collider.sharedMaterial.name);
+        }
     }
 }

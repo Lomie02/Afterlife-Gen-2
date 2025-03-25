@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             Cursor.visible = true;
         }
 
-        StartCoroutine(DisplayFps());
+        //StartCoroutine(DisplayFps());
     }
 
     public void ChangeScene(string _name)

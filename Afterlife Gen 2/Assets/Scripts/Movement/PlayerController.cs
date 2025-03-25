@@ -146,6 +146,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public AnimationEventWatcher m_ThirdPersonCameraWatcher;
 
+    [Header("Foot Steps")]
+    public AudioSource m_FootStepSounds;
+    [Space]
+    [SerializeField] AudioClip[] m_FootStepWood;
+    [SerializeField] AudioClip[] m_FootStepConcrete;
+    [SerializeField] AudioClip[] m_FootStepDirt;
+    [SerializeField] AudioClip[] m_FootStepCarpet;
    
     private void Awake()
     {
@@ -284,6 +291,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_BodyAnimations.SetFloat("xPos", m_AnimXPos);
         m_BodyAnimations.SetFloat("yPos", m_AnimYPos);
     }
+
     void LateUpdate()
     {
         if (!m_MyView.IsMine)
@@ -300,6 +308,34 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         if (m_IsDowned)
             UpdateDownedState();
+    }
+
+    /// <summary>
+    /// Plays Random footstep sound based on physics material name.
+    /// </summary>
+    /// <param name="_type"></param>
+    public void PlayFootStepAudio(string _type)
+    {
+        if (_type == "Wood")
+        {
+            m_FootStepSounds.clip = m_FootStepWood[Random.Range(0, m_FootStepWood.Length)];
+            m_FootStepSounds.Play();
+        }
+        else if (_type == "Concrete")
+        {
+            m_FootStepSounds.clip = m_FootStepConcrete[Random.Range(0, m_FootStepConcrete.Length)];
+            m_FootStepSounds.Play();
+        }
+        else if(_type == "Dirt")
+        {
+            m_FootStepSounds.clip = m_FootStepDirt[Random.Range(0, m_FootStepDirt.Length)];
+            m_FootStepSounds.Play();
+        }
+        else if(_type == "Carpet")
+        {
+            m_FootStepSounds.clip = m_FootStepCarpet[Random.Range(0, m_FootStepCarpet.Length)];
+            m_FootStepSounds.Play();
+        }
     }
 
     public bool CanPlayerMove()

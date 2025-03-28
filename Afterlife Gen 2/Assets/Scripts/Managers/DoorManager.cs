@@ -14,6 +14,10 @@ struct DoorAsset
 public class DoorManager : MonoBehaviour
 {
     PhotonView m_MyView;
+    public AudioSource m_DoorAudio;
+    public AudioClip m_DoorBashSound;
+    public AudioClip m_DoorOpenSound;
+
 
     [SerializeField] DoorAsset[] m_DoorsList;
     [SerializeField] float m_DoorOpenSpeed;
@@ -35,6 +39,9 @@ public class DoorManager : MonoBehaviour
             return;
         m_isDoorOpen = _state;
         m_DoorUpdate = true;
+
+        m_DoorAudio.clip = m_DoorOpenSound;
+        m_DoorAudio.Play();
     }
 
     [PunRPC]
@@ -58,6 +65,7 @@ public class DoorManager : MonoBehaviour
         {
             m_MyView.RPC("RPC_SetDoorState", RpcTarget.All, true);
         }
+
     }
     public void Update()
     {

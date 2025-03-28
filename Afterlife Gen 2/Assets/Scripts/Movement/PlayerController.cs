@@ -145,6 +145,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
     bool m_IsEmoting = false;
 
     public AnimationEventWatcher m_ThirdPersonCameraWatcher;
+    [Header("Sound Effects")]
+    [SerializeField] AudioSource m_SoundEffects;
+    [SerializeField] AudioClip m_DoorBash;
 
     [Header("Foot Steps")]
     public AudioSource m_FootStepSounds;
@@ -543,6 +546,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
                 if (m_ThirdPersonCameraWatcher)
                     m_ThirdPersonCameraWatcher.DoorBashCamAnim();
                 m_BodyAnimations.SetLayerWeight(7, 1);
+
+                m_SoundEffects.clip = m_DoorBash;
+                m_SoundEffects.Play();
             }
         }
     }

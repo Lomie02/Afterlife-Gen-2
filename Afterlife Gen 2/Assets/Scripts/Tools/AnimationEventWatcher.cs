@@ -93,7 +93,10 @@ public class AnimationEventWatcher : MonoBehaviour
     {
         m_PlayerCamera.SetCameraState(false);
         if (m_IsThirdPersonCamera)
+        {
             GetComponent<Camera>().enabled = true;
+            GetComponent<AudioListener>().enabled = true;
+        }
     }
 
     public void DoorBashCameraStart()
@@ -115,7 +118,10 @@ public class AnimationEventWatcher : MonoBehaviour
     {
         m_PlayerCamera.SetCameraState(true);
         if (m_IsThirdPersonCamera)
+        {
             GetComponent<Camera>().enabled = false;
+            GetComponent<AudioListener>().enabled = false;
+        }
     }
 
     public void FootStep()

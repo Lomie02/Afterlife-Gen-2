@@ -8,6 +8,8 @@ public class DoorModule : MonoBehaviour
     PhotonView m_MyView;
     Animator m_DoorAnimations;
 
+    [SerializeField] AudioSource m_DoorAudio;
+
     bool m_IsDoorOpen = false;
     void Start()
     {
@@ -23,6 +25,7 @@ public class DoorModule : MonoBehaviour
     {
         m_IsDoorOpen = _state;
         m_DoorAnimations.SetBool("IsOpen", _state);
+        m_DoorAudio.Play();
     }
 
     public bool GetDoorState()

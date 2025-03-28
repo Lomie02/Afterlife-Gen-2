@@ -8,7 +8,7 @@ using Unity.VisualScripting;
 public class GhostEventManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] UniversalEvent[] m_GhostEvents;
-    float m_GhostEventRefreshRate;
+    float m_GhostEventRefreshRate = 20;
     float m_GhostEventRefreshTimer;
     private void Start()
     {
@@ -20,6 +20,7 @@ public class GhostEventManager : MonoBehaviourPunCallbacks
         }
 
         m_GhostEventRefreshRate = Random.Range(10, 25);
+        m_GhostEventRefreshTimer = m_GhostEventRefreshRate;
 
         if (PhotonNetwork.IsMasterClient)
             SetUpRandomEvents();
@@ -41,6 +42,7 @@ public class GhostEventManager : MonoBehaviourPunCallbacks
         {
             RefreshEvents();
             m_GhostEventRefreshRate = Random.Range(10, 25);
+            m_GhostEventRefreshTimer = m_GhostEventRefreshRate;
         }
     }
 
@@ -59,7 +61,7 @@ public class GhostEventManager : MonoBehaviourPunCallbacks
 
         for (int i = 0; i < m_GhostEvents.Length; i++)
         {
-            if (Random.Range(0, 1) == 1)
+            if (Random.Range(0, 2) == 1)
             {
                 m_GhostEvents[i].RestoreEvent();
             }
@@ -74,7 +76,7 @@ public class GhostEventManager : MonoBehaviourPunCallbacks
         {
             m_GhostEvents[i].ClearEvent();
 
-            if (Random.Range(0, 1) == 1)
+            if (Random.Range(0, 2) == 1)
             {
                 m_GhostEvents[i].RestoreEvent();
             }

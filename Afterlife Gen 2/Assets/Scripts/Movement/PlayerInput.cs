@@ -94,6 +94,17 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     float m_LighterIntensityHoldUp;
 
     Light m_PlayersLighter;
+
+    [Header("Audio Lighter")]
+    [SerializeField] AudioSource m_LighterAudioSource;
+
+    [Space]
+
+    [SerializeField] AudioClip m_LighterOpen;
+    [SerializeField] AudioClip m_LighterIgnite;
+    [SerializeField] AudioClip m_LighterClosed;
+
+
     void Start()
     {
         //SearchForElements();
@@ -325,6 +336,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 m_PlayersFlashLight.RPC_SetObjectState(false);
                 m_PlayersFlashLight.TurnOff();
                 m_isLighterOpen = false;
+                PlayLighterAudio(2);
             }
             else
             {
@@ -643,6 +655,25 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         m_SpecialistMenu.SetActive(false);
         m_MyCamera.MouseLockState(true);
         m_MyController.SetMovement(true);
+    }
+
+    public void PlayLighterAudio(int _index)
+    {
+        switch (_index)
+        {
+            case 0:
+                m_LighterAudioSource.clip = m_LighterOpen;
+                m_LighterAudioSource.Play();
+                break;
+            case 1:
+                m_LighterAudioSource.clip = m_LighterIgnite;
+                m_LighterAudioSource.Play();
+                break;
+            case 2:
+                m_LighterAudioSource.clip = m_LighterClosed;
+                m_LighterAudioSource.Play();
+                break;
+        }
     }
 
     public void SpawnNewPlayer(int _index)

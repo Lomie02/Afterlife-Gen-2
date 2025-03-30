@@ -132,4 +132,9 @@ public class AnimationEventWatcher : MonoBehaviour
             m_PlayerController.PlayFootStepAudio(Hit.collider.sharedMaterial.name);
         }
     }
+
+    public void LighterAudio(int _index)
+    {
+        m_PlayerInput.PlayLighterAudio(_index);
+    }
 }

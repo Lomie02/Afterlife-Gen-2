@@ -214,7 +214,7 @@ public class GhostAI : MonoBehaviour
 
             m_GhostEmfLocation.transform.position = transform.position;
 
-            m_GhostInteractionDuration = Random.Range(5, 10);
+            m_GhostInteractionDuration = Random.Range(20, 30);
             m_GhostInteractionTimer = m_GhostInteractionDuration;
         }
 

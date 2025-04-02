@@ -313,7 +313,7 @@ public class InventoryManager : MonoBehaviour
                 if (m_PlayerController.IsSprinting())
                     m_MyView.RPC("RPC_LerpItem", RpcTarget.All, 0f);
                 else
-                    m_MyView.RPC("RPC_LerpItem", RpcTarget.All, 1f);
+                    m_MyView.RPC("RPC_LerpItem", RpcTarget.All, 0.8f);
             }
             else
             {

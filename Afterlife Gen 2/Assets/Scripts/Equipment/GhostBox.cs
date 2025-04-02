@@ -25,10 +25,11 @@ public class GhostBox : MonoBehaviour
 
     AudioSource m_AudioSource;
     [SerializeField] AudioClip[] m_AudioResponses;
+
     private void Start()
     {
         m_MyNetworkData = GetComponent<NetworkObject>();
-        m_Spawner = FindObjectOfType<NetworkItemSpawner>();
+        m_Spawner = FindFirstObjectByType<NetworkItemSpawner>();
 
         LookForCursedOject();
 
@@ -75,12 +76,9 @@ public class GhostBox : MonoBehaviour
 
         float DistanceFromGhost;
 
-        if (transform.parent)
-            DistanceFromGhost = Vector3.Distance(transform.localPosition, m_CursedObject.gameObject.transform.position);
-        else
             DistanceFromGhost = Vector3.Distance(transform.position, m_CursedObject.gameObject.transform.position);
 
-        if (DistanceFromGhost <= m_DetectionRange && m_CanGiveResponses)
+        if (DistanceFromGhost < m_DetectionRange && m_CanGiveResponses)
         {
             m_MyView.RPC("RPC_GiveResponse", RpcTarget.All, Random.Range(0, m_AudioResponses.Length));
             Debug.Log(args.text);

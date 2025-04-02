@@ -44,6 +44,10 @@ public class GhostAI : MonoBehaviour
     [SerializeField] GhostManager m_GhostManager;
     [SerializeField] float m_RoamingDistance = 50;
 
+    [Header("Evidence Objects")]
+    [SerializeField] GameObject m_GhostOrbs;
+    [SerializeField] GameObject BloodTrails;
+
     bool m_LightInteractionOnCooldown = false;
     float m_TimerCooldownLights;
     float m_TimerCooldownLightsDuration = 4;
@@ -100,6 +104,7 @@ public class GhostAI : MonoBehaviour
 
         m_EmfActivityTimer = m_EmfActivityDuration;
 
+
         if (PhotonNetwork.IsMasterClient)
         {
             m_PlayersGhostCanSee = new List<GameObject>();
@@ -128,6 +133,10 @@ public class GhostAI : MonoBehaviour
         m_GhostAnimation.runtimeAnimatorController = m_GhostKits[_index].m_Controller;
         m_GhostAnimation.avatar = m_GhostKits[_index].m_Avatar;
 
+        // Evidence Objects Assignments
+        m_GhostOrbs.SetActive(ContainsEvidence(EvidenceTypes.GhostOrb));
+        BloodTrails.SetActive(ContainsEvidence(EvidenceTypes.Bloodtrail));
+
         if (!m_IsGhostRevealingTrueForm)
             for (int i = 0; i < m_GhostKits[_index].m_GhostsMaterial.Length; i++)
                 m_GhostKits[_index].m_GhostsMaterial[i].SetFloat("_AfterlifeForm", 0f); // false
@@ -148,6 +157,9 @@ public class GhostAI : MonoBehaviour
         m_IsGhostRevealingTrueForm = true;
         for (int i = 0; i < m_GhostKits[m_CurrentGhostKitActive].m_GhostsMaterial.Length; i++)
             m_GhostKits[m_CurrentGhostKitActive].m_GhostsMaterial[i].SetFloat("_AfterlifeForm", 1f); // True
+
+        m_GhostOrbs.SetActive(false);
+        BloodTrails.SetActive(false);
     }
 
     void Update() // Entire AI Is going to only be controlled on the Hosts side. 

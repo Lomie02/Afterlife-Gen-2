@@ -156,7 +156,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] AudioClip[] m_FootStepConcrete;
     [SerializeField] AudioClip[] m_FootStepDirt;
     [SerializeField] AudioClip[] m_FootStepCarpet;
-   
+
     private void Awake()
     {
         GetComponentInChildren<RigBuilder>().Build();
@@ -263,6 +263,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
         DisablePlayerCollision();
     }
 
+    /// <summary>
+    ///  Converts object position on axis into single values for animation blending.
+    /// </summary>
+    /// <param name="_xPos"></param>
+    /// <param name="_yPos"></param>
     void ConvertMovementForAnimation(float _xPos, float _yPos)
     {
         if (_xPos > 0) // X Conversion
@@ -290,6 +295,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         {
             m_AnimYPos = Mathf.Lerp(m_AnimYPos, 0, m_AnimationLerpSpeed * Time.deltaTime);
         }
+
 
         m_BodyAnimations.SetFloat("xPos", m_AnimXPos);
         m_BodyAnimations.SetFloat("yPos", m_AnimYPos);
@@ -329,18 +335,22 @@ public class PlayerController : MonoBehaviourPunCallbacks
             m_FootStepSounds.clip = m_FootStepConcrete[Random.Range(0, m_FootStepConcrete.Length)];
             m_FootStepSounds.Play();
         }
-        else if(_type == "Dirt")
+        else if (_type == "Dirt")
         {
             m_FootStepSounds.clip = m_FootStepDirt[Random.Range(0, m_FootStepDirt.Length)];
             m_FootStepSounds.Play();
         }
-        else if(_type == "Carpet")
+        else if (_type == "Carpet")
         {
             m_FootStepSounds.clip = m_FootStepCarpet[Random.Range(0, m_FootStepCarpet.Length)];
             m_FootStepSounds.Play();
         }
     }
 
+    /// <summary>
+    /// Can the player move
+    /// </summary>
+    /// <returns></returns>
     public bool CanPlayerMove()
     {
         return m_CanMove;
@@ -459,6 +469,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_StaminaAmount = Mathf.Clamp(m_StaminaAmount, 0, 100);
         m_StaminaBar.value = m_StaminaAmount;
 
+        m_StaminaBar.gameObject.SetActive(m_StaminaAmount != 100 ? true : false);
+
         UpdateEmotes();
 
         m_BodyAnimations.SetBool("TacSprint", m_IsTacticalSprinting);
@@ -504,7 +516,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             }
         }
 
-       
+
 
         m_BodyAnimations.SetLayerWeight(1, m_CrouchLerpAmount);
         m_BodyAnimations.SetBool("Sprinting", m_IsSprinting);

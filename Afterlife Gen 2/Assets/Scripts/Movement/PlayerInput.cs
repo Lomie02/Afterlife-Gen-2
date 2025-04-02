@@ -488,7 +488,8 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     void LerpIKWeight(float _index)
     {
         m_IKLerpIndex = Mathf.Lerp(m_IKLerpIndex, _index, 5 * Time.deltaTime);
-        m_LightAImConstrait.weight = Mathf.Lerp(m_LightAImConstrait.weight, m_IKLerpIndex, 5 * Time.deltaTime);
+
+        m_LightAImConstrait.weight = Mathf.Lerp(Mathf.Clamp(m_LightAImConstrait.weight,0,0.7f), m_IKLerpIndex, 5 * Time.deltaTime);
     }
 
     public void SetLighterBone(bool _state)

@@ -9,10 +9,16 @@ public class UniversalEvent : MonoBehaviour
 
     [Header("Probability")]
 
+    int m_BaseProb;
     [SerializeField] int m_ProbabilityRate = 4;
 
     [SerializeField] int m_MinProb = 4;
     [SerializeField] int m_MaxProb = 20;
+
+    private void Start()
+    {
+        m_BaseProb = m_ProbabilityRate;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -76,5 +82,10 @@ public class UniversalEvent : MonoBehaviour
     {
         m_ProbabilityRate++;
         m_ProbabilityRate = Mathf.Clamp(m_ProbabilityRate, m_MinProb, m_MaxProb);
+    }
+
+    public void ResetProbablity()
+    {
+        m_ProbabilityRate = m_BaseProb;
     }
 }

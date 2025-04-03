@@ -90,6 +90,6 @@ public class DoorModule : MonoBehaviour
 
     public bool IsDoorLocked()
     {
-        return m_IsDoorLocked
+        return m_IsDoorLocked;
     }
 }

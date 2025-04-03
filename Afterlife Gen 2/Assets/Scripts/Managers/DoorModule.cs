@@ -9,6 +9,7 @@ public class DoorModule : MonoBehaviour
     Animator m_DoorAnimations;
 
     [SerializeField] AudioSource m_DoorAudio;
+    [SerializeField] bool m_IsDoorLocked = false;
 
     bool m_IsDoorOpen = false;
     void Start()
@@ -20,6 +21,10 @@ public class DoorModule : MonoBehaviour
             SetDoorRandomState();
     }
 
+    /// <summary>
+    /// Set door state over remote call
+    /// </summary>
+    /// <param name="_state"></param>
     [PunRPC]
     public void RPC_SetDoorState(bool _state)
     {
@@ -34,6 +39,8 @@ public class DoorModule : MonoBehaviour
     }
     public void SetDoorRandomState()
     {
+        if (m_IsDoorLocked) return;
+
         int RandomNum = Random.Range(0, 2);
 
         switch (RandomNum)
@@ -50,8 +57,27 @@ public class DoorModule : MonoBehaviour
         }
     }
 
+    public void LockDoorShut()
+    {
+        m_MyView.RPC("RPC_SetDoorState", RpcTarget.All, false);
+        m_MyView.RPC("RPC_LockDoor", RpcTarget.All, true);
+    }
+
+    public void UnlockDoor()
+    {
+        m_MyView.RPC("RPC_LockDoor", RpcTarget.All, false);
+    }
+
+    [PunRPC]
+    public void RPC_LockDoor(bool _state)
+    {
+        m_IsDoorLocked = _state;
+    }
+
     public void CycleDoorState()
     {
+        if (m_IsDoorLocked) return;
+
         if (m_IsDoorOpen)
         {
             m_MyView.RPC("RPC_SetDoorState", RpcTarget.All, false);
@@ -60,5 +86,10 @@ public class DoorModule : MonoBehaviour
         {
             m_MyView.RPC("RPC_SetDoorState", RpcTarget.All, true);
         }
+    }
+
+    public bool IsDoorLocked()
+    {
+        return m_IsDoorLocked
     }
 }

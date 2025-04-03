@@ -29,6 +29,16 @@ public class LightFlicker : MonoBehaviour
         }
     }
 
+    public void SetLightRed()
+    {
+        m_LightObject.color = Color.red;
+    }
+
+    public void ResetLightColor()
+    {
+        m_LightObject.color = Color.white;
+    }
+
     public void SetFlicker(bool _state)
     {
         m_IsEnabled = _state;

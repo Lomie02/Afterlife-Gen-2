@@ -76,9 +76,14 @@ public class GhostEventManager : MonoBehaviourPunCallbacks
         {
             m_GhostEvents[i].ClearEvent();
 
-            if (Random.Range(0, 2) == 1)
+            if (Random.Range(1, m_GhostEvents[i].GetProbalityRate()) == 1)
             {
                 m_GhostEvents[i].RestoreEvent();
+                m_GhostEvents[i].DecreaseProb();
+            }
+            else
+            {
+                m_GhostEvents[i].IncreaseProb();
             }
         }
     }

@@ -489,7 +489,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     {
         m_IKLerpIndex = Mathf.Lerp(m_IKLerpIndex, _index, 5 * Time.deltaTime);
 
-        m_LightAImConstrait.weight = Mathf.Lerp(Mathf.Clamp(m_LightAImConstrait.weight,0,0.7f), m_IKLerpIndex, 5 * Time.deltaTime);
+        m_LightAImConstrait.weight = Mathf.Lerp(Mathf.Clamp(m_LightAImConstrait.weight, 0, 0.7f), m_IKLerpIndex, 5 * Time.deltaTime);
     }
 
     public void SetLighterBone(bool _state)
@@ -530,7 +530,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                     m_UseImage.gameObject.SetActive(true);
                     m_UseText.text = "Press [E] To Pick Up " + m_ItemCast.collider.GetComponent<NetworkObject>().GetItemsName();
                 }
-                else if (m_ItemCast.collider.tag == "ReadyMonitor" || m_ItemCast.collider.tag == "Door")
+                else if (m_ItemCast.collider.tag == "ReadyMonitor")
                 {
                     m_UseImage.gameObject.SetActive(true);
                     m_UseText.text = "Press [E] To Interact.";
@@ -557,6 +557,15 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                         m_UseImage.gameObject.SetActive(true);
                         m_UseText.text = "Hold [E] To Revive.";
                     }
+                }
+                else if (m_ItemCast.collider.tag == "Door")
+                {
+                    m_UseImage.gameObject.SetActive(true);
+
+                    if (m_ItemCast.collider.GetComponentInParent<DoorModule>().IsDoorLocked())
+                        m_UseText.text = "Door Locked.";
+                    else
+                        m_UseText.text = "Press [E] To Interact.";
                 }
                 else
                 {
@@ -622,7 +631,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
                 m_HostGameSettings.SetActive(true);
                 return;
             }
-            else if (m_ItemCast.collider.tag == "Door")
+            else if (m_ItemCast.collider.tag == "Door" && !m_ItemCast.collider.GetComponentInParent<DoorModule>().IsDoorLocked())
             {
                 m_ItemCast.collider.GetComponentInParent<DoorModule>().CycleDoorState();
                 OpenDoorAnimation();

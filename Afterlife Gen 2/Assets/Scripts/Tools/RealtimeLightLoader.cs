@@ -28,6 +28,8 @@ public class RealtimeLightLoader : MonoBehaviour
     Light[] m_RealtimeLights;
     HDAdditionalLightData[] m_AdditionalLights;
 
+    public PhotonView m_PhotonView;
+
     public LightDataPack[] m_Lights;
     float m_MaxDistanceFromCamera = 10;
 
@@ -37,11 +39,18 @@ public class RealtimeLightLoader : MonoBehaviour
     public int m_RealtimeShadowsLimit = 5;
     public int m_CurrentRealtimeShadowsActive = 0;
 
+    Camera m_PlayersCamera;
     public SettingsPreferenceManager m_SettingsPreferenceManager;
+    LodLightGroup[] m_LightGroups;
 
     void Start()
     {
         // Collect all Realtime Light data
+
+        m_PhotonView = GetComponent<PhotonView>();
+        m_PlayersCamera = GetComponentInChildren<Camera>();
+
+        if (!m_PhotonView.IsMine) this.enabled = false;
 
         m_SettingsPreferenceManager = GetComponentInChildren<SettingsPreferenceManager>(true);
 
@@ -76,7 +85,35 @@ public class RealtimeLightLoader : MonoBehaviour
             m_Lights[i].m_AdditionalLightData = m_RealtimeLights[i].GetComponent<HDAdditionalLightData>();
         }
 
+        SetUpLevelOfDetailLightGroups();
+
+
         UpdateLightsData();
+    }
+
+    void SetUpLevelOfDetailLightGroups()
+    {
+        for (int i = 0; i < m_RealtimeLights.Length; i++)
+        {
+            LodLightGroup LightGroupParent = m_RealtimeLights[i].transform.transform.parent.AddComponent<LodLightGroup>();
+            LightGroupParent.AssignLight(0, m_RealtimeLights[i].gameObject);
+
+            for (int j = 0; j < 2; j++)
+            {
+                GameObject Temp = GameObject.Instantiate(m_RealtimeLights[i].gameObject, m_RealtimeLights[i].transform.position, m_RealtimeLights[i].transform.rotation);
+
+                Temp.transform.parent = m_RealtimeLights[i].transform.parent;
+                Temp.name = m_RealtimeLights[i].name + " LOD Light " + j.ToString();
+
+                LightGroupParent.AssignLight(j + 1, Temp.gameObject);
+            }
+
+            LightGroupParent.AssignMainCamera(m_PlayersCamera);
+            LightGroupParent.CalculateThreshold();
+
+        }
+
+        m_LightGroups = FindObjectsByType<LodLightGroup>(FindObjectsInactive.Include, FindObjectsSortMode.None);
     }
 
     void UpdateLightsData()
@@ -124,6 +161,7 @@ public class RealtimeLightLoader : MonoBehaviour
     {
         while (true)
         {
+
             if (m_OptimizationMode == RealtimeLightMode.Off) yield return null;
 
             for (int i = 0; i < m_Lights.Length; i++)
@@ -151,31 +189,48 @@ public class RealtimeLightLoader : MonoBehaviour
                     }
                 }
             }
-            yield return new WaitForSeconds(0.1f);
+
+            for (int i = 0; i < m_LightGroups.Length; i++)
+            {
+                m_LightGroups[i].ProcessLevels();
+            }
+
+            // Light culling
+
+            for (int i = 0; i < m_Lights.Length; i++)
+            {
+                m_Lights[i].m_LightObject.gameObject.SetActive(IsLightCulled(m_Lights[i]));
+            }
+
+            yield return new WaitForSeconds(0.2f);
         }
     }
 
     private bool IsLightInView(Light _light)
     {
-        Camera cam = Camera.main;
         Vector3 lightPos = _light.transform.position;
 
-        Plane[] planes = GeometryUtility.CalculateFrustumPlanes(cam);
+        Plane[] planes = GeometryUtility.CalculateFrustumPlanes(m_PlayersCamera);
 
         return GeometryUtility.TestPlanesAABB(planes, new Bounds(lightPos, Vector2.zero));
     }
 
-    private bool IsLightCulled(Light _light)
+    private bool IsLightCulled(LightDataPack _Light)
     {
-        Camera cam = Camera.main;
-        Vector3 lightPos = _light.transform.position;
-        Ray RaycastRay = new Ray(transform.position, lightPos - transform.transform.position);
+        RaycastHit[] RaycastHits;
+        RaycastHits = Physics.RaycastAll(transform.position, _Light.m_LightObject.transform.position - transform.position, m_MaxDistanceFromCamera);
 
-        RaycastHit RaycastHit;
-        if (Physics.Raycast(RaycastRay, out RaycastHit, m_MaxDistanceFromCamera))
-            if (RaycastHit.collider.gameObject.isStatic) return true;
-
+        foreach (RaycastHit Temp in RaycastHits)
+        {
+            if (!Temp.collider.gameObject.isStatic)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         return false;
     }
-
 }

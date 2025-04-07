@@ -579,7 +579,7 @@ PrefabInstance:
     - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
       propertyPath: m_Lightmapping
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
@@ -728,7 +728,7 @@ PrefabInstance:
     - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
       propertyPath: m_Lightmapping
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
@@ -798,7 +798,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 121569417}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3970ff958b9787e4c93ffa6d1d2e3e2e, type: 3}
   m_Name: 
@@ -1929,7 +1929,7 @@ PrefabInstance:
     - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
       propertyPath: m_Lightmapping
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
@@ -3592,7 +3592,7 @@ PrefabInstance:
     - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
       propertyPath: m_Lightmapping
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
@@ -3682,7 +3682,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 593503974}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3970ff958b9787e4c93ffa6d1d2e3e2e, type: 3}
   m_Name: 
@@ -5155,7 +5155,7 @@ MonoBehaviour:
     m_MapSceneName: mansion_mp
     m_MapIcon: {fileID: 21300000, guid: 675b5ad54989e8f4b9f58e5a0317db53, type: 3}
   - m_MapName: Carnival
-    m_MapSceneName: mansion_mp
+    m_MapSceneName: carnival_mp
     m_MapIcon: {fileID: 21300000, guid: cae8fe5b5a18562449306eaff1cae7d1, type: 3}
   - m_MapName: Hospital
     m_MapSceneName: mansion_mp
@@ -5378,12 +5378,17 @@ PrefabInstance:
     - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
       propertyPath: m_Lightmapping
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
       propertyPath: m_ShadowRadius
       value: 0.025
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
@@ -5404,6 +5409,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LightDimmer
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6061707043089692296, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: useVolumetric
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6061707043089692296, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
@@ -5448,7 +5458,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 997517339}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3970ff958b9787e4c93ffa6d1d2e3e2e, type: 3}
   m_Name: 

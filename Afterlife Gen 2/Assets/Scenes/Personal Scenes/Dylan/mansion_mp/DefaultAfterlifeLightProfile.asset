@@ -580,8 +580,8 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 0
   rayTracing:
-    m_OverrideState: 1
-    m_Value: 1
+    m_OverrideState: 0
+    m_Value: 0
   intensity:
     m_OverrideState: 1
     m_Value: 0.5
@@ -1119,7 +1119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da5ab44aadfb1804db5fd470983ac1b8, type: 3}
   m_Name: LiftGammaGain
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   lift:
     m_OverrideState: 1
     m_Value: {x: 1, y: 1, z: 1, w: 0}
@@ -1168,7 +1168,7 @@ MonoBehaviour:
     m_Value: 0
   mipFogFar:
     m_OverrideState: 1
-    m_Value: 1000
+    m_Value: 100
   baseHeight:
     m_OverrideState: 1
     m_Value: 1.22
@@ -1192,7 +1192,7 @@ MonoBehaviour:
     m_Value: 20
   denoisingMode:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 1
   anisotropy:
     m_OverrideState: 1
     m_Value: 0.13
@@ -1552,7 +1552,7 @@ MonoBehaviour:
   interCascadeBorders: 1
   maxShadowDistance:
     m_OverrideState: 1
-    m_Value: 500
+    m_Value: 10
   directionalTransmissionMultiplier:
     m_OverrideState: 1
     m_Value: 1
@@ -1592,7 +1592,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56b145d2b9ee1ac4f846968484e7485a, type: 3}
   m_Name: ContactShadows
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   quality:
     m_OverrideState: 1
     m_Value: 1

@@ -6313,7 +6313,7 @@ Camera:
   m_TargetEye: 3
   m_HDR: 0
   m_AllowMSAA: 0
-  m_AllowDynamicResolution: 1
+  m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
@@ -6353,8 +6353,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   volumeAnchorOverride: {fileID: 0}
-  antialiasing: 3
-  SMAAQuality: 2
+  antialiasing: 1
+  SMAAQuality: 0
   dithering: 0
   stopNaNs: 0
   taaSharpenStrength: 0.5
@@ -6379,7 +6379,7 @@ MonoBehaviour:
   flipYMode: 0
   xrRendering: 1
   fullscreenPassthrough: 0
-  allowDynamicResolution: 1
+  allowDynamicResolution: 0
   customRenderingSettings: 0
   invertFaceCulling: 0
   probeLayerMask:
@@ -6514,7 +6514,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 366644568}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c56c66af9fb10b645aa1fcd3b3514bbf, type: 3}
   m_Name: 
@@ -6522,6 +6522,7 @@ MonoBehaviour:
   m_RealTimeCasterLayers:
     serializedVersion: 2
     m_Bits: 2043
+  m_PhotonView: {fileID: 0}
   m_Lights: []
   m_RealtimeShadowsLimit: 5
   m_CurrentRealtimeShadowsActive: 0
@@ -10123,7 +10124,7 @@ MonoBehaviour:
   m_ShadowVariant: 0
   m_ShadowPrecision: 0
   useOldInspector: 0
-  useVolumetric: 1
+  useVolumetric: 0
   featuresFoldout: 1
   m_AreaLightEmissiveMeshShadowCastingMode: 0
   m_AreaLightEmissiveMeshMotionVectorGenerationMode: 0
@@ -16412,7 +16413,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &858579541
 Transform:
   m_ObjectHideFlags: 0
@@ -28657,7 +28658,7 @@ MonoBehaviour:
   m_ShadowVariant: 0
   m_ShadowPrecision: 0
   useOldInspector: 0
-  useVolumetric: 1
+  useVolumetric: 0
   featuresFoldout: 1
   m_AreaLightEmissiveMeshShadowCastingMode: 0
   m_AreaLightEmissiveMeshMotionVectorGenerationMode: 0
@@ -28684,7 +28685,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1

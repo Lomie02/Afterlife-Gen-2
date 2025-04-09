@@ -89,6 +89,12 @@ public class PlayerCamera : MonoBehaviour
 
     void UpdateRelSettings()
     {
+        if (!m_SettingsPreferenceManager)
+        {
+            m_SettingsPreferenceManager = FindFirstObjectByType<SettingsPreferenceManager>();
+            UpdateRelSettings();
+        }
+
         m_Sens = m_SettingsPreferenceManager.FetchMouseSens();
         m_PlayersCamera.fieldOfView = m_SettingsPreferenceManager.FetchFieldofView();
     }

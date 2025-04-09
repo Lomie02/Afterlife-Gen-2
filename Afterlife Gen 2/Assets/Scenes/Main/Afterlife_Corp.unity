@@ -598,8 +598,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
-      propertyPath: m_UseViewFrustumForShadowCasterCull
+      propertyPath: m_BoundingSphereOverride.w
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: m_BoundingSphereOverride.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: m_BoundingSphereOverride.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: m_BoundingSphereOverride.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: m_UseViewFrustumForShadowCasterCull
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6061707043089692296, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
@@ -745,6 +765,26 @@ PrefabInstance:
       propertyPath: m_ColorTemperature
       value: 8162
       objectReference: {fileID: 0}
+    - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: m_BoundingSphereOverride.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: m_BoundingSphereOverride.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: m_BoundingSphereOverride.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: m_BoundingSphereOverride.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6061707043089692296, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
       propertyPath: m_Version
@@ -754,6 +794,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LightDimmer
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6061707043089692296, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: useVolumetric
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6061707043089692296, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
@@ -1929,7 +1974,7 @@ PrefabInstance:
     - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
       propertyPath: m_Lightmapping
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
@@ -1956,6 +2001,26 @@ PrefabInstance:
       propertyPath: m_EnableSpotReflector
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: m_BoundingSphereOverride.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: m_BoundingSphereOverride.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: m_BoundingSphereOverride.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: m_BoundingSphereOverride.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6061707043089692296, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
       propertyPath: m_Version
@@ -1965,6 +2030,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LightDimmer
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6061707043089692296, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: useVolumetric
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6061707043089692296, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
@@ -3619,6 +3689,26 @@ PrefabInstance:
       propertyPath: m_EnableSpotReflector
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: m_BoundingSphereOverride.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: m_BoundingSphereOverride.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: m_BoundingSphereOverride.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: m_BoundingSphereOverride.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6061707043089692296, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
       propertyPath: m_Version
@@ -3628,6 +3718,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LightDimmer
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6061707043089692296, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: useVolumetric
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6061707043089692296, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
@@ -3705,7 +3800,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &655408638
 BoxCollider:
@@ -5152,12 +5247,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MapsList:
   - m_MapName: Manor
-    m_MapSceneName: mansion_mp
+    m_ArrayPosition: 0
+    m_MapSceneName: manor_mp
     m_MapIcon: {fileID: 21300000, guid: 675b5ad54989e8f4b9f58e5a0317db53, type: 3}
   - m_MapName: Carnival
+    m_ArrayPosition: 0
     m_MapSceneName: carnival_mp
-    m_MapIcon: {fileID: 21300000, guid: cae8fe5b5a18562449306eaff1cae7d1, type: 3}
+    m_MapIcon: {fileID: 21300000, guid: cd7f4c4e0cb274a459e0ada191eb613b, type: 3}
   - m_MapName: Hospital
+    m_ArrayPosition: 0
     m_MapSceneName: mansion_mp
     m_MapIcon: {fileID: 21300000, guid: cae8fe5b5a18562449306eaff1cae7d1, type: 3}
   m_MapButtonParent: {fileID: 0}
@@ -5400,6 +5498,26 @@ PrefabInstance:
       propertyPath: m_ColorTemperature
       value: 4000
       objectReference: {fileID: 0}
+    - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: m_BoundingSphereOverride.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: m_BoundingSphereOverride.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: m_BoundingSphereOverride.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914266576777177408, guid: c7533f1eb1cbf594080934c672daa9f1,
+        type: 3}
+      propertyPath: m_BoundingSphereOverride.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6061707043089692296, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
       propertyPath: m_Version
@@ -5413,7 +5531,7 @@ PrefabInstance:
     - target: {fileID: 6061707043089692296, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
       propertyPath: useVolumetric
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6061707043089692296, guid: c7533f1eb1cbf594080934c672daa9f1,
         type: 3}
@@ -9395,7 +9513,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ReadyZoneMode: 0
-  m_HostIsReady: 0
   m_ReadyUpDoor: {fileID: 1026131204}
   m_MonitorFlare: {fileID: 2114295529}
   m_ReadyText: {fileID: 394232784}

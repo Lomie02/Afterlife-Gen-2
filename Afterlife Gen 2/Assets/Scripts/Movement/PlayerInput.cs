@@ -52,7 +52,6 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     [SerializeField] NetworkObject m_PlayersFlashLight;
     [SerializeField] Animator m_PlayersAnimations;
 
-    bool m_ToggleFlashLight = false;
     float m_FlashLightLerp = 0;
 
     ReadyZone m_ReadyDoorsHost;
@@ -78,7 +77,6 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     [SerializeField] GameObject m_LoadingScreenMaps;
 
     float m_FramesPassedForHover;
-    float m_MxFramesForHover = 10;
 
     GhostTrap m_TrapObject;
     SettingsPreferenceManager m_SettingsPreferenceManager;
@@ -183,7 +181,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     public void SearchForElements()
     {
         m_MyView = GetComponent<PhotonView>();
-        m_ReadyUp = FindObjectOfType<ReadyZone>();
+        m_ReadyUp = FindFirstObjectByType<ReadyZone>();
         m_Inventory = GetComponent<InventoryManager>();
 
         m_MyCamera = GetComponent<PlayerCamera>();
@@ -346,7 +344,8 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             }
         }
 
-        m_LighterAnimator.SetBool("IsOpened", m_isLighterOpen);
+        if (m_LighterAnimator.isActiveAndEnabled)
+            m_LighterAnimator.SetBool("IsOpened", m_isLighterOpen);
 
         if (Input.GetKeyDown(KeyCode.R) && !m_TextChatManager.IsTextChatShowing())
         {

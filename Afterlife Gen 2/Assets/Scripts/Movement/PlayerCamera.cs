@@ -27,7 +27,6 @@ public class PlayerCamera : MonoBehaviour
     public float maxTorsoRotation = 45f;
     public float fullBodyTurnSpeed = 5f;
 
-    float torsoRotationY = 0f;
     public void Start()
     {
         m_MyView = GetComponent<PhotonView>();
@@ -50,7 +49,7 @@ public class PlayerCamera : MonoBehaviour
 
             m_SettingsPreferenceManager.m_OnSettingsApplied.AddListener(UpdateRelSettings);
 
-            NetworkWorldCameraHud[] m_Canvases = FindObjectsOfType<NetworkWorldCameraHud>();
+            NetworkWorldCameraHud[] m_Canvases = FindObjectsByType<NetworkWorldCameraHud>(FindObjectsSortMode.None);
 
             for (int i = 0; i < m_Canvases.Length; i++)
             {

@@ -14,7 +14,6 @@ public class ReadyZone : MonoBehaviour
 {
     [SerializeField] ReadyZoneMode m_ReadyZoneMode = ReadyZoneMode.Lobby;
 
-    [SerializeField] bool m_HostIsReady = false;
     [SerializeField] PositonLerp m_ReadyUpDoor;
 
     [Header("Host Stuff")]
@@ -57,7 +56,6 @@ public class ReadyZone : MonoBehaviour
             return;
 
         m_View.RPC("RPC_GameReadyToStart", RpcTarget.All);
-        m_HostIsReady = true;
     }
 
     [PunRPC]

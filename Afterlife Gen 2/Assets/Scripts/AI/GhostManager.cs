@@ -42,7 +42,7 @@ public class GhostManager : MonoBehaviour
             int randomSpawn = Random.Range(0, m_GhostSpawnLocations.Length - 1);
             PhotonNetwork.InstantiateRoomObject(m_Ghost.name, m_GhostSpawnLocations[randomSpawn].position, m_GhostSpawnLocations[randomSpawn].rotation);
 
-            m_GhostAi = FindObjectOfType<GhostAI>();
+            m_GhostAi = FindFirstObjectByType<GhostAI>();
             m_GhostAi.SetGhostProfile(Random.Range(0, m_GhostProfiles.Length - 1));
         }
     }

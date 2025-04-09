@@ -40,7 +40,6 @@ public class MapListManager : MonoBehaviourPunCallbacks
     // Map Buttons
     [SerializeField] Dropdown m_MapDropDownDiff;
 
-    int m_CurrentButtonToSet = 0;
     int m_ActiveMap = 0;
     PhotonView m_MyView;
     void Start()

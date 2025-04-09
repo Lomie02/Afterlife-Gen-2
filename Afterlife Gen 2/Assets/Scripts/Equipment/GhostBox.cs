@@ -35,8 +35,12 @@ public class GhostBox : MonoBehaviour
 
         m_MyView = GetComponent<PhotonView>();
         m_AudioSource = GetComponent<AudioSource>();
-        recognizer = m_Spawner.GetReconizer();
-        recognizer.OnPhraseRecognized += Recognizer_OnPhraseRecognized;
+
+        if (recognizer!=null)
+        {
+            recognizer = m_Spawner.GetReconizer();
+            recognizer.OnPhraseRecognized += Recognizer_OnPhraseRecognized;
+        }
 
         if (m_CursedObject)
         {
@@ -76,7 +80,7 @@ public class GhostBox : MonoBehaviour
 
         float DistanceFromGhost;
 
-            DistanceFromGhost = Vector3.Distance(transform.position, m_CursedObject.gameObject.transform.position);
+        DistanceFromGhost = Vector3.Distance(transform.position, m_CursedObject.gameObject.transform.position);
 
         if (DistanceFromGhost < m_DetectionRange && m_CanGiveResponses)
         {
@@ -99,7 +103,7 @@ public class GhostBox : MonoBehaviour
 
                 if (!m_CursedObject)
                 {
-                    m_CursedObject = FindObjectOfType<CursedObject>();
+                    m_CursedObject = FindFirstObjectByType<CursedObject>();
                     AssignGhost();
                 }
             }

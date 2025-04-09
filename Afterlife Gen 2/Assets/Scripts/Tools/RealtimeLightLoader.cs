@@ -33,7 +33,6 @@ public class RealtimeLightLoader : MonoBehaviour
     public LightDataPack[] m_Lights;
     float m_MaxDistanceFromCamera = 10;
 
-    float m_FramesCheckLimit = 5;
     float m_FramesPassed;
 
     public int m_RealtimeShadowsLimit = 5;

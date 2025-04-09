@@ -39,7 +39,6 @@ public class GhostTrap : MonoBehaviour
     TrapMode m_TrapsMode = TrapMode.Needs_Repairs;
     [SerializeField] GameObject m_PlaceHolderCan;
     [SerializeField] GameObject m_BatteryPlaceholder;
-    [SerializeField] bool m_IsRepaired = false;
 
     bool m_HasBattery = false;
     bool m_HasTankCan = false;

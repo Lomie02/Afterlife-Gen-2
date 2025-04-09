@@ -20,7 +20,6 @@ public class Skinwalker : MonoBehaviour
     float m_SkinWalkerWaitTimer;
     [SerializeField] float m_SkinWalkerWaitDuration = 5;
     [SerializeField] float m_RegularStalkSpeed = 1f;
-    [SerializeField] float m_HideSpeed = 3f;
 
     [SerializeField] GameObject[] m_Skins;
 

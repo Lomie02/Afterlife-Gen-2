@@ -23,7 +23,7 @@ public class SkillNode : MonoBehaviour
     [SerializeField] float m_Money;
     private void Start()
     {
-        m_SkillManager = FindObjectOfType<SkillTreeManager>();
+        m_SkillManager = FindFirstObjectByType<SkillTreeManager>();
 
         m_MyButton = GetComponent<Button>();
 

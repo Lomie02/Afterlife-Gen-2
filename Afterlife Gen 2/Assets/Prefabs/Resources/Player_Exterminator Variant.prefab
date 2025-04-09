@@ -8,6 +8,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 84995042467011628, guid: f1f04cf7ae020cf4daed357e71731580,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 145262857383195921, guid: f1f04cf7ae020cf4daed357e71731580,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 368179911565920565, guid: f1f04cf7ae020cf4daed357e71731580,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -35,8 +45,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 430563880379951526, guid: f1f04cf7ae020cf4daed357e71731580,
         type: 3}
+      propertyPath: TAAQuality
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 430563880379951526, guid: f1f04cf7ae020cf4daed357e71731580,
+        type: 3}
+      propertyPath: SMAAQuality
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 430563880379951526, guid: f1f04cf7ae020cf4daed357e71731580,
+        type: 3}
       propertyPath: antialiasing
-      value: 3
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 430563880379951526, guid: f1f04cf7ae020cf4daed357e71731580,
+        type: 3}
+      propertyPath: allowDynamicResolution
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 430563880379951526, guid: f1f04cf7ae020cf4daed357e71731580,
+        type: 3}
+      propertyPath: allowDeepLearningSuperSampling
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 430563880379951526, guid: f1f04cf7ae020cf4daed357e71731580,
+        type: 3}
+      propertyPath: allowFidelityFX2SuperResolution
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 862240296358692382, guid: f1f04cf7ae020cf4daed357e71731580,
         type: 3}
@@ -93,6 +128,16 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2683196634771522216, guid: f1f04cf7ae020cf4daed357e71731580,
+        type: 3}
+      propertyPath: m_AllowDynamicResolution
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3174051322122604579, guid: f1f04cf7ae020cf4daed357e71731580,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3626674093222651181, guid: f1f04cf7ae020cf4daed357e71731580,
         type: 3}
       propertyPath: m_PlayerWalkSpeed
@@ -123,6 +168,11 @@ PrefabInstance:
       propertyPath: near clip plane
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 4987427523715596555, guid: f1f04cf7ae020cf4daed357e71731580,
+        type: 3}
+      propertyPath: m_AllowDynamicResolution
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5000556251193296026, guid: f1f04cf7ae020cf4daed357e71731580,
         type: 3}
       propertyPath: m_Height
@@ -137,6 +187,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player_Exterminator Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 6131170388756239155, guid: f1f04cf7ae020cf4daed357e71731580,
+        type: 3}
+      propertyPath: TAAQuality
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6131170388756239155, guid: f1f04cf7ae020cf4daed357e71731580,
+        type: 3}
+      propertyPath: antialiasing
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6131170388756239155, guid: f1f04cf7ae020cf4daed357e71731580,
+        type: 3}
+      propertyPath: allowDynamicResolution
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6268275269048071049, guid: f1f04cf7ae020cf4daed357e71731580,
         type: 3}

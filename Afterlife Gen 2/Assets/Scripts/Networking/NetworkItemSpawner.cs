@@ -48,7 +48,6 @@ public class NetworkItemSpawner : MonoBehaviour
     PhotonView m_MyView;
     [SerializeField] CursedObject[] m_CursedObjects;
 
-    int m_PreviousItemSpawned = 0;
     void Start()
     {
         recognizer = new KeywordRecognizer(m_GhostBoxQuestions, m_Confidence);

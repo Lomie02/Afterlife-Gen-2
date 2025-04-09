@@ -4,7 +4,6 @@ using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
-using UnityEngine.Rendering;
 using Photon.Pun.UtilityScripts;
 using UnityEngine.Animations.Rigging;
 using Unity.VisualScripting;
@@ -41,14 +40,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] Image m_HealthBar;
     [SerializeField] Image m_PossessionBar;
 
-    PlayerStance m_Stance = PlayerStance.Stand;
     [SerializeField] PhotonView m_MyView;
     [SerializeField] Animator m_BodyAnimations;
 
     float m_PlayersOverallSpeed = 0;
     [SerializeField] float m_PlayerWalkSpeed = 2;
     [SerializeField] float m_PlayerSprintSpeed = 5;
-    [SerializeField] float m_PlayerTacticalSprintSpeed = 8;
 
     bool m_IsInTrapStance;
     public CapsuleCollider m_PlayerCollider;
@@ -58,10 +55,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     Vector3 m_DiveCollider = new Vector3(0, 0.2867912f, 0);
     float m_DiveHeight = 0.621664f;
-
-    bool m_IsDiving = false;
-    float m_DiveWaitTimer = 0;
-    float m_DiveWaitDuration = 1;
 
     bool m_CanMove = true;
     bool m_IsSprinting = false;
@@ -867,7 +860,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         if (m_MyView.IsMine && m_CanMove)
         {
-            m_IsDiving = true;
             m_PlayerCollider.center = m_DiveCollider;
             m_PlayerCollider.height = m_DiveHeight;
 

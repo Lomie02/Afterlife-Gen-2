@@ -30,7 +30,7 @@ public class GhostDatabase : MonoBehaviour
     {
         m_GhostLib.Add(new GhostData { m_GhostType = "Poltergeist", m_GhostEvidence = new List<string> { "EMF", "REMPOD", "GHOSTBOX", "LASER PROJECTOR" } });
         m_GhostLib.Add(new GhostData { m_GhostType = "Spirit", m_GhostEvidence = new List<string> { "EMF", "BLOOD TRAIL", "GHOSTBOX", "LASER PROJECTOR" } });
-        m_GhostLib.Add(new GhostData { m_GhostType = "Phantom", m_GhostEvidence = new List<string> { "EMF", "BLOOD TRAIL", "GHOSTBOX", "LASER PROJECTOR" } });
+        m_GhostLib.Add(new GhostData { m_GhostType = "Phantom", m_GhostEvidence = new List<string> { "EMF", "BLOOD TRAIL", "FLOATING OBJECTS", "REM POD" } });
     }
 }
 
@@ -87,7 +87,7 @@ public class GhostTrap : MonoBehaviour
     [SerializeField] Text m_GhostTypeText;
     public GhostDatabase m_GhostDataPack;
 
-    private List<string> m_AllEvidenceItems = new List<string>() { "EMF","REMPOD", "GHOSTBOX", "LASER PROJECTOR", "BLOOD TRAIL"};
+    private List<string> m_AllEvidenceItems = new List<string>() { "EMF","REM POD", "GHOSTBOX", "LASER PROJECTOR", "BLOOD TRAIL", "FLOATING OBJECTS"};
 
     private void Start()
     {

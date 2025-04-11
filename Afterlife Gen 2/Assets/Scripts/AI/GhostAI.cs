@@ -8,8 +8,10 @@ using UnityEngine.Animations;
 enum GhostBehaviour
 {
     Idle = 0,
-    Seeking,
-    Hunt,
+    Patrol,
+    Investigate,
+    Chase,
+    Search,
     Attack,
     Trap,
 }
@@ -38,7 +40,7 @@ public class GhostAI : MonoBehaviour
     PowerManager m_PowerManager;
 
     [SerializeField] PhotonView m_View;
-    GhostBehaviour m_GhostsBehaviour = GhostBehaviour.Seeking;
+    GhostBehaviour m_GhostsBehaviour = GhostBehaviour.Patrol;
 
     NavMeshAgent m_MyAgent;
     [SerializeField] GhostManager m_GhostManager;
@@ -55,19 +57,19 @@ public class GhostAI : MonoBehaviour
     bool m_IsGhostRevealingTrueForm = false;
     int m_CurrentGhostKitActive = 0;
 
+    PlayerController[] m_PlayersInLobby;
+
     // idling Vars
     float m_IdleDuration = 5;
     float m_IdleTimer = 0;
 
     Transform m_PlayerTarget; // Player to chase if ghost finds them
-    List<GameObject> m_PlayersGhostCanSee;
-    [SerializeField] Transform m_RayView;
 
     float m_ChaseDuration = 5;
     float m_ChaseTimer = 0;
 
     // cooldown for attacks
-    float m_AttackCooldown = 3f;
+    float m_AttackCooldown = 2f;
     float m_AttackTimer;
     bool m_AttackIsOnCooldown = false;
 
@@ -83,6 +85,18 @@ public class GhostAI : MonoBehaviour
 
     float m_GhostInteractionTimer;
     float m_GhostInteractionDuration;
+
+    GameObject[] m_PatrolZones;
+
+    float m_SearchTimer;
+    float m_SearchDuration = 5f;
+
+    float m_AttackRange = 1.7f;
+    float m_EyeSightRange = 10f;
+    float m_GhostFieldofView = 90f;
+
+    Vector3 m_lastKnownSighting;
+    int m_CurrentPatrolZone;
     private void Start()
     {
         m_MyAgent = GetComponent<NavMeshAgent>();
@@ -104,10 +118,11 @@ public class GhostAI : MonoBehaviour
 
         m_EmfActivityTimer = m_EmfActivityDuration;
 
+        m_PatrolZones = GameObject.FindGameObjectsWithTag("TrapSpawn");
+        m_PlayersInLobby = FindObjectsByType<PlayerController>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         if (PhotonNetwork.IsMasterClient)
         {
-            m_PlayersGhostCanSee = new List<GameObject>();
             m_View.RPC("RPC_AssignGhostKit", RpcTarget.All, 0);
             m_TimerCooldownLights = m_TimerCooldownLightsDuration;
             m_MyAgent.SetDestination(RandomNavSphere(transform.position, m_RoamingDistance, -1));
@@ -121,6 +136,37 @@ public class GhostAI : MonoBehaviour
 
         StartCoroutine(CheckInteractions());
 
+        PhotonAnimatorView animatiorview = GetComponent<PhotonAnimatorView>();
+
+        for (int i = 0; i < m_GhostAnimation.layerCount; i++)
+        {
+            animatiorview.SetLayerSynchronized(i, PhotonAnimatorView.SynchronizeType.Discrete);
+        }
+
+        for (int i = 0; i < m_GhostAnimation.parameterCount; i++)
+        {
+            PhotonAnimatorView.ParameterType type = PhotonAnimatorView.ParameterType.Float;
+
+            if (m_GhostAnimation.parameters[i].type == AnimatorControllerParameterType.Float)
+            {
+                type = PhotonAnimatorView.ParameterType.Float;
+            }
+            else if (m_GhostAnimation.parameters[i].type == AnimatorControllerParameterType.Bool)
+            {
+                type = PhotonAnimatorView.ParameterType.Bool;
+            }
+            else if (m_GhostAnimation.parameters[i].type == AnimatorControllerParameterType.Trigger)
+            {
+                type = PhotonAnimatorView.ParameterType.Trigger;
+            }
+            else if (m_GhostAnimation.parameters[i].type == AnimatorControllerParameterType.Int)
+            {
+                type = PhotonAnimatorView.ParameterType.Int;
+            }
+
+
+            animatiorview.SetParameterSynchronized(m_GhostAnimation.parameters[i].name, type, PhotonAnimatorView.SynchronizeType.Discrete);
+        }
     }
 
     [PunRPC]
@@ -167,21 +213,33 @@ public class GhostAI : MonoBehaviour
         if (!PhotonNetwork.IsMasterClient)
             return;
 
+        CheckPlayerDetection();
+
         switch (m_GhostsBehaviour)
         {
             case GhostBehaviour.Idle:
                 UpdateIdle();
                 break;
 
-            case GhostBehaviour.Seeking:
-                UpdateSeekingBehaviour();
+            case GhostBehaviour.Patrol:
+                PatrolArea();
                 break;
 
-            case GhostBehaviour.Hunt:
-                HuntPlayer();
+            case GhostBehaviour.Investigate:
+                InvestigateArea();
+                break;
+
+            case GhostBehaviour.Chase:
+                ChasePlayer();
+                break;
+
+            case GhostBehaviour.Search:
+                SearchForPlayer();
                 break;
 
             case GhostBehaviour.Attack:
+
+
                 break;
 
             case GhostBehaviour.Trap:
@@ -205,6 +263,8 @@ public class GhostAI : MonoBehaviour
             {
                 m_AttackTimer = m_AttackCooldown;
                 m_AttackIsOnCooldown = false;
+                m_GhostsBehaviour = GhostBehaviour.Chase;
+                m_MyAgent.isStopped = false;
             }
         }
 
@@ -233,9 +293,96 @@ public class GhostAI : MonoBehaviour
         m_GhostAnimation.SetFloat("GhostSpeed", m_MyAgent.velocity.magnitude);
     }
 
-    void RandomGhostEvent()
+    void PatrolArea()
     {
+        if (!m_MyAgent.pathPending && m_MyAgent.remainingDistance < 0.5f)
+        {
+            GoToNextPatrolZone();
+        }
+    }
 
+    void InvestigateArea()
+    {
+        if (m_MyAgent.remainingDistance < 1f)
+        {
+            m_GhostsBehaviour = GhostBehaviour.Search;
+            m_SearchTimer = m_SearchDuration;
+        }
+    }
+
+    void GoToNextPatrolZone()
+    {
+        m_MyAgent.destination = m_PatrolZones[m_CurrentPatrolZone].transform.position;
+        m_CurrentPatrolZone = (m_CurrentPatrolZone + 1) % m_PatrolZones.Length;
+    }
+
+    void ChasePlayer()
+    {
+        m_MyAgent.destination = m_PlayerTarget.position;
+
+        if (Vector3.Distance(transform.position, m_PlayerTarget.position) < m_EyeSightRange * 1.5f)
+        {
+            m_GhostsBehaviour = GhostBehaviour.Search;
+            m_SearchTimer = m_SearchDuration;
+            m_lastKnownSighting = m_PlayerTarget.position;
+        }
+    }
+
+    void SearchForPlayer()
+    {
+        m_MyAgent.destination = m_lastKnownSighting;
+
+        if (m_MyAgent.remainingDistance < 1f)
+        {
+            m_SearchTimer -= Time.deltaTime;
+            if (m_SearchTimer <= 0)
+            {
+                m_GhostsBehaviour = GhostBehaviour.Patrol;
+                GoToNextPatrolZone();
+            }
+        }
+    }
+
+    void CheckPlayerDetection()
+    {
+        for (int i = 0; i < m_PlayersInLobby.Length; i++)
+        {
+
+            Vector3 direction = m_PlayersInLobby[i].transform.position - transform.position;
+            float angle = Vector3.Angle(transform.forward, direction);
+
+            if (direction.magnitude <= m_EyeSightRange && angle <= m_GhostFieldofView / 2f)
+            {
+                RaycastHit hit;
+                if (Physics.Raycast(transform.position + Vector3.up, direction.normalized, out hit, m_EyeSightRange))
+                {
+                    if (hit.collider.CompareTag("Player") && !hit.collider.GetComponent<PlayerController>().IsPlayerDead())
+                    {
+                        m_PlayerTarget = hit.collider.gameObject.transform;
+                        m_GhostsBehaviour = GhostBehaviour.Chase;
+                    }
+                }
+            }
+
+            if (m_AttackIsOnCooldown) return;
+
+            if (direction.magnitude <= m_EyeSightRange && angle <= m_GhostFieldofView / 2f)
+            {
+                RaycastHit hit;
+                if (Physics.Raycast(transform.position + Vector3.up, direction.normalized, out hit, m_AttackRange))
+                {
+                    if (hit.collider.CompareTag("Player") && !hit.collider.GetComponent<PlayerController>().IsPlayerDead())
+                    {
+                        PhotonView playerView = hit.collider.GetComponent<PhotonView>();
+
+                        playerView.RPC("RPC_TakeDamage", playerView.Owner, 0.25f);
+                        m_MyAgent.isStopped = true;
+                        m_GhostAnimation.SetTrigger("Attack");
+                        m_AttackIsOnCooldown = true;
+                    }
+                }
+            }
+        }
     }
 
     void UpdateIdle()
@@ -246,51 +393,7 @@ public class GhostAI : MonoBehaviour
         {
             m_IdleDuration = Random.Range(5f, 9f);
             m_IdleTimer = m_IdleDuration;
-            m_GhostsBehaviour = GhostBehaviour.Seeking;
-        }
-    }
-    void UpdateSeekingBehaviour()
-    {
-        if (m_MyAgent.remainingDistance < 2)
-        {
-            int RandomBehaviour = Random.Range(0, 3);
-
-            if (RandomBehaviour == 1)
-            {
-                m_GhostsBehaviour = GhostBehaviour.Idle; return;
-            }
-
-            if (m_PlayersGhostCanSee.Count != 0)
-                m_MyAgent.SetDestination(RandomNavSphere(transform.position, m_RoamingDistance, -1));
-            else
-                m_MyAgent.SetDestination(m_PlayersGhostCanSee[Random.Range(0, m_PlayersGhostCanSee.Count)].transform.position);
-        }
-    }
-
-    GameObject GetPlayerWithHighestPossesion()
-    {
-        if (m_PlayersGhostCanSee.Count == 0) return null;
-
-        return gameObject;
-    }
-
-
-    void CheckIfCanAttackTarget()
-    {
-        if (!m_PlayerTarget) return;
-
-        RaycastHit HitDetectionInfo;
-
-        Vector3 DirectionOfTarget = m_PlayerTarget.position - m_RayView.position;
-        DirectionOfTarget = DirectionOfTarget.normalized;
-
-        if (Physics.Raycast(m_RayView.position, DirectionOfTarget, out HitDetectionInfo, 2.5f))
-        {
-            if (HitDetectionInfo.collider.GetComponentInParent<PlayerController>())
-            {
-                HitDetectionInfo.collider.GetComponentInParent<PhotonView>().RPC("RPC_TakeDamage", HitDetectionInfo.collider.GetComponentInParent<PhotonView>().Owner, Random.Range(0.1f, 0.3f));
-                m_AttackIsOnCooldown = true;
-            }
+            m_GhostsBehaviour = GhostBehaviour.Patrol;
         }
     }
 
@@ -301,9 +404,6 @@ public class GhostAI : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!PhotonNetwork.IsMasterClient) return;
-
-        if (other.tag == "Player")
-            m_PlayersGhostCanSee.Add(other.gameObject);
 
         if (other.gameObject.GetComponent<NetworkObject>() && ContainsEvidence(EvidenceTypes.FloatingObjects))
         {
@@ -334,7 +434,7 @@ public class GhostAI : MonoBehaviour
         {
             return true;
         }
-        else if(m_Profile.m_Evidence4 == _evidenceType)
+        else if (m_Profile.m_Evidence4 == _evidenceType)
         {
             return true;
         }
@@ -345,9 +445,6 @@ public class GhostAI : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (!PhotonNetwork.IsMasterClient) return;
-
-        if (other.tag == "Player")
-            m_PlayersGhostCanSee.Remove(other.gameObject);
 
         if (other.gameObject.GetComponent<NetworkObject>() && ContainsEvidence(EvidenceTypes.FloatingObjects))
         {
@@ -435,13 +532,6 @@ public class GhostAI : MonoBehaviour
             }
 
             // Player detection
-            if (m_PlayersGhostCanSee.Count > 0 && m_PlayerTarget == null)
-                UpdatePlayerDetection();
-
-            // If AI can attack the player
-            if (!m_AttackIsOnCooldown)
-                CheckIfCanAttackTarget();
-
             // Equipment
             switch (m_Profile.m_Evidence1)
             {
@@ -514,58 +604,6 @@ public class GhostAI : MonoBehaviour
     public void RPC_GrabGhostProfile(int _index)
     {
         m_Profile = m_GhostManager.GrabGhostProfile(_index);
-    }
-
-    public void PlayerHasEnteredView(GameObject _playerObject)
-    {
-        m_PlayersGhostCanSee.Add(_playerObject);
-        m_MyAgent.SetDestination(RandomNavSphere(_playerObject.transform.position, 10, -1));
-    }
-
-    public void PlayerHasExitView(GameObject _playerObject)
-    {
-        m_PlayersGhostCanSee.Remove(_playerObject);
-    }
-
-    bool UpdatePlayerDetection()
-    {
-        RaycastHit HitDetectionInfo;
-
-        for (int i = 0; i < m_PlayersGhostCanSee.Count; i++)
-        {
-            Vector3 DirectionOfTarget = m_PlayersGhostCanSee[i].transform.position - m_RayView.position;
-            DirectionOfTarget = DirectionOfTarget.normalized;
-
-            if (Physics.Raycast(m_RayView.position, DirectionOfTarget, out HitDetectionInfo, 15f))
-            {
-                if (HitDetectionInfo.collider.GetComponentInParent<PlayerController>())
-                {
-                    m_PlayerTarget = m_PlayersGhostCanSee[i].transform;
-                    m_GhostsBehaviour = GhostBehaviour.Hunt;
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    void HuntPlayer()
-    {
-        if (UpdatePlayerDetection())
-        {
-            m_ChaseTimer = m_ChaseDuration;
-        }
-
-        m_MyAgent.SetDestination(m_PlayerTarget.position);
-
-        m_ChaseTimer -= Time.deltaTime;
-        if (m_ChaseTimer <= 0)
-        {
-            m_ChaseTimer = m_ChaseDuration;
-            m_PlayerTarget = null;
-            m_GhostsBehaviour = GhostBehaviour.Idle; return;
-        }
     }
 
 

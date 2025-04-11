@@ -1935,81 +1935,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!1 &2085700212133161486
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7584832562139882026}
-  - component: {fileID: 6981004592099222456}
-  - component: {fileID: 8874304395041528104}
-  - component: {fileID: 1849025000768186555}
-  m_Layer: 2
-  m_Name: AI_View_Box
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7584832562139882026
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2085700212133161486}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.27, z: 0.58}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 749547753048288743}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &6981004592099222456
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2085700212133161486}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &8874304395041528104
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2085700212133161486}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 4.5912657, y: 2.0705976, z: 8.227234}
-  m_Center: {x: 0, y: 0, z: 3.6136172}
---- !u!114 &1849025000768186555
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2085700212133161486}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 790f83b1ca654324ab61d01bf04e212b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2172461600454054584
 GameObject:
   m_ObjectHideFlags: 0
@@ -2250,6 +2175,7 @@ GameObject:
   - component: {fileID: 6756784113857387912}
   - component: {fileID: 8995457584979140492}
   - component: {fileID: 1052455071934559777}
+  - component: {fileID: 4021157755736635263}
   m_Layer: 0
   m_Name: Ghost
   m_TagString: Untagged
@@ -2273,7 +2199,6 @@ Transform:
   - {fileID: 8216765922514620261}
   - {fileID: 59338004237881145}
   - {fileID: 5331232578848827273}
-  - {fileID: 7584832562139882026}
   - {fileID: 6123923374568684468}
   - {fileID: 8131389801814896708}
   - {fileID: 32143134198677800}
@@ -2333,7 +2258,6 @@ MonoBehaviour:
   m_RoamingDistance: 50
   m_GhostOrbs: {fileID: 1679784766830509840}
   BloodTrails: {fileID: 677341739662476426}
-  m_RayView: {fileID: 6123923374568684468}
   m_GhostEmfLocation: {fileID: 0}
 --- !u!114 &5942073849677170462
 MonoBehaviour:
@@ -2355,6 +2279,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 6756784113857387912}
+  - {fileID: 4021157755736635263}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -2434,6 +2359,22 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 6.0219893
   m_Center: {x: 0, y: 0.82, z: 0}
+--- !u!114 &4021157755736635263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2419426403500487198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters: []
+  m_SynchronizeLayers: []
 --- !u!1 &2557262403831959948
 GameObject:
   m_ObjectHideFlags: 0

@@ -102,7 +102,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     [SerializeField] AudioClip m_LighterIgnite;
     [SerializeField] AudioClip m_LighterClosed;
 
-
+    bool m_DisableMouseUpdates = false;
     void Start()
     {
         //SearchForElements();

@@ -89,14 +89,18 @@ public class GhostAI : MonoBehaviour
     GameObject[] m_PatrolZones;
 
     float m_SearchTimer;
-    float m_SearchDuration = 5f;
+    float m_SearchDuration = 10f;
 
     float m_AttackRange = 1.7f;
-    float m_EyeSightRange = 10f;
-    float m_GhostFieldofView = 90f;
+    float m_EyeSightRange = 15f;
+    float m_GhostFieldofView = 103f;
 
     Vector3 m_lastKnownSighting;
     int m_CurrentPatrolZone;
+
+    // Spinning Player
+    bool m_SpinPlayerToGhost = false;
+
     private void Start()
     {
         m_MyAgent = GetComponent<NavMeshAgent>();
@@ -375,7 +379,10 @@ public class GhostAI : MonoBehaviour
                     {
                         PhotonView playerView = hit.collider.GetComponent<PhotonView>();
 
+                        CheckPlayerDirectionForJumpscare(hit, playerView);
+
                         playerView.RPC("RPC_TakeDamage", playerView.Owner, 0.25f);
+
                         m_MyAgent.isStopped = true;
                         m_GhostAnimation.SetTrigger("Attack");
                         m_AttackIsOnCooldown = true;
@@ -383,6 +390,23 @@ public class GhostAI : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void CheckPlayerDirectionForJumpscare(RaycastHit hit, PhotonView view)
+    {
+        Vector3 direction = (transform.position - hit.collider.gameObject.transform.position).normalized;
+        Vector3 playerForward = hit.collider.gameObject.transform.forward;
+
+
+        if (Vector3.Dot(playerForward, direction) < 0)
+        {
+            view.RPC("RPC_SpinToPlayer", view.Owner);
+        }
+    }
+
+    void SpinPlayerToGhost()
+    {
+
     }
 
     void UpdateIdle()

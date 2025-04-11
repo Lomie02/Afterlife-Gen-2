@@ -8,6 +8,7 @@ using Photon.Pun.UtilityScripts;
 using UnityEngine.Animations.Rigging;
 using Unity.VisualScripting;
 using System.Runtime.CompilerServices;
+using Unity.Burst.CompilerServices;
 
 enum MovementType
 {
@@ -150,6 +151,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] AudioClip[] m_FootStepDirt;
     [SerializeField] AudioClip[] m_FootStepCarpet;
 
+    bool m_SpinToGhost = false;
+    float m_PlayerLerpSpeedFinal = 0;
+
+    bool m_DisableMouseUpdates = false;
+
+    Vector3 m_GhostDirection;
     private void Awake()
     {
         GetComponentInChildren<RigBuilder>().Build();
@@ -294,7 +301,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_BodyAnimations.SetFloat("yPos", m_AnimYPos);
     }
 
-    void LateUpdate()
+    void Update()
     {
         if (!m_MyView.IsMine)
             return;
@@ -310,6 +317,18 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         if (m_IsDowned)
             UpdateDownedState();
+
+        if (m_SpinToGhost)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(m_GhostDirection);
+
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
+
+            if (Vector3.Dot(transform.forward, m_GhostDirection) >= 0.98f)
+            {
+                m_SpinToGhost = false;
+            }
+        }
     }
 
     /// <summary>
@@ -367,7 +386,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         Vector3 MoveV = transform.right * xPos + transform.forward * yPos;
 
-        m_Body.MovePosition(transform.position + MoveV.normalized * m_PlayersOverallSpeed * Time.fixedDeltaTime);
+        m_Body.MovePosition(transform.position + MoveV.normalized * m_PlayerLerpSpeedFinal * Time.fixedDeltaTime);
 
         ConvertMovementForAnimation(xPos, yPos);
 
@@ -467,6 +486,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         UpdateEmotes();
 
         m_BodyAnimations.SetBool("TacSprint", m_IsTacticalSprinting);
+        m_HealthBar.fillAmount = Mathf.Lerp(m_HealthBar.fillAmount, m_PlayerHealth, 5 * Time.deltaTime);
 
         if (!m_IsSprinting)
         {
@@ -495,6 +515,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         }
 
+        m_PlayerLerpSpeedFinal = Mathf.Lerp(m_PlayerLerpSpeedFinal, m_PlayersOverallSpeed, 2 * Time.deltaTime);
+
         if (m_IsSliding)
         {
             m_SlideTimer -= Time.deltaTime;
@@ -508,8 +530,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
                 m_SlideTimer = m_SlideDuration;
             }
         }
-
-
 
         m_BodyAnimations.SetLayerWeight(1, m_CrouchLerpAmount);
         m_BodyAnimations.SetBool("Sprinting", m_IsSprinting);
@@ -529,6 +549,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
                 break;
         }
+
+        
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -558,6 +580,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
         }
     }
 
+    [PunRPC]
+    public void RPC_SpinToPlayer()
+    {
+        m_SpinToGhost = true;
+
+        m_GhostDirection = (m_Ghost.transform.position - transform.position).normalized;
+    }
+
     public void ResetWeightLayer(int _index)
     {
         m_BodyAnimations.SetLayerWeight(_index, 0);
@@ -570,7 +600,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         m_PossesionMeter = Mathf.Clamp(m_PossesionMeter, 0, 1);
         m_PlayerHealth += 0.1f;
-        m_HealthBar.fillAmount = m_PlayerHealth;
 
         CheckHealth();
     }
@@ -770,7 +799,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_PlayerHealth -= _damageAmount;
         m_PlayerHealth = Mathf.Clamp(m_PlayerHealth, 0, 1);
 
-        m_HealthBar.fillAmount = m_PlayerHealth;
+        m_PlayerLerpSpeedFinal = m_PlayerLerpSpeedFinal / 2;
         CheckHealth();
     }
 
